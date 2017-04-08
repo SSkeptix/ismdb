@@ -10,5 +10,5 @@ urlpatterns = [
     url(r'^$', views.account),
     #url(r'^reset_password/$', views.reset_password, name='reset_password'),
 
-    url(r'^add_skills', views.add_skills),
+    url(r'^add_skill/$', views.add_skill),
 ] 

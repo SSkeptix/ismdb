@@ -1,8 +1,14 @@
 from django.contrib import admin
-from .users import User, Skill, Student, Student_skill
+from .models import User, Student, Language, Framework, Other, Student_lang, Student_fram, Student_other
 # Register your models here.
 
 admin.site.register(User)
-admin.site.register(Skill)
 admin.site.register(Student)
-admin.site.register(Student_skill)
+
+admin.site.register(Language)
+admin.site.register(Framework)
+admin.site.register(Other)
+
+admin.site.register(Student_lang)
+admin.site.register(Student_fram)
+admin.site.register(Student_other)

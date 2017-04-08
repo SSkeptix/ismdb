@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from .forms import RegistrationForm as UserCreationForm
-from .users import GROUP
+from . import forms
+from .tuples import GROUP
 from django.contrib.auth.decorators import login_required
 
 from django.http import HttpResponse
@@ -9,7 +9,7 @@ from django.http import HttpResponse
 # Create your views here.
 def register(request):
 	if request.method == 'POST':
-		form = UserCreationForm(request.POST)
+		form = forms.RegistrationForm(request.POST)
 		if form.is_valid():
 			form.save()
 			next_page = '/'
@@ -21,7 +21,7 @@ def register(request):
 			return redirect(next_page)
 			#return HttpResponse(next_page)
 	else:
-		form = UserCreationForm()
+		form = forms.RegistrationForm()
 
 	args = {'form': form}
 	return render(request, 'account/register.html', args)
@@ -36,5 +36,7 @@ def account(request):
 	return HttpResponse('account')
 
 @login_required(login_url="/account/login/")
-def add_skills(request):
-	return HttpResponse('add_skills')
+def add_skill(request):
+	#form = Add_skill()
+	args = {'form': form}
+	return render(request, 'account/add_skill.html', args)

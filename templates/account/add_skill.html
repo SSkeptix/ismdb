@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>ISM db Add skill</title>
+{% endblock %}
+
+
+
+{% block body %}
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input class="btn btn-success btn-sm" type="submit" value="Add" />
+</form>
+{% endblock %}
