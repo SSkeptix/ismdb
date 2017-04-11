@@ -22,10 +22,6 @@ def register(request):
 	return render(request, 'account/register.html', args)
 
 
-
-
-
-
 def reset_password(request):
 	return HttpResponse('reset_password')
 
