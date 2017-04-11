@@ -1,5 +1,6 @@
 #choice User_group
-class GROUP:
+
+class CATEGORY:
 	STUDENT = 1
 	TEACHER = 2
 	EMPLOYER = 3
@@ -9,6 +10,11 @@ class GROUP:
 		(TEACHER, 'Teacher'),
 		(EMPLOYER, 'Employer'),
 	)
+
+	def value(self, n):
+		return self.SELECT[n - 1][1]
+
+
 
 #choice User english language
 class LANG:
@@ -28,13 +34,23 @@ class LANG:
 		(C2, 'C2 - Proficient'),
 	)
 
+	def value(self, n):
+		return self.SELECT[n - 1][1]
+
+
+
 class SKILL:
+	CHOOSE = 0
 	LANGUAGE = 1
 	FRAMEWORK = 2
 	OTHER = 3
 
 	SELECT = (
+		(CHOOSE, 'Choose category'),
 		(LANGUAGE, 'Language'), 
 		(FRAMEWORK, 'Framework'), 
 		(OTHER, 'Other'), 
 	)
+
+	def value(self, n):
+		return self.SELECT[n][1]

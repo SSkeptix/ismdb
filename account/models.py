@@ -7,7 +7,7 @@ from . import tuples
 #custom User
 class User(AbstractUser):
 	is_validate = models.BooleanField(default = False)
-	group = models.IntegerField(choices=tuples.GROUP.SELECT, default=tuples.GROUP.STUDENT)
+	category = models.IntegerField(choices=tuples.CATEGORY.SELECT, default=tuples.CATEGORY.STUDENT)
 
 	def __str__(self):
 		return str(self.get_username())
@@ -104,23 +104,15 @@ class Student_skill(models.Model):
 class Student_lang(Student_skill):
 	skill = models.ForeignKey(Language, on_delete=models.CASCADE)
 
-	class Meta:
-		unique_together = ('student', 'skill')
 
 # student - framework
 class Student_fram(Student_skill):
 	skill = models.ForeignKey(Framework, on_delete=models.CASCADE)
 
-	class Meta:
-		unique_together = ('student', 'skill')
 
 # student - other
 class Student_other(Student_skill):
 	skill = models.ForeignKey(Other, on_delete=models.CASCADE)
-
-	class Meta:
-		unique_together = ('student', 'skill')
-
 
 #
 #	--- Student skills - end ---

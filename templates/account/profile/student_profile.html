@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block head %}
+Profile
+{% endblock %}
+
+
+
+{% block body %}
+
+
+<div class="container">
+
+	<p>Username: {{ student.user.username }}</p>
+	<p>Full Name: {{ student.user.last_name}} {{ student.user.first_name }}</p>
+	<p>E-mail: {{ student.user.email }}</p>
+	<br/>
+	<p>Group: {{ student.group }}</p>
+	<p>English Level: {{ student_lang }}</p>
+
+
+</div>
+
+
+
+{% endblock %}
+

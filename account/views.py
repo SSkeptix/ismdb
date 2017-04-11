@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
-from . import forms
-from .tuples import GROUP
+from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
+from . import forms
+from . import tuples
+from . import models
 
 from django.http import HttpResponse
 
@@ -9,22 +11,18 @@ from django.http import HttpResponse
 # Create your views here.
 def register(request):
 	if request.method == 'POST':
-		form = forms.RegistrationForm(request.POST)
+		form = forms.Registration(request.POST)
 		if form.is_valid():
 			form.save()
-			next_page = '/'
-			if form.cleaned_data['group'] == GROUP.STUDENT:
-				next_page = '/account/add_skills/'
-			else:
-				next_page = '/'
-
-			return redirect(next_page)
-			#return HttpResponse(next_page)
+			return redirect('account:profile')
 	else:
-		form = forms.RegistrationForm()
+		form = forms.Registration()
 
 	args = {'form': form}
 	return render(request, 'account/register.html', args)
+
+
+
 
 
 
@@ -33,10 +31,37 @@ def reset_password(request):
 
 @login_required(login_url="/account/login/")
 def account(request):
-	return HttpResponse('account')
+
+	return HttpResponse('/account/%s/' % request.user.id)
+
+
 
 @login_required(login_url="/account/login/")
 def add_skill(request):
-	#form = Add_skill()
-	args = {'form': form}
+	_student = models.Student.objects.get(user = request.user.id)
+
+
+	if request.method == 'POST':
+		form = forms.Add_fram(request.POST)
+		if form.is_valid():
+			student = form.save(commit=False)
+			student.user = request.user
+			student.save()
+
+			return redirect('/account/')
+
+	form = forms.Add_fram()
+
+	skill_langs = models.Student_lang.objects.all().filter(student = _student)
+
+
+	args = {
+	'skill_lang': skill_langs,
+	'skill_fram': models.Student_fram.objects.all().filter(student = _student),
+	'skill_other': models.Student_other.objects.get(student = _student),
+	'form': form,
+	'student': _student,
+	}
+
 	return render(request, 'account/add_skill.html', args)
+
