@@ -29,12 +29,6 @@ def register(request):
 def reset_password(request):
 	return HttpResponse('reset_password')
 
-@login_required(login_url="/account/login/")
-def account(request):
-
-	return HttpResponse('/account/%s/' % request.user.id)
-
-
 
 @login_required(login_url="/account/login/")
 def add_skill(request):

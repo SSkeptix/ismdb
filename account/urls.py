@@ -12,14 +12,8 @@ urlpatterns = [
 	url(r'^logout/$', logout, {'next_page': 'account:login'}, name = 'logout'),
 	url(r'^register/$', views.register, name = 'register'),
 
-	url(r'^$', views.account),
-
-
-
-
 	url(r'^profile/$', profile_views.profile, name = 'profile'),
 	url(r'^profile/(?P<username>\w+)/$', profile_views.profile),
-
 	url(r'^profile//edit/$', profile_views.edit_profile, name = 'edit_profile'),
 	url(r'^profile/(?P<username>\w+)/edit/$', profile_views.edit_profile),
 ] 

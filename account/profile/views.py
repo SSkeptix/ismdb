@@ -68,24 +68,28 @@ def edit_profile(request, username = ''):
 
 
 	if (request.user.category == tuples.CATEGORY.STUDENT) :
-
-		if request.method == 'POST':
+		student = models.Student.objects.get(user = request.user.id)
+		if request.method == 'POST' :
 			form = forms.EditUser(request.POST, instance = request.user)
-			if form.is_valid():
+			student_form = forms.EditStudent(request.POST, instance = student)
+			if form.is_valid() and student_form.is_valid():
 				form.save()
+				student_form.save()
 				return redirect('%s%s/' % (reverse('account:profile'), request.user.username))
 
 		else:
 			form = forms.EditUser(instance = request.user)
+			student_form = forms.EditStudent(instance = student)
 
 		args['form'] = form
+		args['student_form'] = student_form
 		
 		return render(request, 'account/profile/edit_student.html', args)
 
 
 	else:
 
-		if request.method == 'POST':
+		if request.method == 'POST' :
 			form = forms.EditUser(request.POST, instance = request.user)
 			if form.is_valid():
 				form.save()

@@ -21,8 +21,8 @@ class Student(models.Model):
 	validate_by = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='validate_by', null = True, blank = True)
 	updated = models.DateField(auto_now=True)
 
-	gitHub = models.URLField(null = True, blank = True, unique = True)
-	describe = models.TextField(max_length = 2000, null = True, blank = True)
+	github = models.URLField(null = True, blank = True, unique = True)
+	description = models.TextField(max_length = 2000, null = True, blank = True)
 
 
 	def get_username(self):

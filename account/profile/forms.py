@@ -21,32 +21,18 @@ class EditUser(forms.ModelForm):
 
 
 class EditStudent(forms.ModelForm):
-	#username = forms.CharField(label="Username", max_length=30, 
-      #                         widget=forms.TextInput(attrs={'class': 'form-control', 'name': 'username'}))
-
-
+	lang = forms.ChoiceField(choices = tuples.LANG.SELECT, label = 'English level', required = True, widget=forms.Select())
+	github = forms.CharField(label = 'GitHub', required = False)
+	#description = forms.CharField(label = 'Describe yourself', max_length=2000, widget=forms.TextInput({}))
 
 	class Meta:
 		model = models.Student
 		fields = (
 			'lang',
 			'group',
-			'gitHub',
-			'describe',
+			'github',
+			'description',
 			)
-
-	def save(self, commit=True):
-		student = super(RegistrationStudent, self).save(commit=False)
-
-		student.lang = self.cleaned_data['lang']
-		student.group = self.cleaned_data['group']
-		student.gitHub = self.cleaned_data['gitHub']
-		student.describe = self.cleaned_data['describe']
-		
-		if commit:
-			student.save()
-
-		return student
 
 
 
