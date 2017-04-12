@@ -17,12 +17,12 @@ ISM db Edit Profile
 	  <div class="panel panel-default">
 	    <div class="panel-heading" role="tab" id="headProfile">
 	      <h4 class="panel-title">
-	        <a role="button" data-toggle="collapse" data-parent="#edit" href="#profile" aria-expanded="true" aria-controls="profile">
+	        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#edit" href="#profile" aria-expanded="false" aria-controls="profile">
 	          Profile
 	        </a>
 	      </h4>
 	    </div>
-	    <div id="profile" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headProfile">
+	    <div id="profile" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headProfile">
 	      <div class="panel-body">
 	        {% block profile %}
 	        {% endblock %}
@@ -33,12 +33,12 @@ ISM db Edit Profile
 	  <div class="panel panel-default">
 	    <div class="panel-heading" role="tab" id="headSkills">
 	      <h4 class="panel-title">
-	        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#edit" href="#skills" aria-expanded="false" aria-controls="skills">
+	        <a role="button" data-toggle="collapse" data-parent="#edit" href="#skills" aria-expanded="true" aria-controls="skills">
 	          Skills
 	        </a>
 	      </h4>
 	    </div>
-	    <div id="skills" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headSkills">
+	    <div id="skills" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headSkills">
 	      <div class="panel-body">
 	        {% block skills %}
 	        {% endblock %}

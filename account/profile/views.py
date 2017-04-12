@@ -48,9 +48,9 @@ def profile(request, username = ''):
 		args['student'] = student
 		args['student_lang'] = tuples.LANG().value(student.lang)
 
-		langs = models.Student_lang.objects.filter(student = student)
-		frams = models.Student_fram.objects.filter(student = student)
-		others = models.Student_other.objects.filter(student = student)
+		langs = models.Student_lang.objects.filter(student = student, show = True)
+		frams = models.Student_fram.objects.filter(student = student, show = True)
+		others = models.Student_other.objects.filter(student = student, show = True)
 		skills = False
 
 		if langs or frams or others :
@@ -93,7 +93,24 @@ def edit_profile(request, username = ''):
 			student_form = forms.EditStudent(instance = student)
 		args['form'] = form
 		args['student_form'] = student_form
-		
+
+
+		args['skill_form'] = forms.Skill(lang = forms.Lang(), fram = forms.Fram(), other = forms.Other())
+
+
+		langs = models.Student_lang.objects.filter(student = student)
+		frams = models.Student_fram.objects.filter(student = student)
+		others = models.Student_other.objects.filter(student = student)
+		skills = False
+
+		if langs or frams or others :
+			skills = True
+			args['langs'] = langs
+			args['frams'] = frams
+			args['others'] = others
+
+		args['skills'] = skills
+
 		return render(request, 'account/profile/edit.html', args)
 
 	else:
@@ -108,12 +125,3 @@ def edit_profile(request, username = ''):
 		args['form'] = form
 		
 		return render(request, 'account/profile/edit.html', args)
-
-
-
-
-
-
-
-
-	return HttpResponse('edit_profile')

@@ -56,6 +56,8 @@ class EditUser(forms.ModelForm):
 			'email',
 			)
 
+
+
 class EditStudent(forms.ModelForm):
 
 	lang = forms.ChoiceField(
@@ -74,12 +76,22 @@ class EditStudent(forms.ModelForm):
 			'name': 'github'
 			}))
 
+	group = forms.CharField(
+		label="Group",
+		required = True,
+		max_length=50, 
+		widget=forms.TextInput(attrs={
+			'class': 'form-control',
+			'name': 'group'
+			}))
+
 
 	description = forms.CharField(
 		label = 'Describe yourself',
 		required = False,
 		max_length=2000,
-		widget=forms.Textarea({
+		widget=forms.Textarea(attrs={
+			'class': 'form-control'
 			}))
 
 	class Meta:
@@ -93,12 +105,13 @@ class EditStudent(forms.ModelForm):
 
 
 
-class Add_lang(forms.ModelForm):
+class Lang(forms.ModelForm):
 	class Meta:
 		model = models.Student_lang
 		exclude = (
-			'validate_by', 
-			'validate_at',
+			'student',
+			'validated_by', 
+			'validated_at',
 			)
 
 	def save(self, commit=True):
@@ -113,12 +126,13 @@ class Add_lang(forms.ModelForm):
 
 
 
-class Add_fram(forms.ModelForm):
+class Fram(forms.ModelForm):
 	class Meta:
 		model = models.Student_fram
 		exclude = (
-			'validate_by', 
-			'validate_at',
+			'student',
+			'validated_by', 
+			'validated_at',
 			)
 
 	def save(self, commit=True):
@@ -133,12 +147,13 @@ class Add_fram(forms.ModelForm):
 		return student
 
 
-class Add_other(forms.ModelForm):
+class Other(forms.ModelForm):
 	class Meta:
 		model = models.Student_other
 		exclude = (
-			'validate_by', 
-			'validate_at',
+			'student',
+			'validated_by', 
+			'validated_at',
 			)
 
 	def save(self, commit=True):
@@ -152,3 +167,29 @@ class Add_other(forms.ModelForm):
 		return student
 
 
+class Skill(forms.Form):
+	fram = Fram()
+	lang = Lang()
+	other = Other()
+
+	skill = forms.ChoiceField(
+		choices = tuples.SKILL.SELECT,
+		label = 'Add skill',
+		required = True,
+		widget=forms.Select()
+		)
+
+	class Meta:
+		field = ('skill', )
+
+	def __init__(self, fram, lang, other):
+		self.fram = fram
+		self.lang = lang
+		self.other = other
+
+	def save(self, commit=True):
+
+		if commit:
+			self.fram.save()
+			self.lang.save()
+			self.other.save()

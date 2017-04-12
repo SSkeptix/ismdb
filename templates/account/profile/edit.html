@@ -50,4 +50,67 @@
 
 
 {% block skills %}
+  <div class="card card-block">
+
+  	{% if skills %}
+	<table class = "table table-striped">
+		<thead>
+		<tr>
+            <th>Skill</th>
+            <th>Validate by</th>
+            <th>Added at</th>
+            <th><div align="center">Show</div></th>
+         </tr>
+		</thead>
+
+        <tbody>
+
+		{% for i in langs %}
+          <tr>
+            <td style = "white-space: nowrap">{{ i.skill }}</td>
+            {% if i.validated_by %}
+            <td>{{ i.validated_by.username }}</td>
+            <td>{{ i.validated_at }}</td>
+            {% else %}
+            <td>No</td>
+            <td>---</td>
+            {% endif %}
+            <td><div align="center"><input type="checkbox" /></div></td>
+            <td><div align="right"><button type="button" class="btn btn-sm btn-danger">Delete</button></div></td>
+          </tr>
+        {% endfor %}
+
+        {% for i in frams %}
+          <tr>
+            <td style = "white-space: nowrap">{{ i.skill }}</td>
+            {% if i.validated_by %}
+            <td>{{ i.validated_by.username }}</td>
+            <td>{{ i.validated_at }}</td>
+            {% else %}
+            <td>No</td>
+            <td>---</td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+
+        {% for i in others %}
+          <tr>
+            <td style = "white-space: nowrap">{{ i.skill }}</td>
+            {% if i.validated_by %}
+            <td>{{ i.validated_by.username }}</td>
+            <td>{{ i.validated_at }}</td>
+            {% else %}
+            <td>No</td>
+            <td>---</td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+    {% else %}
+    <p>You don't have any skills</p>
+    {% endif %}
+  </div>
+
 {% endblock %}
