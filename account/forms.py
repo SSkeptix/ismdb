@@ -20,14 +20,19 @@ class Login(AuthenticationForm):
 			}))
 
 
+
+
+
 class Registration(UserCreationForm):
+	_class = 'form-control'
+
 	username = forms.CharField(
 		label="Username",
 		help_text = 'Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.',
 		max_length=50,
 		widget=forms.TextInput(attrs={
 			'placeholder': 'pro100_Hacker',
-			'class': 'form-control',
+			'class': _class,
 			'name': 'username'
 			}))
 
@@ -37,7 +42,7 @@ class Registration(UserCreationForm):
 		max_length=50,
 		widget=forms.TextInput(attrs={
 			'placeholder': 'Петро',
-			'class': 'form-control',
+			'class': _class,
 			'name': 'first_name'
 			}))
 
@@ -47,7 +52,7 @@ class Registration(UserCreationForm):
 		max_length=50,
 		widget=forms.TextInput(attrs={
 			'placeholder': 'Петренко',
-			'class': 'form-control',
+			'class': _class,
 			'name': 'last_name'
 			}))
 
@@ -57,7 +62,7 @@ class Registration(UserCreationForm):
 		max_length=50, 
 		widget=forms.TextInput(attrs={
 			'placeholder': 'pro100hacker@mail.com',
-			'class': 'form-control',
+			'class': _class,
 			'name': 'email'
 			}))
 
@@ -72,7 +77,7 @@ class Registration(UserCreationForm):
 		max_length=50, 
 		widget=forms.PasswordInput(attrs={
 			'placeholder': 'passw@rd',
-			'class': 'form-control',
+			'class': _class,
 			'name': 'password'
 			}))
 
@@ -82,7 +87,7 @@ class Registration(UserCreationForm):
 		max_length=50, 
 		widget=forms.PasswordInput(attrs={
 			'placeholder': 're-enter_passw@rd',
-			'class': 'form-control',
+			'class': _class,
 			'name': 'password'
 			}))
 

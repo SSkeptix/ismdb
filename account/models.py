@@ -46,8 +46,8 @@ class Student(models.Model):
 #					 - other skills
 class Skill(models.Model):
 	value = models.CharField(max_length = 50, unique = True)
-	validate_by = models.ForeignKey(User, on_delete=models.CASCADE, null = True, blank = True)
-	validate_at = models.DateField(auto_now=True)
+	validated_by = models.ForeignKey(User, on_delete=models.CASCADE, null = True, blank = True)
+	validated_at = models.DateField(auto_now=True)
 
 	class Meta:
 		abstract = True
@@ -86,8 +86,8 @@ class Other(Skill):
 # abstract model for student skills
 class Student_skill(models.Model):
 	student = models.ForeignKey(Student, on_delete=models.CASCADE)
-	validate_by = models.ForeignKey(User, on_delete=models.SET_NULL, null = True, blank = True)
-	validate_at = models.DateField(auto_now=True)
+	validated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null = True, blank = True)
+	validated_at = models.DateField(auto_now=True)
 	show = models.BooleanField(default = True)
 
 	class Meta:

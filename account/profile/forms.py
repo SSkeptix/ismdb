@@ -20,10 +20,11 @@ class EditUser(forms.ModelForm):
 
 
 
+
 class EditStudent(forms.ModelForm):
 	lang = forms.ChoiceField(choices = tuples.LANG.SELECT, label = 'English level', required = True, widget=forms.Select())
 	github = forms.CharField(label = 'GitHub', required = False)
-	#description = forms.CharField(label = 'Describe yourself', max_length=2000, widget=forms.TextInput({}))
+	description = forms.CharField(label = 'Describe yourself', max_length=2000, widget=forms.Textarea({}))
 
 	class Meta:
 		model = models.Student

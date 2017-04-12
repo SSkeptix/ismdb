@@ -4,19 +4,150 @@
 Profile
 {% endblock %}
 
-
+{% load static %}
 
 {% block body %}
+<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-3 col-lg-offset-3 toppad" >
+	<div class="panel panel-info">
+		<div class="panel-heading">
+			<h1 class="panel-title">Profile</h1>
+		</div>
+		<div class="panel-body">
+			<div class="row">
+			    <div class="col-md-4 col-lg-4 " align="center" class="img-fluid"> 
+			    	<img class="img-responsive" alt="User Pic" src="{% static 'img/profile.png' %}" /> 
+			    	<center>
+					  	{% if own_profile %}
+					  		<a href="{% url 'account:edit_profile' %}" class="btn btn-primary">Edit profile</a>
+				  		{% endif %}
+					</center>
+			    </div>
+
+			    <div class="col-md-8 col-lg-8"> 
+				    <table class="table table-user-information">
+				        <tbody>
+
+				          <tr>
+				            <td align="right" style = "white-space: nowrap">Username:</td>
+				            <td>{{user.username}}</td>
+				          </tr>
+				          <tr>
+				            <td align="right" style = "white-space: nowrap">First name:</td>
+				            <td>{{ user.last_name }}</td>
+				          </tr>
+				          <tr>
+				            <td align="right" style = "white-space: nowrap">Last name:</td>
+				            <td>{{ user.first_name }}</td>
+				          </tr>
+				          <tr>
+				            <td align="right" style = "white-space: nowrap">Email:</td>
+				            <td>{{ user.email }}</td>
+				          </tr>
 
 
-<div class="container">
+				          {% if student %}
+				          <tr>
+				            <td align="right" style = "white-space: nowrap">Group:</td>
+				            <td>{{ student.group }}</td>
+				          </tr>
+				          <tr>
+				            <td align="right" style = "white-space: nowrap">English Level:</td>
+				            <td>{{ student_lang }}</td>
+				          </tr>
+				          <tr>
+				            <td align="right" style = "white-space: nowrap">GitHub:</td>
+				            <td>{{ student.guthub }}</td>
+				          </tr>
+				          <tr>
+				            <td align="right" style = "white-space: nowrap">Description:</td>
+				            <td>{{ student.description }}</td>
+				          </tr>
+				          {% endif %}
 
-	<p>Username: {{ user.username }}</p>
-	<p>Full Name: {{ user.last_name}} {{ user.first_name }}</p>
-	<p>E-mail: {{ user.email }}</p>
+				        </tbody>
+				    </table>		      
+			    </div>
 
+			</div>
+
+
+
+			{% if student %}
+				<button class="btn btn-primary btn-lg btn-block" type="button" data-toggle="collapse" data-target="#skills" aria-expanded="false" aria-controls="skills">Skills</button>
+
+				<div class="collapse" id="skills">
+				  <div class="card card-block">
+				  	<br/>
+				    {% if skills %}
+
+					<table class = "table table-striped">
+						<thead>
+						<tr>
+				            <th>Skill</th>
+				            <th>Validate by</th>
+				            <th>Added at</th>
+				         </tr>
+						</thead>
+
+				        <tbody>
+
+	    				{% for i in langs %}
+				          <tr>
+				            <td style = "white-space: nowrap">{{ i.skill }}</td>
+				            {% if i.validated_by %}
+				            <td>{{ i.validated_by.username }}</td>
+				            <td>{{ i.validated_at }}</td>
+				            {% else %}
+				            <td>No</td>
+				            <td>---</td>
+				            {% endif %}
+				          </tr>
+				        {% endfor %}
+
+				        {% for i in frams %}
+				          <tr>
+				            <td style = "white-space: nowrap">{{ i.skill }}</td>
+				            {% if i.validated_by %}
+				            <td>{{ i.validated_by.username }}</td>
+				            <td>{{ i.validated_at }}</td>
+				            {% else %}
+				            <td>No</td>
+				            <td>---</td>
+				            {% endif %}
+				          </tr>
+				        {% endfor %}
+
+				        {% for i in others %}
+				          <tr>
+				            <td style = "white-space: nowrap">{{ i.skill }}</td>
+				            {% if i.validated_by %}
+				            <td>{{ i.validated_by.username }}</td>
+				            <td>{{ i.validated_at }}</td>
+				            {% else %}
+				            <td>No</td>
+				            <td>---</td>
+				            {% endif %}
+				          </tr>
+				        {% endfor %}
+
+				        </tbody>
+				    </table>
+
+					{% else %}
+
+				    <p>Empty</p>
+
+				    {% endif %}	
+
+				  </div>
+				</div>
+
+
+			{% endif %}
+		</div>
+	</div>
 </div>
 
 
-
 {% endblock %}
+

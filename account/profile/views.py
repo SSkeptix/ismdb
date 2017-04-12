@@ -22,34 +22,46 @@ def profile(request, username = ''):
 	if (username == '') :
 		return redirect(user_profile)
 
-
+	args = {}
 	user = request.user
 	profile = models.User.objects.get(username = username)
 	if (user.category == tuples.CATEGORY.TEACHER) :
 		is_teacher = True
+		if (username == user.username) :
+			is_teacher = False
 	else:
 		is_teacher = False
-	args = {
-		'is_teacher': is_teacher,
-	}
 
+	if (username == user.username) :
+		own_profile = True
+	else:
+		own_profile = False
+
+	args['validation_permission'] = is_teacher
+	args['own_profile'] = own_profile
+	args['user'] = profile
+	
 	# if user want to view profile of student
 	if (profile.category == tuples.CATEGORY.STUDENT) :
 		student = models.Student.objects.get(user = profile.id)
 
 		args['student'] = student
 		args['student_lang'] = tuples.LANG().value(student.lang)
-		args['langs'] = models.Student_lang.objects.filter(student = student)
-		args['frams'] = models.Student_fram.objects.filter(student = student)
-		args['others'] = models.Student_other.objects.filter(student = student)
 
-		return render(request, 'account/profile/student_profile.html', args)
-	
+		langs = models.Student_lang.objects.filter(student = student)
+		frams = models.Student_fram.objects.filter(student = student)
+		others = models.Student_other.objects.filter(student = student)
+		skills = False
 
-	# if user want to view profile of teacher or employer
-	else:
-		args['user'] = profile
-		return render(request, 'account/profile/profile.html', args)
+		if langs or frams or others :
+			skills = True
+			args['langs'] = langs
+			args['frams'] = frams
+			args['others'] = others
+
+		args['skills'] = skills
+
+	return render(request, 'account/profile/profile.html', args)
 
 
 
