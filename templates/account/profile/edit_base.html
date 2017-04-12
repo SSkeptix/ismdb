@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block head %}
+ISM db Edit Profile
+{% endblock %}
+
+
+
+{% block body %}
+<div class="container">
+    <div class="page-header">
+        <h1>Edit Profile</h1>
+    </div>
+
+    {% if student_form %}
+	<div class="panel-group" id="edit" role="tablist" aria-multiselectable="true">
+	  <div class="panel panel-default">
+	    <div class="panel-heading" role="tab" id="headProfile">
+	      <h4 class="panel-title">
+	        <a role="button" data-toggle="collapse" data-parent="#edit" href="#profile" aria-expanded="true" aria-controls="profile">
+	          Profile
+	        </a>
+	      </h4>
+	    </div>
+	    <div id="profile" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headProfile">
+	      <div class="panel-body">
+	        {% block profile %}
+	        {% endblock %}
+	      </div>
+	    </div>
+	  </div>
+	  
+	  <div class="panel panel-default">
+	    <div class="panel-heading" role="tab" id="headSkills">
+	      <h4 class="panel-title">
+	        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#edit" href="#skills" aria-expanded="false" aria-controls="skills">
+	          Skills
+	        </a>
+	      </h4>
+	    </div>
+	    <div id="skills" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headSkills">
+	      <div class="panel-body">
+	        {% block skills %}
+	        {% endblock %}
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	{% else %}
+		{% block profile_only %}
+	    {% endblock %}
+	{% endif %}
+
+
+</div>
+{% endblock %}

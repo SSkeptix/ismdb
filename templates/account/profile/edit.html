@@ -1,0 +1,53 @@
+{% extends 'account/profile/edit_base.html' %}
+
+
+{% block profile_only %}
+{% block profile %}
+  <form class="form-horizontal" method="post">
+    <br/>
+    {% csrf_token %}
+    
+	    {% for field in form %}
+	    
+	    <div class="form-group">
+	    <label class="col-sm-2 control-label" >{{ field.label_tag }}</label>
+	        <div class="col-sm-10">
+	            {{ field.errors }}
+	            {{ field }}
+	            {% if field.help_text %}
+	            <p class="help-block">{{ field.help_text|safe }}</p>
+	            {% endif %}
+	        </div>
+	    </div>
+
+	    {% endfor %}
+
+    {% if student_form %}
+
+        {% for field in student_form %}
+        
+        <div class="form-group">
+        <label class="col-sm-2 control-label" >{{ field.label_tag }}</label>
+            <div class="col-sm-10">
+                {{ field.errors }}
+                {{ field }}
+                {% if field.help_text %}
+                <p class="help-block">{{ field.help_text|safe }}</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        {% endfor %}
+
+    {% endif %}
+
+    <p class="bs-component">
+        <center><input class="btn btn-success btn-sm" type="submit" value="Save" /></center>
+    </p>
+  </form>
+{% endblock %}
+{% endblock %}
+
+
+{% block skills %}
+{% endblock %}

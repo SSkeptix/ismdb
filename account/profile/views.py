@@ -88,16 +88,13 @@ def edit_profile(request, username = ''):
 				form.save()
 				student_form.save()
 				return redirect('%s%s/' % (reverse('account:profile'), request.user.username))
-
 		else:
 			form = forms.EditUser(instance = request.user)
 			student_form = forms.EditStudent(instance = student)
-
 		args['form'] = form
 		args['student_form'] = student_form
 		
-		return render(request, 'account/profile/edit_student.html', args)
-
+		return render(request, 'account/profile/edit.html', args)
 
 	else:
 
@@ -106,13 +103,11 @@ def edit_profile(request, username = ''):
 			if form.is_valid():
 				form.save()
 				return redirect('%s%s/' % (reverse('account:profile'), request.user.username))
-
 		else:
 			form = forms.EditUser(instance = request.user)
-
 		args['form'] = form
 		
-		return render(request, 'account/profile/edit_user.html', args)
+		return render(request, 'account/profile/edit.html', args)
 
 
 
