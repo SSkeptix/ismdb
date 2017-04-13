@@ -16,4 +16,7 @@ urlpatterns = [
 	url(r'^profile/(?P<username>\w+)/$', profile_views.profile),
 	url(r'^profile//edit/$', profile_views.edit_profile, name = 'edit_profile'),
 	url(r'^profile/(?P<username>\w+)/edit/$', profile_views.edit_profile),
+	url(r'^profile//edit/add_skill/$', profile_views.add_skill, name = 'add_skill'),
+	url(r'^profile/(?P<username>\w+)/edit/add_skill/$', profile_views.add_skill),
+
 ] 

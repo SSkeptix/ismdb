@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block head %}
+Add skill
+{% endblock %}
+
+
+
+{% block body %}
+<div class="container">
+    <div class="page-header">
+        <h1>Add skill</h1>
+    </div>
+
+    <p>There a few types of skills:
+    	<li>Programing languages</li>
+    	<li>Frameworks</li>
+    	<li>Another techniques (database, algorithms and so on)</li>
+    </p>
+    <h3>Choose your skill:</h3>
+
+	<div class="panel-group" id="add_skill" role="tablist" aria-multiselectable="true">
+	  
+	  <div class="panel panel-default">
+	    <div class="panel-heading" role="tab" id="headLang">
+	      <h4 class="panel-title">
+	        <a role="button" data-toggle="collapse" data-parent="#add_skill" href="#lang" aria-expanded="true" aria-controls="lang">
+	          Programing languages
+	        </a>
+	      </h4>
+	    </div>
+	    <div id="lang" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headLang">
+	      <div class="panel-body">
+  			<form class="form-horizontal" method="post">
+  				{% csrf_token %}
+	      		{{ lang_form.as_p }}
+				<input class="btn btn-success btn-sm" type="submit" name="lang" value="Add" />
+	      	</form>
+	      </div>
+	    </div>
+	  </div>
+
+	  <div class="panel panel-default">
+	    <div class="panel-heading" role="tab" id="headFram">
+	      <h4 class="panel-title">
+	        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#add_skill" href="#fram" aria-expanded="false" aria-controls="fram">
+	          Frameworks
+	        </a>
+	      </h4>
+	    </div>
+	    <div id="fram" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headFram">
+	      <div class="panel-body">
+	      	<form class="form-horizontal" method="post">
+  				{% csrf_token %}
+	      		{{ fram_form.as_p }}
+				<input class="btn btn-success btn-sm" type="submit" name="fram" value="Add" />
+	      	</form>
+	      </div>
+	    </div>
+	  </div>
+	  
+	  <div class="panel panel-default">
+	    <div class="panel-heading" role="tab" id="headOther">
+	      <h4 class="panel-title">
+	        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#add_skill" href="#other" aria-expanded="false" aria-controls="other">
+	          Another techniques
+	        </a>
+	      </h4>
+	    </div>
+	    <div id="other" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headOther">
+	      <div class="panel-body">
+	      	<form class="form-horizontal" method="post">
+  				{% csrf_token %}
+	      		{{ other_form.as_p }}
+				<input class="btn btn-success btn-sm" type="submit" name="other" value="Add" />
+	      	</form>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
+
+
+</div>
+{% endblock %}

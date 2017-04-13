@@ -3,7 +3,6 @@ from django.contrib.auth.models import AbstractUser
 from . import tuples
 
 
-
 #custom User
 class User(AbstractUser):
 	is_validate = models.BooleanField(default = False)
@@ -21,7 +20,7 @@ class Student(models.Model):
 	validate_by = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='validate_by', null = True, blank = True)
 	updated = models.DateField(auto_now=True)
 
-	github = models.URLField(null = True, blank = True, unique = True)
+	github = models.URLField(null = True, blank = True)
 	description = models.TextField(max_length = 2000, null = True, blank = True)
 
 

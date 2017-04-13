@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from . import models 
+from . import tuples
 
 class Login(AuthenticationForm):
 	username = forms.CharField(
@@ -90,6 +91,16 @@ class Registration(UserCreationForm):
 			'class': _class,
 			'name': 'password'
 			}))
+
+	category = forms.ChoiceField(
+		choices = tuples.CATEGORY.SELECT,
+		label = 'Category',
+		required = True,
+		widget=forms.Select(attrs={
+			'class': _class,
+			'style': 'width:auto;'
+			}))
+
 
 	class Meta:
 		model = models.User

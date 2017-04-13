@@ -40,17 +40,15 @@ class LANG:
 
 
 class SKILL:
-	CHOOSE = 0
 	LANGUAGE = 1
 	FRAMEWORK = 2
 	OTHER = 3
 
 	SELECT = (
-		(CHOOSE, 'Choose category'),
 		(LANGUAGE, 'Language'), 
 		(FRAMEWORK, 'Framework'), 
 		(OTHER, 'Other'), 
 	)
 
 	def value(self, n):
-		return self.SELECT[n][1]
+		return self.SELECT[n - 1][1]

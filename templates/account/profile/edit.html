@@ -49,17 +49,21 @@
 {% endblock %}
 
 
+
+
 {% block skills %}
-  <div class="card card-block">
+<div class="card card-block">
 
   	{% if skills %}
+    <div class="col-xs-12 col-sm-12"> 
 	<table class = "table table-striped">
 		<thead>
 		<tr>
-            <th>Skill</th>
-            <th>Validate by</th>
-            <th>Added at</th>
-            <th><div align="center">Show</div></th>
+            <th class="col-md-3 col-lg-3">Skill</th>
+            <th class="col-md-3 col-lg-3">Validate by</th>
+            <th class="col-md-3 col-lg-3">Added at</th>
+            <th class="col-md-1 col-lg-1"><div align="center">Show</div></th>
+            <th class="col-md-2 col-lg-2"></th>
          </tr>
 		</thead>
 
@@ -75,8 +79,13 @@
             <td>No</td>
             <td>---</td>
             {% endif %}
-            <td><div align="center"><input type="checkbox" /></div></td>
-            <td><div align="right"><button type="button" class="btn btn-sm btn-danger">Delete</button></div></td>
+            <td align="center"><input type="checkbox" class="custom-control-input"></td>
+            <td align="right">
+                <div class="btn-group" role="group">
+                  <button type="button" class="btn btn-sm btn-danger" id="">Delete</button>
+                  <button type="button" class="btn btn-sm btn-success">Save changes</button>
+                </div>
+            </td>
           </tr>
         {% endfor %}
 
@@ -111,6 +120,9 @@
     {% else %}
     <p>You don't have any skills</p>
     {% endif %}
-  </div>
+    </div>
 
+    <a href="{% url 'account:add_skill' %}" class="btn btn-success btn-primary btn-lg active" role="button">Add skill</a>
+
+</div>
 {% endblock %}

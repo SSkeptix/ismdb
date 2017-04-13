@@ -59,20 +59,24 @@ class EditUser(forms.ModelForm):
 
 
 class EditStudent(forms.ModelForm):
+	_class = 'form-control'
 
 	lang = forms.ChoiceField(
 		choices = tuples.LANG.SELECT,
 		label = 'English level',
 		required = True,
-		widget=forms.Select()
-		)
+		widget=forms.Select(attrs={
+			'class': _class,
+			'style': 'width:auto;'
+			}))
+
 
 	github = forms.CharField(
 		label="GitHub",
 		required = False,
 		max_length=200, 
 		widget=forms.TextInput(attrs={
-			'class': 'form-control',
+			'class': _class,
 			'name': 'github'
 			}))
 
@@ -81,7 +85,7 @@ class EditStudent(forms.ModelForm):
 		required = True,
 		max_length=50, 
 		widget=forms.TextInput(attrs={
-			'class': 'form-control',
+			'class': _class,
 			'name': 'group'
 			}))
 
@@ -91,7 +95,7 @@ class EditStudent(forms.ModelForm):
 		required = False,
 		max_length=2000,
 		widget=forms.Textarea(attrs={
-			'class': 'form-control'
+			'class': _class,
 			}))
 
 	class Meta:
@@ -104,8 +108,37 @@ class EditStudent(forms.ModelForm):
 			)
 
 
+# base form for all type of skill
+class Skill(forms.ModelForm):
+	student = None
 
-class Lang(forms.ModelForm):
+	def __init__(self, *args, **kwargs):
+		self.student = kwargs.pop('student', None)
+		super(Skill, self).__init__(*args, **kwargs)
+
+	def is_valid(self):
+		valid = super(Skill, self).is_valid()
+		if not valid:
+			return valid
+		if models.Student_lang.objects.filter(student = self.student, skill = self.cleaned_data['skill']).count():
+			self._errors['skill_exists'] = 'Skill is already exist'
+			return False
+		return True
+
+	def save(self, commit=True):
+		instance = super(Skill, self).save(commit=False)
+
+		instance.skill = self.cleaned_data['skill']
+		instance.show = self.cleaned_data['show']
+		instance.student = self.student
+
+		if commit:
+			instance.save()
+		return instance
+
+
+
+class Lang(Skill):
 	class Meta:
 		model = models.Student_lang
 		exclude = (
@@ -114,19 +147,9 @@ class Lang(forms.ModelForm):
 			'validated_at',
 			)
 
-	def save(self, commit=True):
-		student = super(Add_lang, self).save(commit=False)
-
-		student.skill = self.cleaned_data['skill']
-
-		if commit:
-			student.save()
-
-		return student
 
 
-
-class Fram(forms.ModelForm):
+class Fram(Skill):
 	class Meta:
 		model = models.Student_fram
 		exclude = (
@@ -135,19 +158,8 @@ class Fram(forms.ModelForm):
 			'validated_at',
 			)
 
-	def save(self, commit=True):
-		student = super(Add_fram, self).save(commit=False)
 
-		student.lang = self.cleaned_data['lang']
-		student.skill = self.cleaned_data['skill']
-
-		if commit:
-			student.save()
-
-		return student
-
-
-class Other(forms.ModelForm):
+class Other(Skill):
 	class Meta:
 		model = models.Student_other
 		exclude = (
@@ -155,41 +167,3 @@ class Other(forms.ModelForm):
 			'validated_by', 
 			'validated_at',
 			)
-
-	def save(self, commit=True):
-		student = super(Add_other, self).save(commit=False)
-
-		student.skill = self.cleaned_data['skill']
-
-		if commit:
-			student.save()
-
-		return student
-
-
-class Skill(forms.Form):
-	fram = Fram()
-	lang = Lang()
-	other = Other()
-
-	skill = forms.ChoiceField(
-		choices = tuples.SKILL.SELECT,
-		label = 'Add skill',
-		required = True,
-		widget=forms.Select()
-		)
-
-	class Meta:
-		field = ('skill', )
-
-	def __init__(self, fram, lang, other):
-		self.fram = fram
-		self.lang = lang
-		self.other = other
-
-	def save(self, commit=True):
-
-		if commit:
-			self.fram.save()
-			self.lang.save()
-			self.other.save()
