@@ -13,6 +13,7 @@ urlpatterns = [
 	url(r'^register/$', views.register, name = 'register'),
 
 	url(r'^profile/$', profile_views.profile, name = 'profile'),
+	url(r'^profile/add/$', profile_views.add_profile, name = 'add_profile'),
 	url(r'^profile/(?P<username>\w+)/$', profile_views.profile),
 	url(r'^profile//edit/$', profile_views.edit_profile, name = 'edit_profile'),
 	url(r'^profile/(?P<username>\w+)/edit/$', profile_views.edit_profile),

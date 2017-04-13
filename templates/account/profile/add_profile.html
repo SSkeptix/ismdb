@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block head %}
+ISM db Add Profile
+{% endblock %}
+
+
+
+{% block body %}
+<div class="container">
+    <div class="page-header">
+        <h1>Add Profile: {{ user.username }}</h1>
+    </div>
+
+
+    <form class="form-horizontal" method="post">
+        <br/>
+        {% csrf_token %}
+        
+        {% for field in form %}
+        
+        <div class="form-group">
+        <label class="col-sm-2 control-label" >{{ field.label_tag }}</label>
+            <div class="col-sm-10">
+                {{ field.errors }}
+                {{ field }}
+                {% if field.help_text %}
+                <p class="help-block">{{ field.help_text|safe }}</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        {% endfor %}
+
+        <p class="bs-component">
+            <center><input class="btn btn-success btn-sm" type="submit" value="Save" /></center>
+        </p>
+    </form>
+</div>
+{% endblock %}

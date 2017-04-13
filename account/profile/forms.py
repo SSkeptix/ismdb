@@ -108,6 +108,42 @@ class EditStudent(forms.ModelForm):
 			)
 
 
+
+class AddStudent(EditStudent):
+	user = None
+
+	class Meta:
+		model = models.Student
+		fields = (
+			'lang',
+			'group',
+			'github',
+			'description',
+			)	
+
+	def __init__(self, *args, **kwargs):
+		self.user = kwargs.pop('user', None)
+		super(AddStudent, self).__init__(*args, **kwargs)
+
+	def is_valid(self):
+		valid = super(AddStudent, self).is_valid()
+		if not valid:
+			return valid
+		if models.Student.objects.filter(user = self.user).count():
+			self._errors['profile_exists'] = 'Profile is already exist. Close this page.'
+			return False
+		return True
+
+	def save(self, commit=True):
+		instance = super(AddStudent, self).save(commit=False)
+		instance.user = self.user
+
+		if commit:
+			instance.save()
+		return instance
+
+
+
 # base form for all type of skill
 class Skill(forms.ModelForm):
 	student = None
@@ -127,15 +163,11 @@ class Skill(forms.ModelForm):
 
 	def save(self, commit=True):
 		instance = super(Skill, self).save(commit=False)
-
-		instance.skill = self.cleaned_data['skill']
-		instance.show = self.cleaned_data['show']
 		instance.student = self.student
 
 		if commit:
 			instance.save()
 		return instance
-
 
 
 class Lang(Skill):
@@ -146,7 +178,6 @@ class Lang(Skill):
 			'validated_by', 
 			'validated_at',
 			)
-
 
 
 class Fram(Skill):

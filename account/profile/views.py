@@ -65,6 +65,27 @@ def profile(request, username = ''):
 
 
 
+@login_required(login_url="account:login")
+def add_profile(request):
+
+	user_edit_profile = ( '%s%s/edit/' % (reverse('account:profile'), request.user.username) )
+	args = {}
+
+	# add student profile
+	if request.method == 'POST' :
+		form = forms.AddStudent(request.POST, user=request.user)
+		if form.is_valid():
+			form.save()
+			return redirect(user_edit_profile)
+	else:
+		form = forms.AddStudent()
+
+
+	args['form'] = form
+
+	return render(request, 'account/profile/add_profile.html', args)
+
+
 
 # Edit own profile
 @login_required(login_url="account:login")
@@ -81,38 +102,29 @@ def edit_profile(request, username = ''):
 
 	if (request.user.category == tuples.CATEGORY.STUDENT) :
 
-	# edit student profile
+	#if profile don't exist create profile
 		if models.Student.objects.filter(user = request.user.id).count():
 			student = models.Student.objects.get(user = request.user.id)
 		else:
-			student = False
+			return redirect('account:add_profile')
 
+	# edit student profile
 		if request.method == 'POST' :
 			form = forms.EditUser(request.POST, instance = request.user)
-
-			if student:
-				student_form = forms.EditStudent(request.POST, instance = student)
-			else:
-				student_form = forms.EditStudent(request.POST)
-
+			student_form = forms.EditStudent(request.POST, instance = student)
 			if form.is_valid() and student_form.is_valid():
 				form.save()
 				student_form.save()
 				return redirect('%s%s/' % (reverse('account:profile'), request.user.username))
 		else:
 			form = forms.EditUser(instance = request.user)
-
-			if student:
-				student_form = forms.EditStudent(request.POST, instance = student)
-			else:
-				student_form = forms.EditStudent(request.POST)
+			student_form = forms.EditStudent(instance = student)
 
 		args['form'] = form
 		args['student_form'] = student_form
-		# --end-- edit student profile
 
 
-		# show skills
+	# show skills
 		langs = models.Student_lang.objects.filter(student = student)
 		frams = models.Student_fram.objects.filter(student = student)
 		others = models.Student_other.objects.filter(student = student)
@@ -125,7 +137,7 @@ def edit_profile(request, username = ''):
 			args['others'] = others
 
 		args['skills'] = skills
-		# --end-- show skills
+
 
 		return render(request, 'account/profile/edit.html', args)
 
@@ -162,7 +174,7 @@ def add_skill(request, username = ''):
 		lang_form = forms.Lang(request.POST, student=student)
 		if lang_form.is_valid():
 			lang_form.save()
-			return HttpResponse('succesful')
+			return redirect(user_add_skill)
 	else:
 		lang_form = forms.Lang()
 	args['lang_form'] = lang_form	
@@ -172,7 +184,7 @@ def add_skill(request, username = ''):
 		fram_form = forms.Fram(request.POST, student=student)
 		if fram_form.is_valid():
 			fram_form.save()
-			return HttpResponse('succesful')
+			return redirect(user_add_skill)
 	else:
 		fram_form = forms.Fram()
 	args['fram_form'] = fram_form
@@ -182,13 +194,10 @@ def add_skill(request, username = ''):
 		other_form = forms.Lang(request.POST, student=student)
 		if other_form.is_valid():
 			other_form.save()
-			return HttpResponse('succesful')
+			return redirect(user_add_skill)
 	else:
 		other_form = forms.Lang()
 	args['other_form'] = other_form
-
-
-
 
 
 	return render(request, 'account/profile/add_skill.html', args)
