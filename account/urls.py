@@ -1,4 +1,4 @@
-from django.conf.urls import url, include
+from django.conf.urls import url
 from . import views
 from .profile import views as profile_views
 from .forms import Login as LoginForm

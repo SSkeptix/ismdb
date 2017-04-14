@@ -91,33 +91,7 @@ Profile
 
 				        <tbody>
 
-	    				{% for i in langs %}
-				          <tr>
-				            <td style = "white-space: nowrap">{{ i.skill }}</td>
-				            {% if i.validated_by %}
-				            <td>{{ i.validated_by.username }}</td>
-				            <td>{{ i.validated_at }}</td>
-				            {% else %}
-				            <td>No</td>
-				            <td>---</td>
-				            {% endif %}
-				          </tr>
-				        {% endfor %}
-
-				        {% for i in frams %}
-				          <tr>
-				            <td style = "white-space: nowrap">{{ i.skill }}</td>
-				            {% if i.validated_by %}
-				            <td>{{ i.validated_by.username }}</td>
-				            <td>{{ i.validated_at }}</td>
-				            {% else %}
-				            <td>No</td>
-				            <td>---</td>
-				            {% endif %}
-				          </tr>
-				        {% endfor %}
-
-				        {% for i in others %}
+	    				{% for i in skills %}
 				          <tr>
 				            <td style = "white-space: nowrap">{{ i.skill }}</td>
 				            {% if i.validated_by %}

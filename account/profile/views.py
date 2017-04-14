@@ -5,6 +5,8 @@ from . import forms
 from account import tuples
 from account import models
 
+from itertools import chain
+
 from django.http import HttpResponse
 
 
@@ -42,22 +44,24 @@ def profile(request, username = ''):
 	args['user'] = profile
 	
 	# if user want to view profile of student
-	if (profile.category == tuples.CATEGORY.STUDENT) and models.Student.objects.filter(user = profile.id).count() :
+	if (profile.category == tuples.CATEGORY.STUDENT) and models.Student.objects.filter(user = profile.id).exists() :
 		student = models.Student.objects.get(user = profile.id)
 
 		args['student'] = student
 		args['student_lang'] = tuples.LANG().value(student.lang)
 
-		langs = models.Student_lang.objects.filter(student = student, show = True)
-		frams = models.Student_fram.objects.filter(student = student, show = True)
-		others = models.Student_other.objects.filter(student = student, show = True)
-		skills = False
+	# show skills
+		langs = models.Student_lang.objects.filter(student = student)
+		frams = models.Student_fram.objects.filter(student = student)
+		others = models.Student_other.objects.filter(student = student)
 
 		if langs or frams or others :
-			skills = True
-			args['langs'] = langs
-			args['frams'] = frams
-			args['others'] = others
+			skills = sorted(
+				chain(langs, frams, others),
+				key=lambda instance: instance.skill.__str__()
+				)
+		else:
+			skills = False
 
 		args['skills'] = skills
 
@@ -103,7 +107,7 @@ def edit_profile(request, username = ''):
 	if (request.user.category == tuples.CATEGORY.STUDENT) :
 
 	#if profile don't exist create profile
-		if models.Student.objects.filter(user = request.user.id).count():
+		if models.Student.objects.filter(user = request.user.id).exists() :
 			student = models.Student.objects.get(user = request.user.id)
 		else:
 			return redirect('account:add_profile')
@@ -128,13 +132,14 @@ def edit_profile(request, username = ''):
 		langs = models.Student_lang.objects.filter(student = student)
 		frams = models.Student_fram.objects.filter(student = student)
 		others = models.Student_other.objects.filter(student = student)
-		skills = False
 
 		if langs or frams or others :
-			skills = True
-			args['langs'] = langs
-			args['frams'] = frams
-			args['others'] = others
+			skills = sorted(
+				chain(langs, frams, others),
+				key=lambda instance: instance.skill.__str__()
+				)
+		else:
+			skills = False
 
 		args['skills'] = skills
 
