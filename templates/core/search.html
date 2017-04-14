@@ -16,42 +16,38 @@ Search
 			<table>
 				<thead>
 					<tr>
-			            <th class="col-xs-4 col-sm-4"><div align="center">Language</div></th>
-			            <th class="col-xs-4 col-sm-4"><div align="center">Framework</div></th>
-			            <th class="col-xs-4 col-sm-4"><div align="center">Other</div></th>
+			            <th class="col-xs-4 col-sm-4"></th>
+			            <th class="col-xs-4 col-sm-4"></th>
+			            <th class="col-xs-4 col-sm-4"></th>
 			        </tr>
 				</thead>
 		        <tbody>
 		        	<tr>
-			        	<td align="center"></td>
-			        	<td align="center"></td>
-			        	<td align="center"></td>
+			        	<td align="center">Language</td>
+			        	<td align="center">{{ add_lang.value }}</td>
+			        	<td align="center"><input class="btn btn-success" type="submit" value="Add" name="add_lang"/></td>
 			        </tr>
 		        </tbody>
-		        <tfoot>
-		        	<tr>
-			        	<td align="center"><input class="btn btn-success" type="submit" value="Add" name="add_lang"/></td>
-			        	<td align="center"><input class="btn btn-success" type="submit" value="Add" name="add_fram"/></td>
-			        	<td align="center"><input class="btn btn-success" type="submit" value="Add" name="add_other"/></td>
-			        </tr>	        	
-		        </tfoot>
 		    </table>
 		</div>
 	</form>
 
 
-
-
-	<div class="col-xs-12 col-sm-12" >
+	<div class="col-xs-12 col-sm-12">
 		<table class = "table table-striped">
 			<thead>
 				<tr>
-		            <th>Student</th>
-		            <th>Skills</th>
+		            <th class="col-xs-3 col-sm-3">Student</th>
+		            <th class="col-xs-9 col-sm-9">Skills</th>
 		        </tr>
 			</thead>
 	        <tbody>
-
+    			{% for i in skills %}
+		          <tr>
+		            <td>{{ i.student }}</td>
+		            <td>{{ i.skill }}</td>
+		          </tr>
+		        {% endfor %}
 	        </tbody>
 	    </table>
 

@@ -13,22 +13,37 @@ class User(AbstractUser):
 
 
 # extra field for user - Student
-class Student(models.Model):
+class StudentBase(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key = True)
 	lang = models.IntegerField(choices=tuples.LANG.SELECT, default=tuples.LANG.A1)
-	group = models.CharField(max_length = 50, null = True)
-	validate_by = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='validate_by', null = True, blank = True)
-	updated = models.DateField(auto_now=True)
 
-	github = models.URLField(null = True, blank = True)
-	description = models.TextField(max_length = 2000, null = True, blank = True)
 
+	class Meta:
+		abstract = True
 
 	def get_username(self):
 		return self.user.get_username()
 
 	def __str__(self):
 		return str(self.get_username())
+
+
+
+class StudentProfile(StudentBase):
+	group = models.CharField(max_length = 50, null = True)
+	validate_by = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='validate_by', null = True, blank = True)
+	updated = models.DateField(auto_now=True)
+	github = models.URLField(null = True, blank = True)
+	description = models.TextField(max_length = 2000, null = True, blank = True)
+
+	class Meta:
+		managed = True
+		db_table = 'account_student'
+
+class Student(StudentBase):
+	class Meta:
+		managed = False
+		db_table = 'account_student'
 
 
 
@@ -43,7 +58,7 @@ class Student(models.Model):
 #					 - programing languages
 #					 - programing fraimworks
 #					 - other skills
-class Skill(models.Model):
+class SkillBase(models.Model):
 	value = models.CharField(max_length = 50, unique = True)
 	validated_by = models.ForeignKey(User, on_delete=models.CASCADE, null = True, blank = True)
 	validated_at = models.DateField(auto_now=True)
@@ -61,11 +76,11 @@ class Skill(models.Model):
 
 
 #programing languages model
-class Language(Skill):
+class Language(SkillBase):
 	pass
 
 #programing fraimworks model
-class Framework(Skill):
+class Framework(SkillBase):
 	lang = models.ForeignKey(Language, on_delete=models.CASCADE)
 
 	def get_lang(self):
@@ -75,7 +90,7 @@ class Framework(Skill):
 		return str("%s - %s" % (self.get_lang(), self.get_value()))
 
 #other skills model
-class Other(Skill):
+class Other(SkillBase):
 	pass
 
 

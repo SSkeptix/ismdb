@@ -7,9 +7,6 @@ from account import models
 
 from itertools import chain
 
-from django.http import HttpResponse
-
-
 
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # !!!!!!! need add teacher validation featers
@@ -45,15 +42,15 @@ def profile(request, username = ''):
 	
 	# if user want to view profile of student
 	if (profile.category == tuples.CATEGORY.STUDENT) and models.Student.objects.filter(user = profile.id).exists() :
-		student = models.Student.objects.get(user = profile.id)
+		student_profile = models.StudentProfile.objects.get(user = profile.id)
 
-		args['student'] = student
-		args['student_lang'] = tuples.LANG().value(student.lang)
+		args['student'] = student_profile
+		args['student_lang'] = tuples.LANG().value(student_profile.lang)
 
 	# show skills
-		langs = models.Student_lang.objects.filter(student = student)
-		frams = models.Student_fram.objects.filter(student = student)
-		others = models.Student_other.objects.filter(student = student)
+		langs = models.Student_lang.objects.filter(student = student_profile.user.id, show=True)
+		frams = models.Student_fram.objects.filter(student = student_profile.user.id, show=True)
+		others = models.Student_other.objects.filter(student = student_profile.user.id, show=True)
 
 		if langs or frams or others :
 			skills = sorted(
@@ -66,6 +63,7 @@ def profile(request, username = ''):
 		args['skills'] = skills
 
 	return render(request, 'account/profile/profile.html', args)
+
 
 
 
@@ -91,6 +89,7 @@ def add_profile(request):
 
 
 
+
 # Edit own profile
 @login_required(login_url="account:login")
 def edit_profile(request, username = ''):
@@ -103,12 +102,11 @@ def edit_profile(request, username = ''):
 
 	args = {}
 
-
 	if (request.user.category == tuples.CATEGORY.STUDENT) :
 
 	#if profile don't exist create profile
-		if models.Student.objects.filter(user = request.user.id).exists() :
-			student = models.Student.objects.get(user = request.user.id)
+		if models.StudentProfile.objects.filter(user = request.user.id).exists() :
+			student = models.StudentProfile.objects.get(user = request.user.id)
 		else:
 			return redirect('account:add_profile')
 
@@ -129,9 +127,9 @@ def edit_profile(request, username = ''):
 
 
 	# show skills
-		langs = models.Student_lang.objects.filter(student = student)
-		frams = models.Student_fram.objects.filter(student = student)
-		others = models.Student_other.objects.filter(student = student)
+		langs = models.Student_lang.objects.filter(student = student.user.id)
+		frams = models.Student_fram.objects.filter(student = student.user.id)
+		others = models.Student_other.objects.filter(student = student.user.id)
 
 		if langs or frams or others :
 			skills = sorted(
@@ -158,7 +156,6 @@ def edit_profile(request, username = ''):
 		args['form'] = form
 		
 		return render(request, 'account/profile/edit.html', args)
-
 
 
 
@@ -206,6 +203,3 @@ def add_skill(request, username = ''):
 
 
 	return render(request, 'account/profile/add_skill.html', args)
-
-
-

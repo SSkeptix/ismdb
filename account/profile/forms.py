@@ -71,7 +71,7 @@ class EditStudent(forms.ModelForm):
 			}))
 
 
-	github = forms.CharField(
+	github = forms.URLField(
 		label="GitHub",
 		required = False,
 		max_length=200, 
@@ -99,7 +99,7 @@ class EditStudent(forms.ModelForm):
 			}))
 
 	class Meta:
-		model = models.Student
+		model = models.StudentProfile
 		fields = (
 			'lang',
 			'group',
@@ -113,7 +113,7 @@ class AddStudent(EditStudent):
 	user = None
 
 	class Meta:
-		model = models.Student
+		model = models.StudentProfile
 		fields = (
 			'lang',
 			'group',
@@ -129,7 +129,7 @@ class AddStudent(EditStudent):
 		valid = super(AddStudent, self).is_valid()
 		if not valid:
 			return valid
-		if models.Student.objects.filter(user = self.user).count():
+		if models.Student.objects.filter(user = self.user).exists():
 			self._errors['profile_exists'] = 'Profile is already exist. Close this page.'
 			return False
 		return True
@@ -152,18 +152,13 @@ class Skill(forms.ModelForm):
 		self.student = kwargs.pop('student', None)
 		super(Skill, self).__init__(*args, **kwargs)
 
-	def is_valid(self):
-		valid = super(Skill, self).is_valid()
-		if not valid:
-			return valid
-		if models.Student_lang.objects.filter(student = self.student, skill = self.cleaned_data['skill']).count():
-			self._errors['skill_exists'] = 'Skill is already exist'
-			return False
-		return True
-
 	def save(self, commit=True):
 		instance = super(Skill, self).save(commit=False)
-		instance.student = self.student
+		if self.student == models.Student:
+			instance.student = self.student
+		else:
+			instance.student = models.Student.objects.get(user__id = self.student.user.id)
+
 
 		if commit:
 			instance.save()
@@ -178,6 +173,15 @@ class Lang(Skill):
 			'validated_by', 
 			'validated_at',
 			)
+
+	def is_valid(self):
+		valid = super(Skill, self).is_valid()
+		if not valid:
+			return valid
+		if models.Student_lang.objects.filter(student = self.student.user.id, skill = self.cleaned_data['skill']).count():
+			self._errors['skill_exists'] = 'Skill is already exist'
+			return False
+		return True
 
 
 class Fram(Skill):
