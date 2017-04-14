@@ -175,7 +175,7 @@ class Lang(Skill):
 			)
 
 	def is_valid(self):
-		valid = super(Skill, self).is_valid()
+		valid = super(Lang, self).is_valid()
 		if not valid:
 			return valid
 		if models.Student_lang.objects.filter(student = self.student.user.id, skill = self.cleaned_data['skill']).count():
@@ -193,6 +193,14 @@ class Fram(Skill):
 			'validated_at',
 			)
 
+	def is_valid(self):
+		valid = super(Fram, self).is_valid()
+		if not valid:
+			return valid
+		if models.Student_fram.objects.filter(student = self.student.user.id, skill = self.cleaned_data['skill']).count():
+			self._errors['skill_exists'] = 'Skill is already exist'
+			return False
+		return True
 
 class Other(Skill):
 	class Meta:
@@ -202,3 +210,12 @@ class Other(Skill):
 			'validated_by', 
 			'validated_at',
 			)
+
+	def is_valid(self):
+		valid = super(Other, self).is_valid()
+		if not valid:
+			return valid
+		if models.Student_other.objects.filter(student = self.student.user.id, skill = self.cleaned_data['skill']).count():
+			self._errors['skill_exists'] = 'Skill is already exist'
+			return False
+		return True
