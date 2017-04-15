@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect
-from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
 from . import forms
 from account import tuples
 from account import models
 
 from itertools import chain
+
+from django.http import HttpResponse
 
 
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -14,12 +16,9 @@ from itertools import chain
 # Show own or someone else's profile
 @login_required(login_url="account:login")
 def profile(request, username = ''):
+	if username == '':
+		return redirect('account:profile', username=request.user.username)
 
-	# if url = /account/profile/
-	# redirect to show own profile = /account/profile/username/
-	user_profile = ( '%s%s/' % (reverse('account:profile'), request.user.username) )
-	if (username == '') :
-		return redirect(user_profile)
 
 	args = {}
 	user = request.user
@@ -48,9 +47,9 @@ def profile(request, username = ''):
 		args['student_lang'] = tuples.LANG().value(student_profile.lang)
 
 	# show skills
-		langs = models.Student_lang.objects.filter(student = student_profile.user.id, show=True)
-		frams = models.Student_fram.objects.filter(student = student_profile.user.id, show=True)
-		others = models.Student_other.objects.filter(student = student_profile.user.id, show=True)
+		langs = models.Student_lang.objects.filter(student = student_profile.user.id)
+		frams = models.Student_fram.objects.filter(student = student_profile.user.id)
+		others = models.Student_other.objects.filter(student = student_profile.user.id)
 
 		if langs or frams or others :
 			skills = sorted(
@@ -70,7 +69,6 @@ def profile(request, username = ''):
 @login_required(login_url="account:login")
 def add_profile(request):
 
-	user_edit_profile = ( '%s%s/edit/' % (reverse('account:profile'), request.user.username) )
 	args = {}
 
 	# add student profile
@@ -78,7 +76,7 @@ def add_profile(request):
 		form = forms.AddStudent(request.POST, user=request.user)
 		if form.is_valid():
 			form.save()
-			return redirect(user_edit_profile)
+			return redirect('account:profile', username=request.user.username)
 	else:
 		form = forms.AddStudent()
 
@@ -93,13 +91,6 @@ def add_profile(request):
 # Edit own profile
 @login_required(login_url="account:login")
 def edit_profile(request, username = ''):
-
-	# redirect to edit own profile = /account/profile/username/edit/
-	user_edit_profile = ( '%s%s/edit/' % (reverse('account:profile'), request.user.username) )
-	if (username == '') or (username != request.user.username) :
-		return redirect(user_edit_profile)
-
-
 	args = {}
 
 	if (request.user.category == tuples.CATEGORY.STUDENT) :
@@ -117,7 +108,7 @@ def edit_profile(request, username = ''):
 			if form.is_valid() and student_form.is_valid():
 				form.save()
 				student_form.save()
-				return redirect('%s%s/' % (reverse('account:profile'), request.user.username))
+				return redirect('account:profile', username=request.user.username)
 		else:
 			form = forms.EditUser(instance = request.user)
 			student_form = forms.EditStudent(instance = student)
@@ -150,7 +141,7 @@ def edit_profile(request, username = ''):
 			form = forms.EditUser(request.POST, instance = request.user)
 			if form.is_valid():
 				form.save()
-				return redirect('%s%s/' % (reverse('account:profile'), request.user.username))
+				return redirect('account:profile', username=request.user.username)
 		else:
 			form = forms.EditUser(instance = request.user)
 		args['form'] = form
@@ -162,12 +153,7 @@ def edit_profile(request, username = ''):
 
 @login_required(login_url="account:login")
 def add_skill(request, username = ''):
-
-	# redirect to edit own profile = /account/profile/username/edit/
-	user_add_skill = ( '%s%s/edit/add_skill/' % (reverse('account:profile'), request.user.username) )
-	if (username == '') or (username != request.user.username) :
-		return redirect(user_add_skill)
-
+	this_url = reverse('account:add_skill', kwargs={'username': request.user.username})
 	args = {}
 
 	student = models.Student.objects.get(user = request.user.id)
@@ -176,7 +162,7 @@ def add_skill(request, username = ''):
 		lang_form = forms.Lang(request.POST, student=student)
 		if lang_form.is_valid():
 			lang_form.save()
-			return redirect(user_add_skill)
+			return redirect(this_url)
 	else:
 		lang_form = forms.Lang()
 	args['lang_form'] = lang_form	
@@ -186,19 +172,19 @@ def add_skill(request, username = ''):
 		fram_form = forms.Fram(request.POST, student=student)
 		if fram_form.is_valid():
 			fram_form.save()
-			return redirect(user_add_skill)
+			return redirect(this_url)
 	else:
 		fram_form = forms.Fram()
 	args['fram_form'] = fram_form
 
 
 	if request.method == 'POST' and 'other' in request.POST:
-		other_form = forms.Lang(request.POST, student=student)
+		other_form = forms.Other(request.POST, student=student)
 		if other_form.is_valid():
 			other_form.save()
-			return redirect(user_add_skill)
+			return redirect(this_url)
 	else:
-		other_form = forms.Lang()
+		other_form = forms.Other()
 	args['other_form'] = other_form
 
 

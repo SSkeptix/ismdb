@@ -18,7 +18,7 @@ Profile
 			    	<img class="img-responsive" alt="User Pic" src="{% static 'img/profile.png' %}" /> 
 			    	<center>
 					  	{% if own_profile %}
-					  		<a href="{% url 'account:edit_profile' %}" class="btn btn-primary">Edit profile</a>
+					  		<a href="{% url 'account:edit_profile' username=user.username %}" class="btn btn-primary">Edit profile</a>
 				  		{% endif %}
 					</center>
 			    </div>

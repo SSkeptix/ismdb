@@ -102,7 +102,6 @@ class Student_skill(models.Model):
 	student = models.ForeignKey(Student, on_delete=models.CASCADE)
 	validated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null = True, blank = True)
 	validated_at = models.DateField(auto_now=True)
-	show = models.BooleanField(default = True)
 
 	class Meta:
 		abstract = True

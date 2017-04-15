@@ -11,8 +11,8 @@ class CATEGORY:
 		(EMPLOYER, 'Employer'),
 	)
 
-	def value(self, n):
-		return self.SELECT[n - 1][1]
+	def value(self, *args):
+		return self.SELECT[args[0] - 1][1]
 
 
 
@@ -34,9 +34,8 @@ class LANG:
 		(C2, 'C2 - Proficient'),
 	)
 
-	def value(self, n):
-		return self.SELECT[n - 1][1]
-
+	def value(self, *args):
+		return self.SELECT[args[0] - 1][1]
 
 
 class SKILL:
@@ -50,5 +49,5 @@ class SKILL:
 		(OTHER, 'Other'), 
 	)
 
-	def value(self, n):
-		return self.SELECT[n - 1][1]
+	def value(self, *args):
+		return self.SELECT[args[0] - 1][1]

@@ -126,3 +126,12 @@ class Registration(UserCreationForm):
 
 		return user
 
+	
+	def is_valid(self):
+		valid = super(Registration, self).is_valid()
+		if not valid:
+			return valid
+		if models.User.objects.filter(email = self.cleaned_data['email']).exists():
+			self._errors['email_exists'] = 'Email is already exist'
+			return False
+		return True

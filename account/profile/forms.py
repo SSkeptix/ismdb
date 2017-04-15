@@ -159,7 +159,6 @@ class Skill(forms.ModelForm):
 		else:
 			instance.student = models.Student.objects.get(user__id = self.student.user.id)
 
-
 		if commit:
 			instance.save()
 		return instance

@@ -8,7 +8,18 @@ Search
 
 <div class="container">
     <div class="page-header">
-        <h1>Search</h1>
+        <h1>Search {{ page }}</h1>
+
+        <!--  debuging information  -->
+        {% if langs %}
+        {{ langs }} <br/>
+        {% endif %}
+
+        {% if this_page %}
+        {{ this_page }}
+        {% endif %}
+        <!--  debuging information  -->
+
     </div>
 
     <form class="form-horizontal" method="post">
@@ -23,9 +34,12 @@ Search
 				</thead>
 		        <tbody>
 		        	<tr>
+		        	<form method="post">
+		        		{% csrf_token %}
 			        	<td align="center">Language</td>
-			        	<td align="center">{{ add_lang.value }}</td>
-			        	<td align="center"><input class="btn btn-success" type="submit" value="Add" name="add_lang"/></td>
+			        	<td align="center">{{ lang_form.value }}</td>
+			        	<td align="center"><input class="btn btn-success" type="submit" name="add_lang"/></td>
+			        </form>
 			        </tr>
 		        </tbody>
 		    </table>
@@ -38,14 +52,20 @@ Search
 			<thead>
 				<tr>
 		            <th class="col-xs-3 col-sm-3">Student</th>
-		            <th class="col-xs-9 col-sm-9">Skills</th>
+		            <th class="col-xs-3 col-sm-3">English</th>
+		            <th class="col-xs-6 col-sm-6">Skills</th>
 		        </tr>
 			</thead>
 	        <tbody>
-    			{% for i in skills %}
+    			{% for i in students %}
 		          <tr>
-		            <td>{{ i.student }}</td>
-		            <td>{{ i.skill }}</td>
+		            <td>{{ i.name }}</td>
+		            <td>{{ i.lang }}</td>
+		            <td>
+		            	{% for s in i.skills %}
+		            	{{ s }}
+		            	{% endfor %}
+		            </td>
 		          </tr>
 		        {% endfor %}
 	        </tbody>

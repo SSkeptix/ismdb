@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.conf.urls import url, include
 from . import views
 from .profile import views as profile_views
 from .forms import Login as LoginForm
@@ -12,12 +12,13 @@ urlpatterns = [
 	url(r'^logout/$', logout, {'next_page': 'account:login'}, name = 'logout'),
 	url(r'^register/$', views.register, name = 'register'),
 
-	url(r'^profile/$', profile_views.profile, name = 'profile'),
-	url(r'^profile/add/$', profile_views.add_profile, name = 'add_profile'),
-	url(r'^profile/(?P<username>\w+)/$', profile_views.profile),
-	url(r'^profile//edit/$', profile_views.edit_profile, name = 'edit_profile'),
-	url(r'^profile/(?P<username>\w+)/edit/$', profile_views.edit_profile),
-	url(r'^profile//edit/add_skill/$', profile_views.add_skill, name = 'add_skill'),
-	url(r'^profile/(?P<username>\w+)/edit/add_skill/$', profile_views.add_skill),
+	url(r'^profile/', include([
+		url(r'^add/$', profile_views.add_profile, name = 'add_profile'),
+		url(r'^$', profile_views.profile, name = 'profile_empty'),
+		url(r'^(?P<username>\w+)/$', profile_views.profile, name = 'profile'),
+		url(r'^(?P<username>\w+)/edit/$', profile_views.edit_profile, name = 'edit_profile'),
+		url(r'^(?P<username>\w+)/edit/add_skill/$', profile_views.add_skill, name = 'add_skill'),
+    ])),
+
 
 ] 

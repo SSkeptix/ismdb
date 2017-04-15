@@ -1,11 +1,14 @@
-from django.conf.urls import url
+from django.conf.urls import url, include
 from . import views
 
 app_name = 'core'
 
 urlpatterns = [
-	url(r'^search/$', views.search, name = 'search'),
-	url(r'^search/(?P<username>\w+)/$', views.search),
+
+	url(r'^search/', include([
+		url(r'^$', views.search, name = 'search'),
+		url(r'^(?:page-(?P<page>\d+)/)?$', views.search, name = 'search_filter'),
+    ])),
 
 
 ] 

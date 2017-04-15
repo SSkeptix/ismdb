@@ -133,6 +133,6 @@ STATICFILES_DIRS = [
 
 AUTH_USER_MODEL = 'account.User'
 
-LOGIN_REDIRECT_URL = 'account:profile'
+LOGIN_REDIRECT_URL = 'account:profile_empty'
 
 ALLOWED_HOSTS = ['*']

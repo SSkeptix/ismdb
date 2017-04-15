@@ -24,4 +24,5 @@ urlpatterns = [
     url(r'^', include('core.urls', namespace = 'core')),
     
     url(r'^$', views.home, name = 'home'),
+    url(r'^debuging/$', views.debuging),
 ]
