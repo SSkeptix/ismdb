@@ -11,11 +11,14 @@ def home(request):
 
 def debuging(request):
 
-	var = '1,2,3,4,5'
-	z = 3
-	if str(z) in var:
-		r = 'True'
-	else:
-		r = 'False'
+	langs = '1,2'
+	frams = '54,45'
+	others = '23,12'
+	skill = [langs, frams, others]
+	temp = ['1', '45', '0']
+	iter = 0
+	for i in range(0,3):
+		if temp[i] in skill[i]:
+			iter += 1
+	return HttpResponse(str(iter))
 
-	return HttpResponse('result = {0}'.format(r))

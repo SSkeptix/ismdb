@@ -8,7 +8,7 @@ from account import tuples
 class Lang(forms.Form):
 	value = forms.ModelChoiceField(
 		queryset = models.Language.objects.exclude(validated_by__isnull=True),
-		label = 'Languages',
+		label = 'Language',
 		required = True,
 		widget=forms.Select(attrs={
 			'class': 'form-control',
@@ -18,8 +18,32 @@ class Lang(forms.Form):
 	class Meta:
 		fields = ('value')
 
-	def get_value(self):
-		return self.value
+class Fram(forms.Form):
+	value = forms.ModelChoiceField(
+		queryset = models.Framework.objects.exclude(validated_by__isnull=True),
+		label = 'Framework',
+		required = True,
+		widget=forms.Select(attrs={
+			'class': 'form-control',
+			'style': 'width:auto;'
+			}))
+
+	class Meta:
+		fields = ('value')
+
+class Other(forms.Form):
+	value = forms.ModelChoiceField(
+		queryset = models.Other.objects.exclude(validated_by__isnull=True),
+		label = 'Other skill',
+		required = True,
+		widget=forms.Select(attrs={
+			'class': 'form-control',
+			'style': 'width:auto;'
+			}))
+
+	class Meta:
+		fields = ('value')
+
 
 class Student:
 	name = ''

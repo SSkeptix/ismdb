@@ -12,39 +12,42 @@ from django.http import HttpResponse
 
 
 # Create your views here.
-def search(request, page = 1, langs = None, frams = None, others = None, english = None):
+def search(request, page = 1):
+
+	#get filter data from url
+	langs = request.GET.get('langs', None)
+	frams = request.GET.get('frams', None)
+	others = request.GET.get('others', None)
 
 	args = {
 		'lang_form': forms.Lang(),
+		'fram_form': forms.Fram(),
+		'other_form': forms.Other(),
 		'page': page,
 	}
 
 	#add filters
 	kwargs_filter = {}
 
-
-	langs = request.GET.get('langs')
 	if langs:
 		filter_langs = []
 		for i in langs.split(","):
 			filter_langs.append(int (i))
 		kwargs_filter['student_lang__skill__in'] = filter_langs
 
-	frams = request.GET.get('frams')
 	if frams:
 		filter_frams = []
-		for i in langs.split(","):
+		for i in frams.split(","):
 			filter_frams.append(int (i))
-		kwargs_filter['student_fram__skill__in'] = frams
+		kwargs_filter['student_fram__skill__in'] = filter_frams
 
-	others = request.GET.get('others')
 	if others:
 		filter_others = []
-		for i in langs.split(","):
+		for i in others.split(","):
 			filter_others.append(int (i))
 		kwargs_filter['student_other__skill__in'] = filter_others
 
-	english = request.GET.get('english')
+	english = request.GET.get('english', None)
 	if english:
 		kwargs_filter['lang__gte'] = english
 
@@ -75,36 +78,37 @@ def search(request, page = 1, langs = None, frams = None, others = None, english
 
 	args['students'] = students_form
 
-	
-	if request.method == 'POST' and 'add_lang' in request.POST:
-		form = forms.Lang(request.POST)
-		if form.is_valid():
-			var = form.cleaned_data['value'].id
-		else:
-			var = 15
-		base_url = reverse('core:search_filter', kwargs={'page': 1})
-		
-		if langs:
-			if not (str(var) in langs):
-				langs += (',{0}'.format(str(var)))
-		else:
-			langs = str(var)
 
-		base_url += '?langs={0}'.format(langs)
+	# !!!!!!!!!!!!!!
+	# not fancy code --- but it work :)
+	# send filter data to url
+	if request.method == 'POST':
+		base_url = reverse('core:search_filter', kwargs={'page': 1}) + '?'
 
+		skill = [langs, frams, others]
+		template = ['langs', 'frams', 'others']
+		for i in range(0,3):
+			if template[i] in request.POST:
+				if i==0:
+					form = forms.Lang(request.POST)
+				elif i==1:
+					form = forms.Fram(request.POST)
+				elif i==2:
+					form = forms.Other(request.POST)
 
-		if frams:
-			base_url += '?frams={0}'.format(frams)
-		if others:
-			base_url += '?others={0}'.format(others)
-		if english:
-			base_url += '?english={0}'.format(english)
+				if form.is_valid():
+					var = form.cleaned_data['value'].id
+				if skill[i]:
+					if not (str(var) in skill[i]):
+						skill[i] += (',{0}'.format(str(var)))
+				else:
+					skill[i] = str(var)
+				base_url += '{0}={1}&'.format(template[i], skill[i])
+
+			elif skill[i]:
+				base_url += '{0}={1}&'.format(template[i], skill[i])
 
 		return redirect(base_url)
-	
-
-	#debuging information
-	args['this_page'] = '{0}?{1}'.format(reverse('core:search_filter', kwargs={'page': 1}), 'langs=1,2,3')
 
 
 
