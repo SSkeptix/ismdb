@@ -12,7 +12,7 @@ class Lang(forms.Form):
 		required = True,
 		widget=forms.Select(attrs={
 			'class': 'form-control',
-			'style': 'width:auto;'
+			#'style': 'width:auto;'
 			}))
 
 	class Meta:
@@ -25,7 +25,7 @@ class Fram(forms.Form):
 		required = True,
 		widget=forms.Select(attrs={
 			'class': 'form-control',
-			'style': 'width:auto;'
+			#'style': 'width:auto;'
 			}))
 
 	class Meta:
@@ -38,21 +38,39 @@ class Other(forms.Form):
 		required = True,
 		widget=forms.Select(attrs={
 			'class': 'form-control',
-			'style': 'width:auto;'
+			#'style': 'width:auto;'
 			}))
 
 	class Meta:
 		fields = ('value')
 
 
+
+class English(forms.Form):
+	value = forms.ChoiceField(
+		choices = tuples.LANG.SELECT,
+		label = 'English level',
+		required = True,
+		widget=forms.Select(attrs={
+			'class': 'form-control',
+			#'style': 'width:auto;'
+			}))
+
+	class Meta:
+		fields = ('value')
+
+
+
 class Student:
 	name = ''
+	username = ''
 	skills = []
 	lang = ''
 
 	def __init__(self, student):
-		self.name = ('%s %s' % (student.user.last_name, student.user.first_name))
+		self.name = ('{0} {1}'.format(student.user.last_name, student.user.first_name))
 		self.lang = tuples.LANG().value(student.lang)
+		self.username = student.user.username
 		self.skills = []
 
 		skills_queryset = models.Student_lang.objects.filter(student = student.user.id)

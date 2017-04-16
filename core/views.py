@@ -2,10 +2,7 @@ from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from account import models
-
 from . import forms
-#from . import tuples
-
 from itertools import chain
 
 from django.http import HttpResponse
@@ -13,50 +10,41 @@ from django.http import HttpResponse
 
 # Create your views here.
 def search(request, page = 1):
+	args = {}
+	page = int(page)
+
+	# number of rows per page in table results
+	rows = 10
 
 	#get filter data from url
 	langs = request.GET.get('langs', None)
 	frams = request.GET.get('frams', None)
 	others = request.GET.get('others', None)
-
-	args = {
-		'lang_form': forms.Lang(),
-		'fram_form': forms.Fram(),
-		'other_form': forms.Other(),
-		'page': page,
-	}
+	english = request.GET.get('english', '1')
 
 	#add filters
 	kwargs_filter = {}
 
 	if langs:
-		filter_langs = []
 		for i in langs.split(","):
-			filter_langs.append(int (i))
-		kwargs_filter['student_lang__skill__in'] = filter_langs
-
+			kwargs_filter['student_lang__skill'] = int (i)
 	if frams:
-		filter_frams = []
 		for i in frams.split(","):
-			filter_frams.append(int (i))
-		kwargs_filter['student_fram__skill__in'] = filter_frams
-
+			kwargs_filter['student_fram__skill'] = int (i)
 	if others:
-		filter_others = []
 		for i in others.split(","):
-			filter_others.append(int (i))
-		kwargs_filter['student_other__skill__in'] = filter_others
-
-	english = request.GET.get('english', None)
+			kwargs_filter['student_other__skill'] = int (i)
 	if english:
 		kwargs_filter['lang__gte'] = english
 
+	# which data need get from database
 	args_only = {
 		'user',
 		'lang',
 		'user__id',
 		'user__first_name',
-		'user__last_name'
+		'user__last_name',
+		'user__username'
 	}
 
 	# last parameter is primary in sorting
@@ -65,13 +53,15 @@ def search(request, page = 1):
 		'user__last_name',	# first
 	}
 
+	# take number of all suitable students
+	students_count = models.Student.objects.filter(**kwargs_filter).select_related('user').only(*args_only).order_by(*args_order_by).count()
 
-	# take queryset
-	students = models.Student.objects.filter(**kwargs_filter).select_related('user').only(*args_only).order_by(*args_order_by).distinct()
+	# take queryset (rows depends on 'page' and 'rows' - number of lines per page)
+	students = models.Student.objects.filter(**kwargs_filter).select_related('user').only(*args_only).order_by(*args_order_by)[(page-1)*rows:page*rows]
 
 
 	# build list of student which include:
-	# name, skills[], lang
+	# name, username, skills[], lang
 	students_form = []
 	for student in students:
 		students_form.append(forms.Student(student = student))
@@ -108,7 +98,25 @@ def search(request, page = 1):
 			elif skill[i]:
 				base_url += '{0}={1}&'.format(template[i], skill[i])
 
+		if 'english' in request.POST:
+			form = forms.English(request.POST)
+			if form.is_valid():
+				var = form.cleaned_data['value']
+				base_url += '{0}={1}&'.format('english', str(var))
+		else:
+			base_url += '{0}={1}&'.format('english', english)
+
+
+
 		return redirect(base_url)
+
+
+	args['lang_form'] = forms.Lang()
+	args['fram_form'] = forms.Fram()
+	args['other_form'] = forms.Other()
+	args['english_form'] = forms.English(initial={'value': int(english)})
+	args['page'] = page
+
 
 
 

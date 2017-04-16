@@ -8,16 +8,11 @@ Search
 
 <div class="container">
     <div class="page-header">
-        <h1>Search {{ page }}</h1>
+        <h1>Search, page = {{ page }}</h1>
+        <a href="{% url 'core:search' %}" class="btn btn-primary">Reset filters</a>
 
         <!--  debuging information  -->
-        {% if langs %}
-        {{ langs }} <br/>
-        {% endif %}
 
-        {% if this_page %}
-        {{ this_page }}
-        {% endif %}
         <!--  debuging information  -->
 
     </div>
@@ -36,9 +31,17 @@ Search
 		        	<tr>
 		        	<form method="post">
 		        		{% csrf_token %}
+			        	<td align="center">{{ english_form.value.label_tag }}</td>
+			        	<td align="center">{{ english_form.value }}</td>
+			        	<td align="center"><input class="btn btn-success" type="submit" value="Set" name="english"/></td>
+			        </form>
+			        </tr>
+		        	<tr>
+		        	<form method="post">
+		        		{% csrf_token %}
 			        	<td align="center">{{ lang_form.value.label_tag }}</td>
 			        	<td align="center">{{ lang_form.value }}</td>
-			        	<td align="center"><input class="btn btn-success" type="submit" name="langs"/></td>
+			        	<td align="center"><input class="btn btn-success" type="submit" value="Add" name="langs"/></td>
 			        </form>
 			        </tr>
 			        <tr>
@@ -46,7 +49,7 @@ Search
 		        		{% csrf_token %}
 			        	<td align="center">{{ fram_form.value.label_tag }}</td>
 			        	<td align="center">{{ fram_form.value }}</td>
-			        	<td align="center"><input class="btn btn-success" type="submit" name="frams"/></td>
+			        	<td align="center"><input class="btn btn-success" type="submit" value="Add" name="frams"/></td>
 			        </form>
 			        </tr>
 			        <tr>
@@ -54,7 +57,7 @@ Search
 		        		{% csrf_token %}
 			        	<td align="center">{{ other_form.value.label_tag }}</td>
 			        	<td align="center">{{ other_form.value }}</td>
-			        	<td align="center"><input class="btn btn-success" type="submit" name="others"/></td>
+			        	<td align="center"><input class="btn btn-success" type="submit" value="Add" name="others"/></td>
 			        </form>
 			        </tr>
 		        </tbody>
@@ -73,9 +76,10 @@ Search
 		        </tr>
 			</thead>
 	        <tbody>
+	        	{% if students %}
     			{% for i in students %}
 		          <tr>
-		            <td>{{ i.name }}</td>
+		            <td><a href="{% url 'account:profile' username=i.username %}" target="_blank">{{ i.name }}</a></td>
 		            <td>{{ i.lang }}</td>
 		            <td>
 		            	{% for s in i.skills %}
@@ -84,6 +88,11 @@ Search
 		            </td>
 		          </tr>
 		        {% endfor %}
+		        {% else %}
+		        <tr>
+		            <td>Empty</td>            
+		        </tr>
+		        {% endif %}
 	        </tbody>
 	    </table>
 
