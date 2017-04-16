@@ -10,9 +10,30 @@ from itertools import chain
 from django.http import HttpResponse
 
 
+
+@login_required(login_url="account:login")
+def add_profile(request):
+
+	args = {}
+
+	# add student profile
+	if request.method == 'POST' :
+		form = forms.AddStudent(request.POST, user=request.user)
+		if form.is_valid():
+			form.save()
+			return redirect('account:profile', username=request.user.username)
+	else:
+		form = forms.AddStudent()
+
+
+	args['form'] = form
+
+	return render(request, 'account/profile/add_profile.html', args)
+
+
+
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # !!!!!!! need add teacher validation featers
-
 # Show own or someone else's profile
 @login_required(login_url="account:login")
 def profile(request, username = ''):
@@ -65,29 +86,6 @@ def profile(request, username = ''):
 
 
 
-
-@login_required(login_url="account:login")
-def add_profile(request):
-
-	args = {}
-
-	# add student profile
-	if request.method == 'POST' :
-		form = forms.AddStudent(request.POST, user=request.user)
-		if form.is_valid():
-			form.save()
-			return redirect('account:profile', username=request.user.username)
-	else:
-		form = forms.AddStudent()
-
-
-	args['form'] = form
-
-	return render(request, 'account/profile/add_profile.html', args)
-
-
-
-
 # Edit own profile
 @login_required(login_url="account:login")
 def edit_profile(request, username = ''):
@@ -95,7 +93,7 @@ def edit_profile(request, username = ''):
 
 	if (request.user.category == tuples.CATEGORY.STUDENT) :
 
-	#if profile don't exist create profile
+	#if student profile don't exist create profile
 		if models.StudentProfile.objects.filter(user = request.user.id).exists() :
 			student = models.StudentProfile.objects.get(user = request.user.id)
 		else:
@@ -153,6 +151,14 @@ def edit_profile(request, username = ''):
 
 @login_required(login_url="account:login")
 def add_skill(request, username = ''):
+
+	#if student profile don't exist create profile
+	if models.StudentProfile.objects.filter(user = request.user.id).exists() :
+		student = models.StudentProfile.objects.get(user = request.user.id)
+	else:
+		return redirect('account:add_profile')
+
+
 	this_url = reverse('account:add_skill', kwargs={'username': request.user.username})
 	args = {}
 

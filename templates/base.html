@@ -33,10 +33,10 @@
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Account <span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
-              <li><a href="{% url 'home' %}">Home</a></li>
-              <li class="divider"></li>
               <li><a href="{% url 'account:profile' username=user.username  %}">Profile</a></li>
               <li><a href="{% url 'account:edit_profile' username=user.username %}">Edit profile</a></li>              
+              <li class="divider"></li>
+              <li><a href="{% url 'account:add_skill' username=user.username %}">Add skill</a></li>              
               <li class="divider"></li>
               <li><a href="{% url 'account:logout' %}">Logout</a></li>
             </ul>
