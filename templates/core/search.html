@@ -95,7 +95,11 @@ Search
 		        {% endif %}
 	        </tbody>
 	    </table>
-
+	</div>
+	<div class="btn-group mr-2" role="group" aria-label="Second group">
+	{% for i in page_range %}
+		<a href="{% url 'core:search_page' page=i %}{{ url_data }}" class="btn btn-info">{{ i }}</a>
+	{% endfor %}
 	</div>
 </div>
 

@@ -11,14 +11,9 @@ def home(request):
 
 def debuging(request):
 
-	langs = '1,2'
-	frams = '54,45'
-	others = '23,12'
-	skill = [langs, frams, others]
-	temp = ['1', '45', '0']
-	iter = 0
-	for i in range(0,3):
-		if temp[i] in skill[i]:
-			iter += 1
-	return HttpResponse(str(iter))
+	count = 33
+	string = ''
+	for i in range(1, int(count/10) + 2):
+		string += str(i)
+	return HttpResponse(string)
 

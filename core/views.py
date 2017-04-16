@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from account import models
 from . import forms
 from itertools import chain
+import math
 
 from django.http import HttpResponse
 
@@ -55,6 +56,9 @@ def search(request, page = 1):
 
 	# take number of all suitable students
 	students_count = models.Student.objects.filter(**kwargs_filter).select_related('user').only(*args_only).order_by(*args_order_by).count()
+	args['page_range'] = ''
+	for i in range(1, 1 + math.ceil(students_count/rows)):
+		args['page_range'] += str(i)
 
 	# take queryset (rows depends on 'page' and 'rows' - number of lines per page)
 	students = models.Student.objects.filter(**kwargs_filter).select_related('user').only(*args_only).order_by(*args_order_by)[(page-1)*rows:page*rows]
@@ -72,43 +76,43 @@ def search(request, page = 1):
 	# !!!!!!!!!!!!!!
 	# not fancy code --- but it work :)
 	# send filter data to url
-	if request.method == 'POST':
-		base_url = reverse('core:search_filter', kwargs={'page': 1}) + '?'
+	url_data = '?'
+	skill = [langs, frams, others]
+	template = ['langs', 'frams', 'others']
 
-		skill = [langs, frams, others]
-		template = ['langs', 'frams', 'others']
-		for i in range(0,3):
-			if template[i] in request.POST:
-				if i==0:
-					form = forms.Lang(request.POST)
-				elif i==1:
-					form = forms.Fram(request.POST)
-				elif i==2:
-					form = forms.Other(request.POST)
+	for i in range(0,3):
+		if request.method == 'POST' and template[i] in request.POST:
+			if i==0:
+				form = forms.Lang(request.POST)
+			elif i==1:
+				form = forms.Fram(request.POST)
+			elif i==2:
+				form = forms.Other(request.POST)
 
-				if form.is_valid():
-					var = form.cleaned_data['value'].id
-				if skill[i]:
-					if not (str(var) in skill[i]):
-						skill[i] += (',{0}'.format(str(var)))
-				else:
-					skill[i] = str(var)
-				base_url += '{0}={1}&'.format(template[i], skill[i])
-
-			elif skill[i]:
-				base_url += '{0}={1}&'.format(template[i], skill[i])
-
-		if 'english' in request.POST:
-			form = forms.English(request.POST)
 			if form.is_valid():
-				var = form.cleaned_data['value']
-				base_url += '{0}={1}&'.format('english', str(var))
-		else:
-			base_url += '{0}={1}&'.format('english', english)
+				var = form.cleaned_data['value'].id
+			if skill[i]:
+				if not (str(var) in skill[i]):
+					skill[i] += (',{0}'.format(str(var)))
+			else:
+				skill[i] = str(var)
+			url_data += '{0}={1}&'.format(template[i], skill[i])
 
+		elif skill[i]:
+			url_data += '{0}={1}&'.format(template[i], skill[i])
 
+	if request.method == 'POST' and 'english' in request.POST:
+		form = forms.English(request.POST)
+		if form.is_valid():
+			var = form.cleaned_data['value']
+			url_data += '{0}={1}&'.format('english', str(var))
+	else:
+		url_data += '{0}={1}&'.format('english', english)
 
-		return redirect(base_url)
+	args['url_data'] = url_data
+
+	if request.method == 'POST':
+		return redirect(reverse('core:search_page', kwargs={'page': 1}) + url_data)
 
 
 	args['lang_form'] = forms.Lang()
