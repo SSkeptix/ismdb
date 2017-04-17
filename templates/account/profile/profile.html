@@ -93,14 +93,9 @@ Profile
 
 	    				{% for i in skills %}
 				          <tr>
-				            <td style = "white-space: nowrap">{{ i.skill }}</td>
-				            {% if i.validated_by %}
-				            <td>{{ i.validated_by.username }}</td>
-				            <td>{{ i.validated_at }}</td>
-				            {% else %}
-				            <td>No</td>
-				            <td>---</td>
-				            {% endif %}
+				            <td style = "white-space: nowrap">{{ i.value }}</td>
+				            <td>{{ i.validated_by }}</td>
+            				<td>{{ i.validated_at }}</td>
 				          </tr>
 				        {% endfor %}
 

@@ -60,27 +60,31 @@ def profile(request, username = ''):
 	args['own_profile'] = own_profile
 	args['user'] = profile
 	
+
 	# if user want to view profile of student
 	if (profile.category == tuples.CATEGORY.STUDENT) and models.Student.objects.filter(user = profile.id).exists() :
-		student_profile = models.StudentProfile.objects.get(user = profile.id)
+		student = models.StudentProfile.objects.get(user = profile.id)
 
-		args['student'] = student_profile
-		args['student_lang'] = tuples.LANG().value(student_profile.lang)
+		args['student'] = student
+		args['student_lang'] = tuples.LANG().value(student.lang)
+
 
 	# show skills
-		langs = models.Student_lang.objects.filter(student = student_profile.user.id)
-		frams = models.Student_fram.objects.filter(student = student_profile.user.id)
-		others = models.Student_other.objects.filter(student = student_profile.user.id)
+		skills = []
 
-		if langs or frams or others :
-			skills = sorted(
-				chain(langs, frams, others),
-				key=lambda instance: instance.skill.__str__()
-				)
-		else:
-			skills = False
+		langs = models.Student_lang.objects.filter(student = student.user.id)
+		for skill in langs:
+			skills.append(forms.SkillView(skill=skill, category='lang'))
+		frams = models.Student_fram.objects.filter(student = student.user.id)
+		for skill in frams:
+			skills.append(forms.SkillView(skill=skill, category='fram'))
+		others = models.Student_other.objects.filter(student = student.user.id)
+		for skill in others:
+			skills.append(forms.SkillView(skill=skill, category='other'))
 
+		skills.sort(key=lambda instance: instance.value)
 		args['skills'] = skills
+
 
 	return render(request, 'account/profile/profile.html', args)
 
@@ -99,8 +103,17 @@ def edit_profile(request, username = ''):
 		else:
 			return redirect('account:add_profile')
 
+	# delete skill
+		if request.method == 'POST':
+			if 'lang' in request.POST:
+				models.Student_lang.objects.get(id = int(request.POST['lang'])).delete()
+			if 'fram' in request.POST:
+				models.Student_fram.objects.get(id = int(request.POST['fram'])).delete()
+			if 'other' in request.POST:
+				models.Student_other.objects.get(id = int(request.POST['other'])).delete()
+
 	# edit student profile
-		if request.method == 'POST' :
+		if request.method == 'POST' and 'profile' in request.POST:
 			form = forms.EditUser(request.POST, instance = request.user)
 			student_form = forms.EditStudent(request.POST, instance = student)
 			if form.is_valid() and student_form.is_valid():
@@ -116,26 +129,26 @@ def edit_profile(request, username = ''):
 
 
 	# show skills
+		skills = []
+
 		langs = models.Student_lang.objects.filter(student = student.user.id)
+		for skill in langs:
+			skills.append(forms.SkillView(skill=skill, category='lang'))
 		frams = models.Student_fram.objects.filter(student = student.user.id)
+		for skill in frams:
+			skills.append(forms.SkillView(skill=skill, category='fram'))
 		others = models.Student_other.objects.filter(student = student.user.id)
+		for skill in others:
+			skills.append(forms.SkillView(skill=skill, category='other'))
 
-		if langs or frams or others :
-			skills = sorted(
-				chain(langs, frams, others),
-				key=lambda instance: instance.skill.__str__()
-				)
-		else:
-			skills = False
-
+		skills.sort(key=lambda instance: instance.value)
 		args['skills'] = skills
-
 
 		return render(request, 'account/profile/edit.html', args)
 
 	else:
 	# edit profile (teacher, employer)
-		if request.method == 'POST' :
+		if request.method == 'POST' and 'profile' in request.POST:
 			form = forms.EditUser(request.POST, instance = request.user)
 			if form.is_valid():
 				form.save()
