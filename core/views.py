@@ -126,3 +126,7 @@ def search(request, page = 1):
 
 	return render(request, 'core/search.html', args)
 
+
+
+def test(request):
+	return render(request, 'core/test.html')

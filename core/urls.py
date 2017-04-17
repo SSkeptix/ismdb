@@ -10,5 +10,6 @@ urlpatterns = [
 		url(r'^(?:page-(?P<page>[\d]+)/)?$', views.search, name = 'search_page'),
     ])),
 
+    url(r'^test/$', views.test),
 
 ] 
