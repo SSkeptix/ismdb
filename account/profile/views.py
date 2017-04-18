@@ -44,19 +44,23 @@ def profile(request, username = ''):
 	args = {}
 	user = request.user
 	profile = models.User.objects.get(username = username)
-	if (user.category == tuples.CATEGORY.TEACHER) :
-		is_teacher = True
-		if (username == user.username) :
-			is_teacher = False
-	else:
-		is_teacher = False
 
+	# validatin permission - possibility to validate:
+	# student's skill, persons
+	if (user.category == tuples.CATEGORY.TEACHER) :
+		validation_permission = True
+		if (username == user.username) :
+			validation_permission = False
+	else:
+		validation_permission = False
+
+	# need to display button 'edit profile'
 	if (username == user.username) :
 		own_profile = True
 	else:
 		own_profile = False
 
-	args['validation_permission'] = is_teacher
+	args['validation_permission'] = validation_permission
 	args['own_profile'] = own_profile
 	args['user'] = profile
 	

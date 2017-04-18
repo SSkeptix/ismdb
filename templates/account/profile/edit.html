@@ -70,8 +70,18 @@
 		{% for i in skills %}
           <tr>
             <td style = "white-space: nowrap">{{ i.value }}</td>
-            <td>{{ i.validated_by }}</td>
-            <td>{{ i.validated_at }}</td>
+            
+            {% if i.validated_by %}
+            <td style = "white-space: nowrap">
+                <a href="{% url 'account:profile' username=i.validated_by_username %}" target="_blank">{{ i.validated_by }}</a>
+            </td>
+            <td style = "white-space: nowrap">{{ i.validated_at }}</td>
+            {% else %}
+            {{ i.validated_by }}
+            <td>None</td>
+            <td>---</td>
+            {% endif %}
+            
             <td align="right">
                 <form method="POST"> {% csrf_token %} 
                     <input type="hidden" name="{{ i.category }}" value="{{ i.id }}">
