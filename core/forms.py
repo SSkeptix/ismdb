@@ -7,7 +7,7 @@ from account import tuples
 
 class Lang(forms.Form):
 	value = forms.ModelChoiceField(
-		queryset = models.Language.objects.exclude(validated_by__isnull=True),
+		queryset = models.Language.objects.exclude(validated_by__isnull=True).order_by('value'),
 		label = 'Language',
 		required = True,
 		widget=forms.Select(attrs={
@@ -20,7 +20,7 @@ class Lang(forms.Form):
 
 class Fram(forms.Form):
 	value = forms.ModelChoiceField(
-		queryset = models.Framework.objects.exclude(validated_by__isnull=True),
+		queryset = models.Framework.objects.exclude(validated_by__isnull=True).order_by('lang__value', 'value'),
 		label = 'Framework',
 		required = True,
 		widget=forms.Select(attrs={
@@ -33,7 +33,7 @@ class Fram(forms.Form):
 
 class Other(forms.Form):
 	value = forms.ModelChoiceField(
-		queryset = models.Other.objects.exclude(validated_by__isnull=True),
+		queryset = models.Other.objects.exclude(validated_by__isnull=True).order_by('value'),
 		label = 'Other skill',
 		required = True,
 		widget=forms.Select(attrs={

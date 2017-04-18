@@ -62,7 +62,7 @@ def profile(request, username = ''):
 
 	args['validation_permission'] = validation_permission
 	args['own_profile'] = own_profile
-	args['user'] = profile
+	args['user_form'] = profile
 	
 
 	# if user want to view profile of student
@@ -110,6 +110,9 @@ def profile(request, username = ''):
 # Edit own profile
 @login_required(login_url="account:login")
 def edit_profile(request, username = ''):
+	if username != request.user.username:
+		return redirect('account:edit_profile', username=request.user.username)
+
 	args = {}
 
 	if (request.user.category == tuples.CATEGORY.STUDENT) :
@@ -181,6 +184,9 @@ def edit_profile(request, username = ''):
 
 @login_required(login_url="account:login")
 def add_skill(request, username = ''):
+	if username != request.user.username:
+		return redirect('account:add_skill', username=request.user.username)
+
 
 	#if student profile don't exist create profile
 	if models.StudentProfile.objects.filter(user = request.user.id).exists() :

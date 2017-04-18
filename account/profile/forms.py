@@ -165,6 +165,15 @@ class Skill(forms.ModelForm):
 
 
 class Lang(Skill):
+	skill = forms.ModelChoiceField(
+		queryset = models.Language.objects.exclude(validated_by__isnull=True).order_by('value'),
+		label = 'Language',
+		required = True,
+		widget=forms.Select(attrs={
+			'class': 'form-control',
+			'style': 'width:auto;'
+			}))
+
 	class Meta:
 		model = models.Student_lang
 		exclude = (
@@ -184,6 +193,15 @@ class Lang(Skill):
 
 
 class Fram(Skill):
+	skill = forms.ModelChoiceField(
+		queryset = models.Framework.objects.exclude(validated_by__isnull=True).order_by('lang__value', 'value'),
+		label = 'Framework',
+		required = True,
+		widget=forms.Select(attrs={
+			'class': 'form-control',
+			'style': 'width:auto;'
+			}))
+
 	class Meta:
 		model = models.Student_fram
 		exclude = (
@@ -202,6 +220,15 @@ class Fram(Skill):
 		return True
 
 class Other(Skill):
+	skill = forms.ModelChoiceField(
+		queryset = models.Other.objects.exclude(validated_by__isnull=True).order_by('value'),
+		label = 'Other skill',
+		required = True,
+		widget=forms.Select(attrs={
+			'class': 'form-control',
+			'style': 'width:auto;'
+			}))
+
 	class Meta:
 		model = models.Student_other
 		exclude = (
@@ -220,6 +247,7 @@ class Other(Skill):
 		return True
 
 
+# for 'edit_profile' and 'profile'
 class SkillView:
 	category = None
 	value = None
