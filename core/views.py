@@ -35,8 +35,7 @@ def search(request, page = 1):
 	if others:
 		for i in others.split(","):
 			kwargs_filter['student_other__skill'] = int (i)
-	if english:
-		kwargs_filter['lang__gte'] = english
+	kwargs_filter['lang__gte'] = english
 
 	# which data need get from database
 	args_only = {
@@ -56,9 +55,10 @@ def search(request, page = 1):
 
 	# take number of all suitable students
 	students_count = models.Student.objects.filter(**kwargs_filter).select_related('user').only(*args_only).order_by(*args_order_by).count()
-	args['page_range'] = ''
+	# args['page_range'] - number of result's pages = [1, 2, 3, 4, 5] - 5 pages
+	args['page_range'] = []
 	for i in range(1, 1 + math.ceil(students_count/rows)):
-		args['page_range'] += str(i)
+		args['page_range'].append(i)
 
 	# take queryset (rows depends on 'page' and 'rows' - number of lines per page)
 	students = models.Student.objects.filter(**kwargs_filter).select_related('user').only(*args_only).order_by(*args_order_by)[(page-1)*rows:page*rows]
@@ -122,9 +122,10 @@ def search(request, page = 1):
 	args['page'] = page
 
 
-
-
 	return render(request, 'core/search.html', args)
+
+
+
 
 
 
