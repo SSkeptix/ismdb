@@ -78,16 +78,29 @@ def profile(request, username = ''):
 
 		langs = models.Student_lang.objects.filter(student = student.user.id)
 		for skill in langs:
-			skills.append(forms.SkillView(skill=skill, category='lang'))
+			skills.append(forms.SkillView(skill=skill, category='langs'))
 		frams = models.Student_fram.objects.filter(student = student.user.id)
 		for skill in frams:
-			skills.append(forms.SkillView(skill=skill, category='fram'))
+			skills.append(forms.SkillView(skill=skill, category='frams'))
 		others = models.Student_other.objects.filter(student = student.user.id)
 		for skill in others:
-			skills.append(forms.SkillView(skill=skill, category='other'))
+			skills.append(forms.SkillView(skill=skill, category='others'))
 
 		skills.sort(key=lambda instance: instance.value)
 		args['skills'] = skills
+
+
+	if request.method == 'POST':
+		if 'langs' in request.POST:
+			skill = models.Student_lang.objects.get(id = int(request.POST['langs']))
+		elif 'frams' in request.POST:
+			skill = models.Student_fram.objects.get(id = int(request.POST['frams']))
+		elif 'others' in request.POST:
+			skill = models.Student_other.objects.get(id = int(request.POST['others']))
+
+		skill.validated_by = models.User.objects.only('id').get(username = request.user.username)
+		skill.save()
+		return redirect('account:profile', username = username)
 
 
 	return render(request, 'account/profile/profile.html', args)
@@ -111,9 +124,9 @@ def edit_profile(request, username = ''):
 		if request.method == 'POST':
 			if 'langs' in request.POST:
 				models.Student_lang.objects.get(id = int(request.POST['langs'])).delete()
-			if 'frams' in request.POST:
+			elif 'frams' in request.POST:
 				models.Student_fram.objects.get(id = int(request.POST['frams'])).delete()
-			if 'others' in request.POST:
+			elif 'others' in request.POST:
 				models.Student_other.objects.get(id = int(request.POST['others'])).delete()
 
 	# edit student profile

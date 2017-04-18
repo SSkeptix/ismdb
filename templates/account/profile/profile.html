@@ -101,9 +101,19 @@ Profile
 				            </td>
 				            <td style = "white-space: nowrap">{{ i.validated_at }}</td>
 				            {% else %}
-				            {{ i.validated_by }}
-				            <td>None</td>
-				            <td>---</td>
+
+				            	{% if validation_permission %}
+				            	<td>
+				            		<form method="POST"> {% csrf_token %} 
+					                    <input type="hidden" name="{{ i.category }}" value="{{ i.id }}">
+					                    <input class="btn btn-sm btn-success" type="submit" value="Confirm" />
+                					</form>
+				            	</td>
+				            	{% else %}
+					            <td>None</td>
+					            {% endif %}
+
+							<td>---</td>
 				            {% endif %}
             
 				          </tr>
