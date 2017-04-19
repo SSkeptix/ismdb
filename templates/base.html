@@ -36,8 +36,10 @@
               <li><a href="{% url 'account:profile' username=user.username  %}">Profile</a></li>
               <li><a href="{% url 'account:edit_profile' username=user.username %}">Edit profile</a></li>              
               <li class="divider"></li>
+              {% if user.category == 1 %} <!-- 1 - student -->
               <li><a href="{% url 'account:add_skill' username=user.username %}">Add skill</a></li>              
               <li class="divider"></li>
+              {% endif %}
               <li><a href="{% url 'account:logout' %}">Logout</a></li>
             </ul>
           </li>

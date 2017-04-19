@@ -44,7 +44,7 @@ def profile(request, username = ''):
 
 	# validatin permission - possibility to validate:
 	# student's skill, persons
-	if (user.category == tuples.CATEGORY.TEACHER) :
+	if (user.category == tuples.CATEGORY.TEACHER) and user.is_validate:
 		validation_permission = True
 		if (username == user.username) :
 			validation_permission = False
