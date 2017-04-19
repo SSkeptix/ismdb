@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
-from django.contrib.auth.decorators import login_required
 from account import models
 from . import forms
 from itertools import chain
@@ -9,7 +8,6 @@ import math
 from django.http import HttpResponse
 
 
-# Create your views here.
 def search(request, page = 1):
 	args = {}
 	page = int(page)
@@ -123,6 +121,12 @@ def search(request, page = 1):
 
 
 	return render(request, 'core/search.html', args)
+
+
+
+def add_skill(request):
+	pass
+
 
 
 

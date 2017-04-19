@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from . import forms
 from account import tuples
@@ -11,7 +10,6 @@ from django.http import HttpResponse
 
 
 
-@login_required(login_url="account:login")
 def add_profile(request):
 
 	args = {}
@@ -35,7 +33,6 @@ def add_profile(request):
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # !!!!!!! need add teacher validation featers
 # Show own or someone else's profile
-@login_required(login_url="account:login")
 def profile(request, username = ''):
 	if username == '':
 		return redirect('account:profile', username=request.user.username)
@@ -113,7 +110,6 @@ def profile(request, username = ''):
 
 
 # Edit own profile
-@login_required(login_url="account:login")
 def edit_profile(request, username = ''):
 	if username != request.user.username:
 		return redirect('account:edit_profile', username=request.user.username)
@@ -187,7 +183,6 @@ def edit_profile(request, username = ''):
 
 
 
-@login_required(login_url="account:login")
 def add_skill(request, username = ''):
 	if username != request.user.username:
 		return redirect('account:add_skill', username=request.user.username)

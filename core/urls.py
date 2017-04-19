@@ -10,6 +10,13 @@ urlpatterns = [
 		url(r'^(?:page-(?P<page>[\d]+)/)?$', views.search, name = 'search_page'),
     ])),
 
+	url(r'^control/', include([
+		url(r'^add_skill/$', views.add_skill, name = 'add_skill'),
+
+	])),
+
+	
+
     url(r'^test/$', views.test),
 
 ] 
