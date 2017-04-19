@@ -56,6 +56,14 @@ class EditUser(forms.ModelForm):
 			'email',
 			)
 
+	def is_valid(self):
+		valid = super(EditUser, self).is_valid()
+		if not valid:
+			return valid
+		if models.User.objects.exclude().filter(email=self.cleaned_data['email']).exists():
+			self._errors['email_exists'] = 'Email is already exist.'
+			return False
+		return True
 
 
 class EditStudent(forms.ModelForm):

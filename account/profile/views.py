@@ -42,7 +42,7 @@ def profile(request, username = ''):
 
 
 	args = {}
-	user = request.user
+	user = models.User.objects.get(username = request.user.username)
 	profile = models.User.objects.get(username = username)
 
 	# validatin permission - possibility to validate:
@@ -90,7 +90,7 @@ def profile(request, username = ''):
 		args['skills'] = skills
 
 
-	if request.method == 'POST':
+	if request.method == 'POST' and 'skills' in request.POST:
 		if 'langs' in request.POST:
 			skill = models.Student_lang.objects.get(id = int(request.POST['langs']))
 		elif 'frams' in request.POST:
@@ -98,9 +98,14 @@ def profile(request, username = ''):
 		elif 'others' in request.POST:
 			skill = models.Student_other.objects.get(id = int(request.POST['others']))
 
-		skill.validated_by = models.User.objects.only('id').get(username = request.user.username)
+		skill.validated_by = models.User.objects.only('id').get(username = user.username)
 		skill.save()
 		return redirect('account:profile', username = username)
+
+	if request.method == 'POST' and 'validation' in request.POST:
+		profile.is_validate = True
+		profile.save()
+		return redirect ('account:profile', username=profile.username)
 
 
 	return render(request, 'account/profile/profile.html', args)

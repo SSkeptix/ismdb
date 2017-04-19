@@ -55,7 +55,7 @@ Profile
 				            <td>{{ student_lang }}</td>
 				          </tr>
 				          <tr>
-				            <td align="right" style = "white-space: nowrap">GitHub:</td>
+				            <td align="right" style = "white-space: nowrap; ">GitHub:</td>
 				            <td>{{ student.github }}</td>
 				          </tr>
 				          <tr>
@@ -63,6 +63,24 @@ Profile
 				            <td>{{ student.description }}</td>
 				          </tr>
 				          {% endif %}
+
+				          <tr>
+				            <td align="right" style = "white-space: nowrap; ">Is validated:</td>
+				            {% if user_form.is_validate %}
+				            <td>Yes</td>
+				            {% else %}
+				            	{% if validation_permission %}
+				            	<td>
+				            		<form method="POST"> {% csrf_token %} 
+					                    <input class="btn btn-sm btn-success" type="submit" name="validation" value="Confirm" />
+                					</form>
+				            	</td>
+				            	{% else %}
+				            	<td>No</td>
+				            	{% endif %}
+
+				            {% endif %}
+				          </tr>
 
 				        </tbody>
 				    </table>		      
@@ -106,7 +124,7 @@ Profile
 				            	<td>
 				            		<form method="POST"> {% csrf_token %} 
 					                    <input type="hidden" name="{{ i.category }}" value="{{ i.id }}">
-					                    <input class="btn btn-sm btn-success" type="submit" value="Confirm" />
+					                    <input class="btn btn-sm btn-success" type="submit" name="skills" value="Confirm" />
                 					</form>
 				            	</td>
 				            	{% else %}
