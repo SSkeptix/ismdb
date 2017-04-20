@@ -9,13 +9,14 @@ Search
 <div class="container">
     <div class="page-header">
         <h1>Search, page = {{ page }}</h1>
-        <a href="{% url 'core:search' %}" class="btn btn-primary">Reset filters</a>
-
         <!--  debuging information  -->
 
         <!--  debuging information  -->
 
     </div>
+
+    <a href="{% url 'core:search' %}" class="btn btn-primary">Reset filters</a>
+
 
     <form class="form-horizontal" method="post">
 		<div class="col-xs-12 col-sm-12">

@@ -4,8 +4,6 @@ from . import forms
 from account import tuples
 from account import models
 
-from itertools import chain
-
 from django.http import HttpResponse
 
 

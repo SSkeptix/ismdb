@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
+from django.views.generic import TemplateView
 from account import models
 from . import forms
 from itertools import chain
@@ -15,13 +16,13 @@ def search(request, page = 1):
 	# number of rows per page in table results
 	rows = 10
 
-	#get filter data from url
+	# get filter data from url
 	langs = request.GET.get('langs', None)
 	frams = request.GET.get('frams', None)
 	others = request.GET.get('others', None)
 	english = request.GET.get('english', '1')
 
-	#add filters
+	# add filters
 	kwargs_filter = {}
 
 	if langs:
@@ -121,14 +122,6 @@ def search(request, page = 1):
 
 
 	return render(request, 'core/search.html', args)
-
-
-
-def add_skill(request):
-	pass
-
-
-
 
 
 

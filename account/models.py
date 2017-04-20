@@ -17,7 +17,6 @@ class StudentBase(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key = True)
 	lang = models.IntegerField(choices=tuples.LANG.SELECT, default=tuples.LANG.A1)
 
-
 	class Meta:
 		abstract = True
 

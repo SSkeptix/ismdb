@@ -1,5 +1,6 @@
 from django.conf.urls import url, include
 from . import views
+from .control.add_skill.views import AddSkill
 
 app_name = 'core'
 
@@ -11,7 +12,7 @@ urlpatterns = [
     ])),
 
 	url(r'^control/', include([
-		url(r'^add_skill/$', views.add_skill, name = 'add_skill'),
+		url(r'^add_skill/$', AddSkill.as_view(), name = 'add_skill'),
 
 	])),
 

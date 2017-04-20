@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block head %}
+Search
+{% endblock %}
+
+{% block body %}
+
+
+
+
+<div class="container">
+
+    <div class="page-header">
+    	<h1>Skills that are waiting to confirmation</h1>
+    </div>
+
+    {% if skills %}
+    <table class = "table table-striped">
+    	<thead>
+    		<th>Skills</th>
+    		<th>Added</th>
+    		{% if permission %}
+				<th></th>
+			{% endif %}
+    	</thead>
+    	<tbody>
+	    	{% for i in skills %}
+	    	<tr>
+	    		<td>{{ i.value }}</td>
+	    		<td>{{ i.added_at }}</td>
+	    		{% if permission %}
+	    			<td align="right">
+	    				<form method="POST">   
+	    					{% csrf_token %}
+		    				<div class="btn-group" role="group">
+		    					<input type="hidden" name="{{ i.category }}" value="{{ i.id }}">
+					            <input class="btn btn-sm btn-danger" type="submit" name="skills" value="Delete" />
+					            <input class="btn btn-sm btn-warning" type="submit" name="skills" value="Change" />
+					            <input class="btn btn-sm btn-success" type="submit" name="skills" value="Save" />
+							</div>
+						</form>
+	    			</td> 			
+    			{% endif %}   		
+	    	</tr>
+	    	{% endfor %}
+    	</tbody>
+    </table>
+    {% else %}
+    <p>Empty</p>
+    {% endif %}
+
+
+
+    <div class="page-header">
+        <h1>Add new skill</h1>
+    </div>
+
+    <form class="form-horizontal" method="post">
+	    {% csrf_token %}
+		<div class="form-group">
+        <label class="col-sm-2 control-label" >{{ lang_form.value.label_tag }}</label>
+            <div class="col-sm-10">
+                {{ lang_form.value.errors }}
+                {{ lang_form.value }}
+                <input class="btn btn-success btn-sm" type="submit" name="lang" value="Add" />
+            </div>
+        </div>
+	</form>
+
+    <form class="form-horizontal" method="post">
+    	{% csrf_token %}
+		<div class="form-group">
+        <label class="col-sm-2 control-label" >{{ fram_form.value.label_tag }}</label>
+            <div class="col-sm-10">
+            	{{ fram_form.lang.errors }}
+                {{ fram_form.lang }}
+
+                {{ fram_form.value.errors }}
+                {{ fram_form.value }} 
+                <input class="btn btn-success btn-sm" type="submit" name="fram" value="Add" />
+            </div>
+        </div>
+	</form>
+
+    <form class="form-horizontal" method="post">
+    	{% csrf_token %}
+		<div class="form-group">
+        <label class="col-sm-2 control-label" >{{ other_form.value.label_tag }}</label>
+            <div class="col-sm-10">
+                {{ other_form.value.errors }}
+                {{ other_form.value }}
+                <input class="btn btn-success btn-sm" type="submit" name="other" value="Add" />
+            </div>
+        </div>
+	</form>
+
+
+	
+</div>
+
+
+{% endblock %}
+
