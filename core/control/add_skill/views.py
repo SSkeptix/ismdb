@@ -86,7 +86,6 @@ class AddSkill(TemplateView):
 					form.save(validated_by = models.User.objects.get(id=request.user.id))
 				else:
 					form.save()
-				return HttpResponse('saved')
 				return redirect('core:add_skill')
 
 
