@@ -17,7 +17,7 @@ class CATEGORY:
 
 
 #choice User english language
-class LANG:
+class ENGLISH:
 	A1 = 1
 	A2 = 2
 	B1 = 3

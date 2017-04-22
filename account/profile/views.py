@@ -49,9 +49,9 @@ class Profile(TemplateView):
 		profile = models.User.objects.get(username = username)
 		args['user_form'] = profile
 
-		# validatin permission - possibility to validate:
+		# validation permission - possibility to validate:
 		# student's skill, persons
-		if (user.category == tuples.CATEGORY.TEACHER) and user.is_validate:
+		if (user.category == tuples.CATEGORY.TEACHER) and user.is_validated:
 			validation_permission = True
 			if (username == user.username) :
 				validation_permission = False
@@ -68,20 +68,20 @@ class Profile(TemplateView):
 
 		# if user want to view profile of student
 		if (profile.category == tuples.CATEGORY.STUDENT) and models.Student.objects.filter(user = profile.id).exists() :
-			student = models.StudentProfile.objects.get(user = profile.id)
+			student = models.Student.objects.get(user = profile.id)
 			args['student'] = student
-			args['student_lang'] = tuples.LANG().value(student.lang)
+			args['student_english'] = tuples.ENGLISH().value(student.english)
 
 		# show skills
 			skills = []
 
-			langs = models.Student_lang.objects.filter(student = student.user.id)
+			langs = models.StudentLanguages.objects.filter(student = student.user.id)
 			for skill in langs:
 				skills.append(view_forms.SkillView(skill=skill, category='langs'))
-			frams = models.Student_fram.objects.filter(student = student.user.id)
+			frams = models.StudentFrameworks.objects.filter(student = student.user.id)
 			for skill in frams:
 				skills.append(view_forms.SkillView(skill=skill, category='frams'))
-			others = models.Student_other.objects.filter(student = student.user.id)
+			others = models.StudentOthers.objects.filter(student = student.user.id)
 			for skill in others:
 				skills.append(view_forms.SkillView(skill=skill, category='others'))
 
