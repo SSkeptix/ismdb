@@ -15,13 +15,11 @@ class AddSkill(TemplateView):
 	template_name = 'core/add_skill.html'
 
 
-
 	def get(self, request):
 		if request.user.category in (tuples.CATEGORY.TEACHER, tuples.CATEGORY.EMPLOYER):
 			permission = True
 		else:
 			permission = False
-
 
 		# show skills that are waiting to confirmation
 		skills = []
@@ -38,7 +36,6 @@ class AddSkill(TemplateView):
 
 		skills.sort(key=lambda instance: instance.added_at)
 
-
 		args = {
 			'lang_form': forms.Lang(),
 			'fram_form': forms.Fram(),
@@ -48,7 +45,6 @@ class AddSkill(TemplateView):
 		}
 
 		return render(request, self.template_name, args)
-
 
 
 	def post(self, request):
@@ -87,7 +83,6 @@ class AddSkill(TemplateView):
 				else:
 					form.save()
 				return redirect('core:add_skill')
-
 
 		return render(request, self.template_name, args)
 

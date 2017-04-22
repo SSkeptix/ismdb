@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
+from django.views.generic import TemplateView
 from . import forms
 from account import tuples
 from account import models
@@ -8,8 +9,8 @@ from django.http import HttpResponse
 
 
 
-def add_profile(request):
 
+def add_profile(request):
 	args = {}
 
 	# add student profile
@@ -21,15 +22,94 @@ def add_profile(request):
 	else:
 		form = forms.AddStudent()
 
-
-	args['form'] = form
+	args = {
+		'form': form,
+	}
 
 	return render(request, 'account/profile/add_profile.html', args)
 
 
 
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# !!!!!!! need add teacher validation featers
+class EditProfile(TemplateView):
+	template_name = 'account/profile/edit.html'
+
+	def get(self, request, username = ''):
+		if username != request.user.username:
+			return redirect('account:edit_profile', username=request.user.username)
+
+
+		if (request.user.category == tuples.CATEGORY.STUDENT) :
+
+		#if student profile don't exist create profile
+			if models.StudentProfile.objects.filter(user = request.user.id).exists() :
+				student = models.StudentProfile.objects.get(user = request.user.id)
+			else:
+				return redirect('account:add_profile')
+
+		# show skills
+			skills = []
+
+			langs = models.Student_lang.objects.filter(student = student.user.id)
+			for skill in langs:
+				skills.append(forms.SkillView(skill=skill, category='langs'))
+			frams = models.Student_fram.objects.filter(student = student.user.id)
+			for skill in frams:
+				skills.append(forms.SkillView(skill=skill, category='frams'))
+			others = models.Student_other.objects.filter(student = student.user.id)
+			for skill in others:
+				skills.append(forms.SkillView(skill=skill, category='others'))
+
+			skills.sort(key=lambda instance: instance.value)
+
+			args = {
+				'skills': skills,
+				'form': forms.EditUser(instance = request.user),
+				'student_form': forms.EditStudent(instance = student),
+			}
+
+		else:
+		# edit profile (teacher, employer)
+			args = {
+				'form': forms.EditUser(instance = request.user),
+			}
+			
+		return render(request, self.template_name, args)
+
+
+	def post(self, request, username = ''):
+		student = models.StudentProfile.objects.get(user = request.user.id)
+
+		if (request.user.category == tuples.CATEGORY.STUDENT) :
+
+		# edit student profile
+			if 'profile' in request.POST:
+				form = forms.EditUser(request.POST, instance = request.user)
+				student_form = forms.EditStudent(request.POST, instance = student)
+				if form.is_valid() and student_form.is_valid():
+					form.save()
+					student_form.save()
+					return redirect('account:profile', username=request.user.username)
+		
+		# delete skill
+			elif 'langs' in request.POST:
+				models.Student_lang.objects.get(id = int(request.POST['langs'])).delete()
+			elif 'frams' in request.POST:
+				models.Student_fram.objects.get(id = int(request.POST['frams'])).delete()
+			elif 'others' in request.POST:
+				models.Student_other.objects.get(id = int(request.POST['others'])).delete()
+
+		else:
+		# edit profile (teacher, employer)
+			if 'profile' in request.POST:
+				form = forms.EditUser(request.POST, instance = request.user)
+				if form.is_valid():
+					form.save()
+					return redirect('account:profile', username=request.user.username)
+
+		return redirect('account:edit_profile', username=request.user.username)
+
+
+
 # Show own or someone else's profile
 def profile(request, username = ''):
 	if username == '':
@@ -105,78 +185,6 @@ def profile(request, username = ''):
 
 	return render(request, 'account/profile/profile.html', args)
 
-
-
-# Edit own profile
-def edit_profile(request, username = ''):
-	if username != request.user.username:
-		return redirect('account:edit_profile', username=request.user.username)
-
-	args = {}
-
-	if (request.user.category == tuples.CATEGORY.STUDENT) :
-
-	#if student profile don't exist create profile
-		if models.StudentProfile.objects.filter(user = request.user.id).exists() :
-			student = models.StudentProfile.objects.get(user = request.user.id)
-		else:
-			return redirect('account:add_profile')
-
-	# delete skill
-		if request.method == 'POST':
-			if 'langs' in request.POST:
-				models.Student_lang.objects.get(id = int(request.POST['langs'])).delete()
-			elif 'frams' in request.POST:
-				models.Student_fram.objects.get(id = int(request.POST['frams'])).delete()
-			elif 'others' in request.POST:
-				models.Student_other.objects.get(id = int(request.POST['others'])).delete()
-
-	# edit student profile
-		if request.method == 'POST' and 'profile' in request.POST:
-			form = forms.EditUser(request.POST, instance = request.user)
-			student_form = forms.EditStudent(request.POST, instance = student)
-			if form.is_valid() and student_form.is_valid():
-				form.save()
-				student_form.save()
-				return redirect('account:profile', username=request.user.username)
-		else:
-			form = forms.EditUser(instance = request.user)
-			student_form = forms.EditStudent(instance = student)
-
-		args['form'] = form
-		args['student_form'] = student_form
-
-
-	# show skills
-		skills = []
-
-		langs = models.Student_lang.objects.filter(student = student.user.id)
-		for skill in langs:
-			skills.append(forms.SkillView(skill=skill, category='langs'))
-		frams = models.Student_fram.objects.filter(student = student.user.id)
-		for skill in frams:
-			skills.append(forms.SkillView(skill=skill, category='frams'))
-		others = models.Student_other.objects.filter(student = student.user.id)
-		for skill in others:
-			skills.append(forms.SkillView(skill=skill, category='others'))
-
-		skills.sort(key=lambda instance: instance.value)
-		args['skills'] = skills
-
-		return render(request, 'account/profile/edit.html', args)
-
-	else:
-	# edit profile (teacher, employer)
-		if request.method == 'POST' and 'profile' in request.POST:
-			form = forms.EditUser(request.POST, instance = request.user)
-			if form.is_valid():
-				form.save()
-				return redirect('account:profile', username=request.user.username)
-		else:
-			form = forms.EditUser(instance = request.user)
-		args['form'] = form
-		
-		return render(request, 'account/profile/edit.html', args)
 
 
 

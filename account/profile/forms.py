@@ -1,7 +1,7 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from account import models 
 from account import tuples
+
 
 
 class EditUser(forms.ModelForm):
@@ -18,7 +18,7 @@ class EditUser(forms.ModelForm):
 			}))
 
 	first_name = forms.CharField(
-		label="First_name",
+		label="First name",
 		required = True,
 		max_length=50,
 		widget=forms.TextInput(attrs={
@@ -28,7 +28,7 @@ class EditUser(forms.ModelForm):
 			}))
 
 	last_name = forms.CharField(
-		label="Last_name",
+		label="Last name",
 		required = True,
 		max_length=50,
 		widget=forms.TextInput(attrs={
@@ -60,10 +60,11 @@ class EditUser(forms.ModelForm):
 		valid = super(EditUser, self).is_valid()
 		if not valid:
 			return valid
-		if models.User.objects.exclude().filter(email=self.cleaned_data['email']).exists():
+		if models.User.objects.exclude(username=self.cleaned_data['username']).filter(email=self.cleaned_data['email']).exists():
 			self._errors['email_exists'] = 'Email is already exist.'
 			return False
 		return True
+
 
 
 class EditStudent(forms.ModelForm):
@@ -77,7 +78,6 @@ class EditStudent(forms.ModelForm):
 			'class': _class,
 			'style': 'width:auto;'
 			}))
-
 
 	github = forms.URLField(
 		label="GitHub",
@@ -114,6 +114,8 @@ class EditStudent(forms.ModelForm):
 			'github',
 			'description',
 			)
+
+
 
 
 

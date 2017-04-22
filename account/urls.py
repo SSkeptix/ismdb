@@ -5,6 +5,7 @@ from .forms import Login as LoginForm
 from django.contrib.auth.views import login, logout
 
 
+
 app_name = 'account'
 
 urlpatterns = [
@@ -16,9 +17,8 @@ urlpatterns = [
 		url(r'^add/$', profile_views.add_profile, name = 'add_profile'),
 		url(r'^$', profile_views.profile, name = 'profile_empty'),
 		url(r'^(?P<username>\w+)/$', profile_views.profile, name = 'profile'),
-		url(r'^(?P<username>\w+)/edit/$', profile_views.edit_profile, name = 'edit_profile'),
+		url(r'^(?P<username>\w+)/edit/$', profile_views.EditProfile.as_view(), name = 'edit_profile'),
 		url(r'^(?P<username>\w+)/edit/add_skill/$', profile_views.add_skill, name = 'add_skill'),
     ])),
-
 
 ] 

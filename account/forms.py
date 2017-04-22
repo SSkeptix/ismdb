@@ -3,6 +3,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from . import models 
 from . import tuples
 
+
 class Login(AuthenticationForm):
 	username = forms.CharField(
 		label="Username",
@@ -19,8 +20,6 @@ class Login(AuthenticationForm):
 			'class': 'form-control',
 			'name': 'password'
 			}))
-
-
 
 
 
