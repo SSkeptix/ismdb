@@ -1,11 +1,16 @@
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
 from django.views.generic import TemplateView
-from . import forms
 from account import tuples
 from account import models
 
+from . import forms
+from . import edit_forms
+from . import view_forms
+
 from django.http import HttpResponse
+
+#reverse('account:add_skill', kwargs={'username': request.user.username})
 
 
 
@@ -30,8 +35,94 @@ def add_profile(request):
 
 
 
+
+
+# Show own or someone else's profile
+class Profile(TemplateView):
+	template_name = 'account/profile/profile.html'
+
+
+	def get(self, request, username = ''):
+		if username == '':
+			return redirect('account:profile', username=request.user.username)
+
+		args = {}
+		user = models.User.objects.get(username = request.user.username)
+		profile = models.User.objects.get(username = username)
+		args['user_form'] = profile
+
+
+		# validatin permission - possibility to validate:
+		# student's skill, persons
+		if (user.category == tuples.CATEGORY.TEACHER) and user.is_validate:
+			validation_permission = True
+			if (username == user.username) :
+				validation_permission = False
+		else:
+			validation_permission = False
+		args['validation_permission'] = validation_permission
+
+
+		# need to display button 'edit profile'
+		if (username == user.username) :
+			own_profile = True
+		else:
+			own_profile = False
+		args['own_profile'] = own_profile
+
+		# if user want to view profile of student
+		if (profile.category == tuples.CATEGORY.STUDENT) and models.Student.objects.filter(user = profile.id).exists() :
+			student = models.StudentProfile.objects.get(user = profile.id)
+			args['student'] = student
+			args['student_lang'] = tuples.LANG().value(student.lang)
+
+		# show skills
+			skills = []
+
+			langs = models.Student_lang.objects.filter(student = student.user.id)
+			for skill in langs:
+				skills.append(view_forms.SkillView(skill=skill, category='langs'))
+			frams = models.Student_fram.objects.filter(student = student.user.id)
+			for skill in frams:
+				skills.append(view_forms.SkillView(skill=skill, category='frams'))
+			others = models.Student_other.objects.filter(student = student.user.id)
+			for skill in others:
+				skills.append(view_forms.SkillView(skill=skill, category='others'))
+
+			skills.sort(key=lambda instance: instance.value)
+			args['skills'] = skills
+
+		return render(request, self.template_name, args)
+
+
+
+	def post(self, request, username = ''):
+
+		if 'skills' in request.POST:
+			if 'langs' in request.POST:
+				skill = models.Student_lang.objects.get(id = int(request.POST['langs']))
+			elif 'frams' in request.POST:
+				skill = models.Student_fram.objects.get(id = int(request.POST['frams']))
+			elif 'others' in request.POST:
+				skill = models.Student_other.objects.get(id = int(request.POST['others']))
+
+			skill.validated_by = models.User.objects.only('id').get(username = request.user.username)
+			skill.save()
+			return redirect('account:profile', username = username)
+
+		elif 'validation' in request.POST:
+			profile = models.User.objects.get(username = username)
+			profile.is_validate = True
+			profile.save()
+			return redirect ('account:profile', username=profile.username)
+
+
+
+
+
 class EditProfile(TemplateView):
 	template_name = 'account/profile/edit.html'
+
 
 	def get(self, request, username = ''):
 		if username != request.user.username:
@@ -51,40 +142,41 @@ class EditProfile(TemplateView):
 
 			langs = models.Student_lang.objects.filter(student = student.user.id)
 			for skill in langs:
-				skills.append(forms.SkillView(skill=skill, category='langs'))
+				skills.append(view_forms.SkillView(skill=skill, category='langs'))
 			frams = models.Student_fram.objects.filter(student = student.user.id)
 			for skill in frams:
-				skills.append(forms.SkillView(skill=skill, category='frams'))
+				skills.append(view_forms.SkillView(skill=skill, category='frams'))
 			others = models.Student_other.objects.filter(student = student.user.id)
 			for skill in others:
-				skills.append(forms.SkillView(skill=skill, category='others'))
+				skills.append(view_forms.SkillView(skill=skill, category='others'))
 
 			skills.sort(key=lambda instance: instance.value)
 
 			args = {
 				'skills': skills,
-				'form': forms.EditUser(instance = request.user),
-				'student_form': forms.EditStudent(instance = student),
+				'form': edit_forms.EditUser(instance = request.user),
+				'student_form': edit_forms.EditStudent(instance = student),
 			}
 
 		else:
 		# edit profile (teacher, employer)
 			args = {
-				'form': forms.EditUser(instance = request.user),
+				'form': edit_forms.EditUser(instance = request.user),
 			}
 			
 		return render(request, self.template_name, args)
 
 
+
 	def post(self, request, username = ''):
-		student = models.StudentProfile.objects.get(user = request.user.id)
 
 		if (request.user.category == tuples.CATEGORY.STUDENT) :
 
 		# edit student profile
 			if 'profile' in request.POST:
-				form = forms.EditUser(request.POST, instance = request.user)
-				student_form = forms.EditStudent(request.POST, instance = student)
+				student = models.StudentProfile.objects.get(user = request.user.id)
+				form = edit_forms.EditUser(request.POST, instance = request.user)
+				student_form = edit_forms.EditStudent(request.POST, instance = student)
 				if form.is_valid() and student_form.is_valid():
 					form.save()
 					student_form.save()
@@ -101,7 +193,7 @@ class EditProfile(TemplateView):
 		else:
 		# edit profile (teacher, employer)
 			if 'profile' in request.POST:
-				form = forms.EditUser(request.POST, instance = request.user)
+				form = edit_forms.EditUser(request.POST, instance = request.user)
 				if form.is_valid():
 					form.save()
 					return redirect('account:profile', username=request.user.username)
@@ -110,130 +202,49 @@ class EditProfile(TemplateView):
 
 
 
-# Show own or someone else's profile
-def profile(request, username = ''):
-	if username == '':
-		return redirect('account:profile', username=request.user.username)
 
 
-	args = {}
-	user = models.User.objects.get(username = request.user.username)
-	profile = models.User.objects.get(username = username)
-
-	# validatin permission - possibility to validate:
-	# student's skill, persons
-	if (user.category == tuples.CATEGORY.TEACHER) and user.is_validate:
-		validation_permission = True
-		if (username == user.username) :
-			validation_permission = False
-	else:
-		validation_permission = False
-
-	# need to display button 'edit profile'
-	if (username == user.username) :
-		own_profile = True
-	else:
-		own_profile = False
-
-	args['validation_permission'] = validation_permission
-	args['own_profile'] = own_profile
-	args['user_form'] = profile
-	
-
-	# if user want to view profile of student
-	if (profile.category == tuples.CATEGORY.STUDENT) and models.Student.objects.filter(user = profile.id).exists() :
-		student = models.StudentProfile.objects.get(user = profile.id)
-
-		args['student'] = student
-		args['student_lang'] = tuples.LANG().value(student.lang)
+class AddSkill(TemplateView):
+	template_name = 'account/profile/add_skill.html'
 
 
-	# show skills
-		skills = []
+	def get(self, request, username = ''):
+		if username != request.user.username:
+			return redirect('account:add_skill', username=request.user.username)
 
-		langs = models.Student_lang.objects.filter(student = student.user.id)
-		for skill in langs:
-			skills.append(forms.SkillView(skill=skill, category='langs'))
-		frams = models.Student_fram.objects.filter(student = student.user.id)
-		for skill in frams:
-			skills.append(forms.SkillView(skill=skill, category='frams'))
-		others = models.Student_other.objects.filter(student = student.user.id)
-		for skill in others:
-			skills.append(forms.SkillView(skill=skill, category='others'))
-
-		skills.sort(key=lambda instance: instance.value)
-		args['skills'] = skills
+		#if student profile don't exist create profile
+		if models.StudentProfile.objects.filter(user = request.user.id).exists() :
+			student = models.StudentProfile.objects.get(user = request.user.id)
+		else:
+			return redirect('account:add_profile')
 
 
-	if request.method == 'POST' and 'skills' in request.POST:
-		if 'langs' in request.POST:
-			skill = models.Student_lang.objects.get(id = int(request.POST['langs']))
-		elif 'frams' in request.POST:
-			skill = models.Student_fram.objects.get(id = int(request.POST['frams']))
-		elif 'others' in request.POST:
-			skill = models.Student_other.objects.get(id = int(request.POST['others']))
-
-		skill.validated_by = models.User.objects.only('id').get(username = user.username)
-		skill.save()
-		return redirect('account:profile', username = username)
-
-	if request.method == 'POST' and 'validation' in request.POST:
-		profile.is_validate = True
-		profile.save()
-		return redirect ('account:profile', username=profile.username)
-
-
-	return render(request, 'account/profile/profile.html', args)
+		args = {
+			'lang_form': forms.Lang(),
+			'fram_form': forms.Fram(),
+			'other_form': forms.Other(),
+		}
+		return render(request, self.template_name, args)
 
 
 
+	def post(self, request, username = ''):
+		student = models.Student.objects.get(user = request.user.id)
 
+		if 'lang' in request.POST:
+			form = forms.Lang(request.POST, student=student)
+		elif 'fram' in request.POST:
+			form = forms.Fram(request.POST, student=student)
+		elif 'other' in request.POST:
+			form = forms.Other(request.POST, student=student)	
 
-def add_skill(request, username = ''):
-	if username != request.user.username:
-		return redirect('account:add_skill', username=request.user.username)
-
-
-	#if student profile don't exist create profile
-	if models.StudentProfile.objects.filter(user = request.user.id).exists() :
-		student = models.StudentProfile.objects.get(user = request.user.id)
-	else:
-		return redirect('account:add_profile')
-
-
-	this_url = reverse('account:add_skill', kwargs={'username': request.user.username})
-	args = {}
-
-	student = models.Student.objects.get(user = request.user.id)
-
-	if request.method == 'POST' and 'lang' in request.POST:
-		lang_form = forms.Lang(request.POST, student=student)
-		if lang_form.is_valid():
-			lang_form.save()
-			return redirect(this_url)
-	else:
-		lang_form = forms.Lang()
-	args['lang_form'] = lang_form	
-
-
-	if request.method == 'POST' and 'fram' in request.POST:
-		fram_form = forms.Fram(request.POST, student=student)
-		if fram_form.is_valid():
-			fram_form.save()
-			return redirect(this_url)
-	else:
-		fram_form = forms.Fram()
-	args['fram_form'] = fram_form
-
-
-	if request.method == 'POST' and 'other' in request.POST:
-		other_form = forms.Other(request.POST, student=student)
-		if other_form.is_valid():
-			other_form.save()
-			return redirect(this_url)
-	else:
-		other_form = forms.Other()
-	args['other_form'] = other_form
-
-
-	return render(request, 'account/profile/add_skill.html', args)
+		if form.is_valid():
+			form.save()
+			return redirect('account:add_skill', username=request.user.username)
+		else:
+			args = {
+				'lang_form': forms.Lang(),
+				'fram_form': forms.Fram(),
+				'other_form': forms.Other(),
+			}
+			return render(request, self.template_name, args)
