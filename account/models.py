@@ -80,7 +80,11 @@ class Language(SkillBase):
 
 #programing fraimworks model
 class Framework(SkillBase):
+	value = models.CharField(max_length = 50)
 	lang = models.ForeignKey(Language, on_delete=models.CASCADE)
+
+	class Meta:
+		unique_together = ('value', 'lang')
 
 	def get_lang(self):
 		return self.lang.get_value()

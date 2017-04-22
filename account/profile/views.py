@@ -42,15 +42,12 @@ class Profile(TemplateView):
 	template_name = 'account/profile/profile.html'
 
 
-	def get(self, request, username = ''):
-		if username == '':
-			return redirect('account:profile', username=request.user.username)
 
+	def render(self, request, username = '', new_args = None):
 		args = {}
 		user = models.User.objects.get(username = request.user.username)
 		profile = models.User.objects.get(username = username)
 		args['user_form'] = profile
-
 
 		# validatin permission - possibility to validate:
 		# student's skill, persons
@@ -63,7 +60,6 @@ class Profile(TemplateView):
 		args['validation_permission'] = validation_permission
 
 
-		# need to display button 'edit profile'
 		if (username == user.username) :
 			own_profile = True
 		else:
@@ -92,7 +88,19 @@ class Profile(TemplateView):
 			skills.sort(key=lambda instance: instance.value)
 			args['skills'] = skills
 
+
+		if new_args:
+			for i in new_args:
+				args[i] = new_args[i]
 		return render(request, self.template_name, args)
+
+
+
+	def get(self, request, username = ''):
+		if username == '':
+			return redirect('account:profile', username=request.user.username)
+
+		return self.render(request=request, username=username)
 
 
 
@@ -116,6 +124,9 @@ class Profile(TemplateView):
 			profile.save()
 			return redirect ('account:profile', username=profile.username)
 
+		return self.get(request=request, username=username)
+
+
 
 
 
@@ -124,18 +135,10 @@ class EditProfile(TemplateView):
 	template_name = 'account/profile/edit.html'
 
 
-	def get(self, request, username = ''):
-		if username != request.user.username:
-			return redirect('account:edit_profile', username=request.user.username)
 
-
+	def render(self, request, username = '', new_args = None):
 		if (request.user.category == tuples.CATEGORY.STUDENT) :
-
-		#if student profile don't exist create profile
-			if models.StudentProfile.objects.filter(user = request.user.id).exists() :
-				student = models.StudentProfile.objects.get(user = request.user.id)
-			else:
-				return redirect('account:add_profile')
+			student = models.StudentProfile.objects.get(user = request.user.id)
 
 		# show skills
 			skills = []
@@ -157,19 +160,35 @@ class EditProfile(TemplateView):
 				'form': edit_forms.EditUser(instance = request.user),
 				'student_form': edit_forms.EditStudent(instance = student),
 			}
-
 		else:
 		# edit profile (teacher, employer)
 			args = {
 				'form': edit_forms.EditUser(instance = request.user),
 			}
 			
+		if new_args:
+			for i in new_args:
+				args[i] = new_args[i]
 		return render(request, self.template_name, args)
 
 
 
-	def post(self, request, username = ''):
+	def get(self, request, username = ''):
+		if username != request.user.username:
+			return redirect('account:edit_profile', username=request.user.username)
 
+		#if student profile don't exist create profile
+		if (
+			request.user.category == tuples.CATEGORY.STUDENT and 
+			models.StudentProfile.objects.filter(user = request.user.id).exists() == False
+			):
+			return redirect('account:add_profile')
+
+		return self.render(request=request, username=username)
+
+
+
+	def post(self, request, username = ''):
 		if (request.user.category == tuples.CATEGORY.STUDENT) :
 
 		# edit student profile
@@ -181,6 +200,12 @@ class EditProfile(TemplateView):
 					form.save()
 					student_form.save()
 					return redirect('account:profile', username=request.user.username)
+				else:
+					args = {
+						'form': form,
+						'student_form':student_form,
+					}
+					return self.render(request=request, username=username, new_args=args)
 		
 		# delete skill
 			elif 'langs' in request.POST:
@@ -197,8 +222,12 @@ class EditProfile(TemplateView):
 				if form.is_valid():
 					form.save()
 					return redirect('account:profile', username=request.user.username)
+				else:
+					args = {'form': form, }
+					return self.render(request=request, username=username, new_args=args)
 
-		return redirect('account:edit_profile', username=request.user.username)
+
+		return self.get(request=request, username=username)
 
 
 
@@ -206,6 +235,21 @@ class EditProfile(TemplateView):
 
 class AddSkill(TemplateView):
 	template_name = 'account/profile/add_skill.html'
+
+
+
+	def render(self, request, username = '', new_args = None):
+		args = {
+			'lang_form': forms.Lang(),
+			'fram_form': forms.Fram(),
+			'other_form': forms.Other(),
+		}
+
+		if new_args:
+			for i in new_args:
+				args[i] = new_args[i]
+		return render(request, self.template_name, args)
+
 
 
 	def get(self, request, username = ''):
@@ -218,13 +262,7 @@ class AddSkill(TemplateView):
 		else:
 			return redirect('account:add_profile')
 
-
-		args = {
-			'lang_form': forms.Lang(),
-			'fram_form': forms.Fram(),
-			'other_form': forms.Other(),
-		}
-		return render(request, self.template_name, args)
+		return self.render(request=request, username=username)
 
 
 
@@ -242,9 +280,8 @@ class AddSkill(TemplateView):
 			form.save()
 			return redirect('account:add_skill', username=request.user.username)
 		else:
-			args = {
-				'lang_form': forms.Lang(),
-				'fram_form': forms.Fram(),
-				'other_form': forms.Other(),
-			}
-			return render(request, self.template_name, args)
+			args = {'form': form, }
+			return self.render(request=request, username=username, new_args=args)
+		
+		return self.get(request=request, username=username)
+

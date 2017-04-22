@@ -15,7 +15,8 @@ class AddSkill(TemplateView):
 	template_name = 'core/add_skill.html'
 
 
-	def get(self, request):
+
+	def render(self, request, new_args = None):
 		if request.user.category in (tuples.CATEGORY.TEACHER, tuples.CATEGORY.EMPLOYER):
 			permission = True
 		else:
@@ -34,7 +35,7 @@ class AddSkill(TemplateView):
 		for i in queryset:
 			skills.append(forms.SkillView(skill=i, category='others'))
 
-		skills.sort(key=lambda instance: instance.added_at)
+		skills.sort(key=lambda instance: instance.value)
 
 		args = {
 			'lang_form': forms.Lang(),
@@ -44,12 +45,20 @@ class AddSkill(TemplateView):
 			'skills': skills,
 		}
 
+
+		if new_args:
+			for i in new_args:
+				args[i] = new_args[i]
 		return render(request, self.template_name, args)
 
 
-	def post(self, request):
-		args = {}
 
+	def get(self, request):
+		return self.render(request=request)
+
+
+
+	def post(self, request):
 		if 'skills' in request.POST:
 
 			if 'langs' in request.POST:
@@ -70,9 +79,9 @@ class AddSkill(TemplateView):
 			return redirect('core:add_skill')
 
 		else:
-			if 'lang' in request.POST:
+			if 'language' in request.POST:
 				form = forms.Lang(request.POST)
-			elif 'fram' in request.POST:
+			elif 'framework' in request.POST:
 				form = forms.Fram(request.POST)
 			elif 'other' in request.POST:
 				form = forms.Other(request.POST)
@@ -84,6 +93,15 @@ class AddSkill(TemplateView):
 					form.save()
 				return redirect('core:add_skill')
 
-		return render(request, self.template_name, args)
+			else:
+				if 'language' in request.POST:
+					args = {'lang_form': form, }
+				elif 'framework' in request.POST:
+					args = {'fram_form': form, }
+				elif 'other' in request.POST:
+					args = {'other_form': form, }
+				
+				return self.render(request=request, new_args=args)
 
+		return self.get(request=request)
 

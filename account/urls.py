@@ -5,7 +5,6 @@ from .forms import Login as LoginForm
 from django.contrib.auth.views import login, logout
 
 
-
 app_name = 'account'
 
 urlpatterns = [
