@@ -5,6 +5,9 @@ _style = 'width:auto;'
 _class = 'form-control'
 
 
+
+
+
 # base form for all type of skill
 class Skill(forms.ModelForm):
 	def save(self, commit=True, validated_by = None):
@@ -18,7 +21,10 @@ class Skill(forms.ModelForm):
 		return instance
 
 
-class Lang(Skill):
+
+
+
+class Language(Skill):
 	value = forms.CharField(
 		label="Language",
 		max_length=50,
@@ -27,7 +33,6 @@ class Lang(Skill):
 			'placeholder': 'Title of language',
 			'class': _class,
 			'style': _style,
-			'name': 'lang'
 			}))
 
 	class Meta:
@@ -36,15 +41,16 @@ class Lang(Skill):
 
 
 
-class Fram(Skill):
+
+
+class Framework(Skill):
 	lang = forms.ModelChoiceField(
 		queryset = models.Language.objects.exclude(validated_by__isnull=True).order_by('value'),
 		label = 'Language',
 		required = True,
 		widget=forms.Select(attrs={
 			'class': _class,
-			'style': 'width:auto;',
-			'name': 'fram_langs'
+			'style': _style,
 			}))
 
 	value = forms.CharField(
@@ -55,7 +61,6 @@ class Fram(Skill):
 			'placeholder': 'Title of framework',
 			'class': _class,
 			'style': _style,
-			'name': 'fram'
 			}))
 
 	class Meta:
@@ -73,12 +78,12 @@ class Other(Skill):
 			'placeholder': 'Title of technique',
 			'class': _class,
 			'style': _style,
-			'name': 'other'
 			}))
 
 	class Meta:
 		model = models.Other
 		fields = ('value', )
+
 
 
 

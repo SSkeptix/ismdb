@@ -3,53 +3,34 @@ from django.contrib.auth.models import AbstractUser
 from . import tuples
 
 
+
+
+
 #custom User
 class User(AbstractUser):
-	is_validate = models.BooleanField(default = False)
 	category = models.IntegerField(choices=tuples.CATEGORY.SELECT, default=tuples.CATEGORY.STUDENT)
+	validated_by = models.ForeignKey('User', on_delete=models.SET_NULL, related_name='validate_by', null = True, blank = True)
 
 	def __str__(self):
 		return str(self.get_username())
+
+
+
 
 
 # extra field for user - Student
-class StudentBase(models.Model):
+class Student(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key = True)
-	lang = models.IntegerField(choices=tuples.LANG.SELECT, default=tuples.LANG.A1)
-
-	class Meta:
-		abstract = True
-
-	def get_username(self):
-		return self.user.get_username()
-
-	def __str__(self):
-		return str(self.get_username())
-
-
-
-class StudentProfile(StudentBase):
+	english = models.IntegerField(choices=tuples.ENGLISH.SELECT, default=tuples.ENGLISH.A1)
 	group = models.CharField(max_length = 50, null = True)
-	validate_by = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='validate_by', null = True, blank = True)
-	updated = models.DateField(auto_now=True)
 	github = models.URLField(null = True, blank = True)
 	description = models.TextField(max_length = 2000, null = True, blank = True)
 
-	class Meta:
-		managed = True
-		db_table = 'account_student'
+	def get_username(self):
+		return self.user.username
 
-class Student(StudentBase):
-	class Meta:
-		managed = False
-		db_table = 'account_student'
-
-
-
-
-#
-#	--- Student skills ---
-#
+	def __str__(self):
+		return str(self.get_username())
 
 
 
@@ -70,8 +51,6 @@ class SkillBase(models.Model):
 
 	def __str__(self):
 		return str(self.get_value())
-
-
 
 
 #programing languages model
@@ -101,7 +80,7 @@ class Other(SkillBase):
 
 
 # abstract model for student skills
-class Student_skill(models.Model):
+class StudentSkill(models.Model):
 	student = models.ForeignKey(Student, on_delete=models.CASCADE)
 	validated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null = True, blank = True)
 	validated_at = models.DateField(auto_now=True)
@@ -113,23 +92,11 @@ class Student_skill(models.Model):
 	def __str__(self):
 		return str("%s - %s" % (self.student.get_username(), self.skill.get_value()) )
 
-
-
-
-# student - language
-class Student_lang(Student_skill):
+class StudentLanguage(StudentSkill):
 	skill = models.ForeignKey(Language, on_delete=models.CASCADE)
 
-
-# student - framework
-class Student_fram(Student_skill):
+class StudentFramework(StudentSkill):
 	skill = models.ForeignKey(Framework, on_delete=models.CASCADE)
 
-
-# student - other
-class Student_other(Student_skill):
+class StudentOther(StudentSkill):
 	skill = models.ForeignKey(Other, on_delete=models.CASCADE)
-
-#
-#	--- Student skills - end ---
-#

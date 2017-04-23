@@ -15,7 +15,6 @@ class EditUser(forms.ModelForm):
 		widget=forms.TextInput(attrs={
 			'placeholder': 'pro100_Hacker',
 			'class': _class,
-			'name': 'username'
 			}))
 
 	first_name = forms.CharField(
@@ -25,7 +24,6 @@ class EditUser(forms.ModelForm):
 		widget=forms.TextInput(attrs={
 			'placeholder': 'Петро',
 			'class': _class,
-			'name': 'first_name'
 			}))
 
 	last_name = forms.CharField(
@@ -35,7 +33,6 @@ class EditUser(forms.ModelForm):
 		widget=forms.TextInput(attrs={
 			'placeholder': 'Петренко',
 			'class': _class,
-			'name': 'last_name'
 			}))
 
 	email = forms.EmailField(
@@ -45,7 +42,6 @@ class EditUser(forms.ModelForm):
 		widget=forms.TextInput(attrs={
 			'placeholder': 'pro100hacker@mail.com',
 			'class': _class,
-			'name': 'email'
 			}))
 
 	class Meta:
@@ -71,8 +67,8 @@ class EditUser(forms.ModelForm):
 
 
 class EditStudent(forms.ModelForm):
-	lang = forms.ChoiceField(
-		choices = tuples.LANG.SELECT,
+	english = forms.ChoiceField(
+		choices = tuples.ENGLISH.SELECT,
 		label = 'English level',
 		required = True,
 		widget=forms.Select(attrs={
@@ -86,7 +82,6 @@ class EditStudent(forms.ModelForm):
 		max_length=200, 
 		widget=forms.TextInput(attrs={
 			'class': _class,
-			'name': 'github'
 			}))
 
 	group = forms.CharField(
@@ -95,7 +90,6 @@ class EditStudent(forms.ModelForm):
 		max_length=50, 
 		widget=forms.TextInput(attrs={
 			'class': _class,
-			'name': 'group'
 			}))
 
 
@@ -108,9 +102,9 @@ class EditStudent(forms.ModelForm):
 			}))
 
 	class Meta:
-		model = models.StudentProfile
+		model = models.Student
 		fields = (
-			'lang',
+			'english',
 			'group',
 			'github',
 			'description',

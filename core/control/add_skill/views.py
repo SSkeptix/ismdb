@@ -11,37 +11,46 @@ from django.http import HttpResponse
 
 
 
+
+
 class AddSkill(TemplateView):
 	template_name = 'core/add_skill.html'
 
+	permission = None
+
+
+
+	def init(self, request):
+		if request.user.category in (tuples.CATEGORY.TEACHER, tuples.CATEGORY.EMPLOYER) and request.user.validated_by:
+			self.permission = True
+		else:
+			self.permission = False
+		
 
 
 	def render(self, request, new_args = None):
-		if request.user.category in (tuples.CATEGORY.TEACHER, tuples.CATEGORY.EMPLOYER):
-			permission = True
-		else:
-			permission = False
+		
 
 		# show skills that are waiting to confirmation
 		skills = []
 
 		queryset = models.Language.objects.filter(validated_by__isnull = True)
 		for i in queryset:
-			skills.append(forms.SkillView(skill=i, category='langs'))
+			skills.append(forms.SkillView(skill=i, category='language'))
 		queryset = models.Framework.objects.filter(validated_by__isnull = True)
 		for i in queryset:
-			skills.append(forms.SkillView(skill=i, category='frams'))
+			skills.append(forms.SkillView(skill=i, category='framework'))
 		queryset = models.Other.objects.filter(validated_by__isnull = True)
 		for i in queryset:
-			skills.append(forms.SkillView(skill=i, category='others'))
+			skills.append(forms.SkillView(skill=i, category='other'))
 
 		skills.sort(key=lambda instance: instance.value)
 
 		args = {
-			'lang_form': forms.Lang(),
-			'fram_form': forms.Fram(),
+			'language_form': forms.Language(),
+			'framework_form': forms.Framework(),
 			'other_form': forms.Other(),
-			'permission': permission,
+			'permission': self.permission,
 			'skills': skills,
 		}
 
@@ -54,51 +63,55 @@ class AddSkill(TemplateView):
 
 
 	def get(self, request):
+		self.init(request=request)
+
 		return self.render(request=request)
 
 
 
 	def post(self, request):
-		if 'skills' in request.POST:
+		self.init(request=request)
 
-			if 'langs' in request.POST:
-				skill = models.Language.objects.get(id = int(request.POST['langs']))
-			elif 'frams' in request.POST:
-				skill = models.Framework.objects.get(id = int(request.POST['frams']))
-			elif 'others' in request.POST:
-				skill = models.Other.objects.get(id = int(request.POST['others']))
+		if 'skill_validation' in request.POST:
 
-			if request.POST['skills'] == 'Delete':
+			if 'language' in request.POST:
+				skill = models.Language.objects.get(id = int(request.POST['language']))
+			elif 'framework' in request.POST:
+				skill = models.Framework.objects.get(id = int(request.POST['framework']))
+			elif 'other' in request.POST:
+				skill = models.Other.objects.get(id = int(request.POST['other']))
+
+			if request.POST['skill_validation'] == 'Delete':
 				skill.delete()
-			elif request.POST['skills'] == 'Change':
+			elif request.POST['skill_validation'] == 'Change':
 				return HttpResponse('change')
-			elif request.POST['skills'] == 'Save':
+			elif request.POST['skill_validation'] == 'Save':
 				skill.validated_by = models.User.objects.get(id=request.user.id)
 				skill.save()
 
 			return redirect('core:add_skill')
 
 		else:
-			if 'language' in request.POST:
-				form = forms.Lang(request.POST)
-			elif 'framework' in request.POST:
-				form = forms.Fram(request.POST)
-			elif 'other' in request.POST:
+			if 'add_language' in request.POST:
+				form = forms.Language(request.POST)
+			elif 'add_framework' in request.POST:
+				form = forms.Framework(request.POST)
+			elif 'add_other' in request.POST:
 				form = forms.Other(request.POST)
 
 			if form.is_valid():
-				if request.user.category in (tuples.CATEGORY.TEACHER, tuples.CATEGORY.EMPLOYER):
+				if self.permission:
 					form.save(validated_by = models.User.objects.get(id=request.user.id))
 				else:
 					form.save()
 				return redirect('core:add_skill')
 
 			else:
-				if 'language' in request.POST:
-					args = {'lang_form': form, }
-				elif 'framework' in request.POST:
-					args = {'fram_form': form, }
-				elif 'other' in request.POST:
+				if 'add_language' in request.POST:
+					args = {'language_form': form, }
+				elif 'add_framework' in request.POST:
+					args = {'framework_form': form, }
+				elif 'add_other' in request.POST:
 					args = {'other_form': form, }
 				
 				return self.render(request=request, new_args=args)

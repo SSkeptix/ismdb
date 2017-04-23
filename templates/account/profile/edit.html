@@ -7,7 +7,7 @@
     <br/>
     {% csrf_token %}
     
-	    {% for field in form %}
+	    {% for field in user_form %}
 	    
 	    <div class="form-group">
 	    <label class="col-sm-2 control-label" >{{ field.label_tag }}</label>
@@ -56,46 +56,46 @@
 
   	{% if skills %}
     <div class="col-xs-12 col-sm-12"> 
-	<table class = "table table-striped">
-		<thead>
-		<tr>
-            <th class="col-md-3 col-lg-3">Skill</th>
-            <th class="col-md-3 col-lg-3">Validate by</th>
-            <th class="col-md-3 col-lg-3">Added at</th>
-            <th class="col-md-3 col-lg-3"></th>
-         </tr>
-		</thead>
+    	<table class = "table table-striped">
+    		<thead>
+    		<tr>
+                <th class="col-md-3 col-lg-3">Skill</th>
+                <th class="col-md-3 col-lg-3">Validate by</th>
+                <th class="col-md-3 col-lg-3">Added at</th>
+                <th class="col-md-3 col-lg-3"></th>
+             </tr>
+    		</thead>
 
-        <tbody>
-		{% for i in skills %}
-          <tr>
-            <td style = "white-space: nowrap">{{ i.value }}</td>
-            
-            {% if i.validated_by %}
-            <td style = "white-space: nowrap">
-                <a href="{% url 'account:profile' username=i.validated_by_username %}" target="_blank">{{ i.validated_by }}</a>
-            </td>
-            <td style = "white-space: nowrap">{{ i.validated_at }}</td>
-            {% else %}
-            {{ i.validated_by }}
-            <td>None</td>
-            <td>---</td>
-            {% endif %}
-            
-            <td align="right">
-                <form method="POST"> {% csrf_token %} 
-                    <input type="hidden" name="{{ i.category }}" value="{{ i.id }}">
-                    <input class="btn btn-sm btn-danger" type="submit" value="Delete" />
-                </form>
-            </td>
-          </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-    <p>You don't have any skills</p>
-    {% endif %}
+            <tbody>
+    		{% for i in skills %}
+              <tr>
+                <td style = "white-space: nowrap">{{ i.value }}</td>
+                
+                {% if i.validated_by %}
+                <td style = "white-space: nowrap">
+                    <a href="{% url 'account:profile' username=i.validated_by_username %}" target="_blank">{{ i.validated_by }}</a>
+                </td>
+                <td style = "white-space: nowrap">{{ i.validated_at }}</td>
+                {% else %}
+                <td>None</td>
+                <td>---</td>
+                {% endif %}
+                
+                <td align="right">
+                    <form method="POST"> {% csrf_token %} 
+                        <input type="hidden" name="{{ i.category }}" value="{{ i.id }}">
+                        <input class="btn btn-sm btn-danger" type="submit" value="Delete" />
+                    </form>
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
+    {% else %}
+        <p>You don't have any skills</p>
+    {% endif %} 
+       
     <a href="{% url 'account:add_skill' username=user.username %}" class="btn btn-success btn-primary btn-lg" role="button">Add skill</a>
 
 </div>

@@ -52,7 +52,7 @@ Profile
 				          </tr>
 				          <tr>
 				            <td align="right" style = "white-space: nowrap">English Level:</td>
-				            <td>{{ student_lang }}</td>
+				            <td>{{ student_english }}</td>
 				          </tr>
 				          <tr>
 				            <td align="right" style = "white-space: nowrap; ">GitHub:</td>
@@ -66,13 +66,13 @@ Profile
 
 				          <tr>
 				            <td align="right" style = "white-space: nowrap; ">Is validated:</td>
-				            {% if user_form.is_validate %}
+				            {% if user_form.validated_by %}
 				            <td>Yes</td>
 				            {% else %}
 				            	{% if validation_permission %}
 				            	<td>
 				            		<form method="POST"> {% csrf_token %} 
-					                    <input class="btn btn-sm btn-success" type="submit" name="validation" value="Confirm" />
+					                    <input class="btn btn-sm btn-success" type="submit" name="user_validation" value="Confirm" />
                 					</form>
 				            	</td>
 				            	{% else %}
@@ -95,7 +95,6 @@ Profile
 
 				<div class="collapse" id="skills">
 				  <div class="card card-block">
-				  	<br/>
 				    {% if skills %}
 
 					<table class = "table table-striped">
@@ -124,7 +123,7 @@ Profile
 				            	<td>
 				            		<form method="POST"> {% csrf_token %} 
 					                    <input type="hidden" name="{{ i.category }}" value="{{ i.id }}">
-					                    <input class="btn btn-sm btn-success" type="submit" name="skills" value="Confirm" />
+					                    <input class="btn btn-sm btn-success" type="submit" name="skill_validation" value="Confirm" />
                 					</form>
 				            	</td>
 				            	{% else %}

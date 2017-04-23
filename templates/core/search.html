@@ -40,16 +40,16 @@ Search
 		        	<tr>
 		        	<form method="post">
 		        		{% csrf_token %}
-			        	<td align="center">{{ lang_form.value.label_tag }}</td>
-			        	<td align="center">{{ lang_form.value }}</td>
+			        	<td align="center">{{ language_form.value.label_tag }}</td>
+			        	<td align="center">{{ language_form.value }}</td>
 			        	<td align="center"><input class="btn btn-success" type="submit" value="Add" name="langs"/></td>
 			        </form>
 			        </tr>
 			        <tr>
 		        	<form method="post">
 		        		{% csrf_token %}
-			        	<td align="center">{{ fram_form.value.label_tag }}</td>
-			        	<td align="center">{{ fram_form.value }}</td>
+			        	<td align="center">{{ framework_form.value.label_tag }}</td>
+			        	<td align="center">{{ framework_form.value }}</td>
 			        	<td align="center"><input class="btn btn-success" type="submit" value="Add" name="frams"/></td>
 			        </form>
 			        </tr>

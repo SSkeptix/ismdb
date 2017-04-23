@@ -13,9 +13,9 @@ class AddStudent(EditStudent):
 	user = None
 
 	class Meta:
-		model = models.StudentProfile
+		model = models.Student
 		fields = (
-			'lang',
+			'english',
 			'group',
 			'github',
 			'description',
@@ -47,19 +47,16 @@ class AddStudent(EditStudent):
 
 
 # base form for all type of skill
-class Skill(forms.ModelForm):
+class StudentSkill(forms.ModelForm):
 	student = None
 
 	def __init__(self, *args, **kwargs):
 		self.student = kwargs.pop('student', None)
-		super(Skill, self).__init__(*args, **kwargs)
+		super(StudentSkill, self).__init__(*args, **kwargs)
 
 	def save(self, commit=True):
-		instance = super(Skill, self).save(commit=False)
-		if self.student == models.Student:
-			instance.student = self.student
-		else:
-			instance.student = models.Student.objects.get(user__id = self.student.user.id)
+		instance = super(StudentSkill, self).save(commit=False)
+		instance.student = self.student
 
 		if commit:
 			instance.save()
@@ -69,7 +66,7 @@ class Skill(forms.ModelForm):
 
 
 
-class Lang(Skill):
+class StudentLanguage(StudentSkill):
 	skill = forms.ModelChoiceField(
 		queryset = models.Language.objects.exclude(validated_by__isnull=True).order_by('value'),
 		label = 'Language',
@@ -80,7 +77,7 @@ class Lang(Skill):
 			}))
 
 	class Meta:
-		model = models.Student_lang
+		model = models.StudentLanguage
 		exclude = (
 			'student',
 			'validated_by', 
@@ -88,10 +85,10 @@ class Lang(Skill):
 			)
 
 	def is_valid(self):
-		valid = super(Lang, self).is_valid()
+		valid = super(StudentLanguage, self).is_valid()
 		if not valid:
 			return valid
-		if models.Student_lang.objects.filter(student = self.student.user.id, skill = self.cleaned_data['skill']).count():
+		if models.StudentLanguage.objects.filter(student = self.student.user.id, skill = self.cleaned_data['skill']).count():
 			self._errors['skill_exists'] = 'Skill is already exist'
 			return False
 		return True
@@ -100,7 +97,7 @@ class Lang(Skill):
 
 
 
-class Fram(Skill):
+class StudentFramework(StudentSkill):
 	skill = forms.ModelChoiceField(
 		queryset = models.Framework.objects.exclude(validated_by__isnull=True).order_by('lang__value', 'value'),
 		label = 'Framework',
@@ -111,7 +108,7 @@ class Fram(Skill):
 			}))
 
 	class Meta:
-		model = models.Student_fram
+		model = models.StudentFramework
 		exclude = (
 			'student',
 			'validated_by', 
@@ -119,10 +116,10 @@ class Fram(Skill):
 			)
 
 	def is_valid(self):
-		valid = super(Fram, self).is_valid()
+		valid = super(StudentFramework, self).is_valid()
 		if not valid:
 			return valid
-		if models.Student_fram.objects.filter(student = self.student.user.id, skill = self.cleaned_data['skill']).count():
+		if models.StudentFramework.objects.filter(student = self.student.user.id, skill = self.cleaned_data['skill']).count():
 			self._errors['skill_exists'] = 'Skill is already exist'
 			return False
 		return True
@@ -131,7 +128,7 @@ class Fram(Skill):
 
 
 
-class Other(Skill):
+class StudentOther(StudentSkill):
 	skill = forms.ModelChoiceField(
 		queryset = models.Other.objects.exclude(validated_by__isnull=True).order_by('value'),
 		label = 'Other skill',
@@ -142,7 +139,7 @@ class Other(Skill):
 			}))
 
 	class Meta:
-		model = models.Student_other
+		model = models.StudentOther
 		exclude = (
 			'student',
 			'validated_by', 
@@ -150,10 +147,10 @@ class Other(Skill):
 			)
 
 	def is_valid(self):
-		valid = super(Other, self).is_valid()
+		valid = super(StudentOther, self).is_valid()
 		if not valid:
 			return valid
-		if models.Student_other.objects.filter(student = self.student.user.id, skill = self.cleaned_data['skill']).count():
+		if models.StudentOther.objects.filter(student = self.student.user.id, skill = self.cleaned_data['skill']).count():
 			self._errors['skill_exists'] = 'Skill is already exist'
 			return False
 		return True
