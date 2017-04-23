@@ -3,13 +3,18 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from . import models 
 from . import tuples
 
+	_class = 'form-control'
+
+
+
+
 
 class Login(AuthenticationForm):
 	username = forms.CharField(
 		label="Username",
 		max_length=50, 
 		widget=forms.TextInput(attrs={
-			'class': 'form-control',
+			'class': _class,
 			'name': 'username'
 			}))
 
@@ -17,14 +22,15 @@ class Login(AuthenticationForm):
 		label="Password",
 		max_length=50, 
 		widget=forms.PasswordInput(attrs={
-			'class': 'form-control',
+			'class': _class,
 			'name': 'password'
 			}))
 
 
 
+
+
 class Registration(UserCreationForm):
-	_class = 'form-control'
 
 	username = forms.CharField(
 		label="Username",
@@ -100,7 +106,6 @@ class Registration(UserCreationForm):
 			'style': 'width:auto;'
 			}))
 
-
 	class Meta:
 		model = models.User
 		fields = (
@@ -125,7 +130,6 @@ class Registration(UserCreationForm):
 
 		return user
 
-	
 	def is_valid(self):
 		valid = super(Registration, self).is_valid()
 		if not valid:
