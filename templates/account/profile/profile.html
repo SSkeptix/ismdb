@@ -72,7 +72,7 @@ Profile
 				            	{% if validation_permission %}
 				            	<td>
 				            		<form method="POST"> {% csrf_token %} 
-					                    <input class="btn btn-sm btn-success" type="submit" name="validation" value="Confirm" />
+					                    <input class="btn btn-sm btn-success" type="submit" name="user_validation" value="Confirm" />
                 					</form>
 				            	</td>
 				            	{% else %}
@@ -124,7 +124,7 @@ Profile
 				            	<td>
 				            		<form method="POST"> {% csrf_token %} 
 					                    <input type="hidden" name="{{ i.category }}" value="{{ i.id }}">
-					                    <input class="btn btn-sm btn-success" type="submit" name="skills" value="Confirm" />
+					                    <input class="btn btn-sm btn-success" type="submit" name="skill_validation" value="Confirm" />
                 					</form>
 				            	</td>
 				            	{% else %}

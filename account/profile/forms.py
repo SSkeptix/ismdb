@@ -56,10 +56,7 @@ class StudentSkill(forms.ModelForm):
 
 	def save(self, commit=True):
 		instance = super(Skill, self).save(commit=False)
-		if self.student == models.Student:
-			instance.student = self.student
-		else:
-			instance.student = models.Student.objects.get(user__id = self.student.user.id)
+		instance.student = self.student
 
 		if commit:
 			instance.save()
