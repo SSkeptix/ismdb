@@ -1,5 +1,5 @@
 from django.conf.urls import url, include
-from . import views
+from .search.views import Search
 from .control.add_skill.views import AddSkill
 
 app_name = 'core'
@@ -7,7 +7,7 @@ app_name = 'core'
 urlpatterns = [
 
 	url(r'^search/', include([
-		url(r'^$', views.search, name = 'search'),
+		url(r'^$', Search.as_view(), name = 'search'),
 		url(r'^(?:page-(?P<page>[\d]+)/)?$', views.search, name = 'search_page'),
     ])),
 
