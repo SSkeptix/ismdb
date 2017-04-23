@@ -4,12 +4,11 @@ from .models import User, Student, StudentProfile, Language, Framework, Other, S
 
 admin.site.register(User)
 admin.site.register(Student)
-admin.site.register(StudentProfile)
 
 admin.site.register(Language)
 admin.site.register(Framework)
 admin.site.register(Other)
 
-admin.site.register(Student_lang)
-admin.site.register(Student_fram)
-admin.site.register(Student_other)
+admin.site.register(StudentLanguage)
+admin.site.register(StudentFramework)
+admin.site.register(StudentOther)
