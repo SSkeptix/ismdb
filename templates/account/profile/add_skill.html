@@ -29,17 +29,17 @@ Add skill
 	  <div class="panel panel-default">
 	    <div class="panel-heading" role="tab" id="headLang">
 	      <h4 class="panel-title">
-	        <a role="button" data-toggle="collapse" data-parent="#add_skill" href="#lang" aria-expanded="true" aria-controls="lang">
+	        <a role="button" data-toggle="collapse" data-parent="#add_skill" href="#language" aria-expanded="true" aria-controls="language">
 	          Programing languages
 	        </a>
 	      </h4>
 	    </div>
-	    <div id="lang" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headLang">
+	    <div id="language" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headLang">
 	      <div class="panel-body">
   			<form class="form-horizontal" method="post">
   				{% csrf_token %}
 	      		{{ lang_form.as_p }}
-				<input class="btn btn-success btn-sm" type="submit" name="lang" value="Add" />
+				<input class="btn btn-success btn-sm" type="submit" name="language" value="Add" />
 	      	</form>
 	      </div>
 	    </div>
@@ -48,17 +48,17 @@ Add skill
 	  <div class="panel panel-default">
 	    <div class="panel-heading" role="tab" id="headFram">
 	      <h4 class="panel-title">
-	        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#add_skill" href="#fram" aria-expanded="false" aria-controls="fram">
+	        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#add_skill" href="#framework" aria-expanded="false" aria-controls="framework">
 	          Frameworks
 	        </a>
 	      </h4>
 	    </div>
-	    <div id="fram" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headFram">
+	    <div id="framework" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headFram">
 	      <div class="panel-body">
 	      	<form class="form-horizontal" method="post">
   				{% csrf_token %}
 	      		{{ fram_form.as_p }}
-				<input class="btn btn-success btn-sm" type="submit" name="fram" value="Add" />
+				<input class="btn btn-success btn-sm" type="submit" name="framework" value="Add" />
 	      	</form>
 	      </div>
 	    </div>

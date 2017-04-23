@@ -58,34 +58,34 @@ Search
 
     <table>
 
-        {% if lang_form.value.errors %}
+        {% if language_form.value.errors %}
         <tr>
             <td></td>
-            <td>{{ lang_form.value.errors }}</td>
+            <td>{{ language_form.value.errors }}</td>
         </tr>
         {% endif %}
         <tr>
             <form class="form-horizontal" method="post">
         	    {% csrf_token %}
-                <td><label class="col-sm-2 control-label" >{{ lang_form.value.label_tag }}</label></td>
-                <td>{{ lang_form.value }}</td>
+                <td><label class="col-sm-2 control-label" >{{ language_form.value.label_tag }}</label></td>
+                <td>{{ language_form.value }}</td>
                 <td><input class="btn btn-success btn-sm" type="submit" name="add_language" value="Add" /></td>
         	</form>
         </tr>
 
 
-        {% if fram_form.value.errors %}
+        {% if framework_form.value.errors %}
         <tr>
             <td></td>
-            <td>{{ fram_form.value.errors }}</td>
+            <td>{{ framework_form.value.errors }}</td>
         </tr>
         {% endif %}
         <tr>
             <form class="form-horizontal" method="post">
                 {% csrf_token %}
-                <td><label class="col-sm-2 control-label" >{{ fram_form.value.label_tag }}</label></td>
-                <td>{{ fram_form.value }}</td>
-                <td>{{ fram_form.lang }}</td>
+                <td><label class="col-sm-2 control-label" >{{ framework_form.value.label_tag }}</label></td>
+                <td>{{ framework_form.value }}</td>
+                <td>{{ framework_form.lang }}</td>
                 <td><input class="btn btn-success btn-sm" type="submit" name="add_framework" value="Add" /></td>
             </form>
         </tr>

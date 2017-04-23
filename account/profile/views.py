@@ -157,13 +157,13 @@ class EditProfile(TemplateView):
 
 			args = {
 				'skills': skills,
-				'form': edit_forms.EditUser(instance = request.user),
+				'user_form': edit_forms.EditUser(instance = request.user),
 				'student_form': edit_forms.EditStudent(instance = student),
 			}
 		else:
 		# edit profile (teacher, employer)
 			args = {
-				'form': edit_forms.EditUser(instance = request.user),
+				'user_form': edit_forms.EditUser(instance = request.user),
 			}
 			
 		if new_args:
@@ -194,15 +194,15 @@ class EditProfile(TemplateView):
 		# edit student profile
 			if 'profile' in request.POST:
 				student = models.Student.objects.get(user = request.user.id)
-				form = edit_forms.EditUser(request.POST, instance = request.user)
+				user_form = edit_forms.EditUser(request.POST, instance = request.user)
 				student_form = edit_forms.EditStudent(request.POST, instance = student)
-				if form.is_valid() and student_form.is_valid():
-					form.save()
+				if user_form.is_valid() and student_form.is_valid():
+					user_form.save()
 					student_form.save()
 					return redirect('account:profile', username=request.user.username)
 				else:
 					args = {
-						'form': form,
+						'user_form': user_form,
 						'student_form':student_form,
 					}
 					return self.render(request=request, username=username, new_args=args)
@@ -218,12 +218,12 @@ class EditProfile(TemplateView):
 		else:
 		# edit profile (teacher, employer)
 			if 'profile' in request.POST:
-				form = edit_forms.EditUser(request.POST, instance = request.user)
-				if form.is_valid():
-					form.save()
+				user_form = edit_forms.EditUser(request.POST, instance = request.user)
+				if user_form.is_valid():
+					user_form.save()
 					return redirect('account:profile', username=request.user.username)
 				else:
-					args = {'form': form, }
+					args = {'user_form': user_form, }
 					return self.render(request=request, username=username, new_args=args)
 
 		return self.get(request=request, username=username)
@@ -239,9 +239,9 @@ class AddSkill(TemplateView):
 
 	def render(self, request, username = '', new_args = None):
 		args = {
-			'language_form': forms.Lang(),
-			'framework_form': forms.Fram(),
-			'other_form': forms.Other(),
+			'language_form': forms.StudentLanguage(),
+			'framework_form': forms.StudentFramework(),
+			'other_form': forms.StudentOther(),
 		}
 
 		if new_args:
@@ -269,11 +269,11 @@ class AddSkill(TemplateView):
 		student = models.Student.objects.get(user = request.user.id)
 
 		if 'language' in request.POST:
-			form = forms.Lang(request.POST, student=student)
+			form = forms.StudentLanguage(request.POST, student=student)
 		elif 'framework' in request.POST:
-			form = forms.Fram(request.POST, student=student)
+			form = forms.StudentFramework(request.POST, student=student)
 		elif 'other' in request.POST:
-			form = forms.Other(request.POST, student=student)	
+			form = forms.StudentOther(request.POST, student=student)	
 
 		if form.is_valid():
 			form.save()
