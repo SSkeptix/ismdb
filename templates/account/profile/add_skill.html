@@ -38,7 +38,7 @@ Add skill
 	      <div class="panel-body">
   			<form class="form-horizontal" method="post">
   				{% csrf_token %}
-	      		{{ lang_form.as_p }}
+	      		{{ language_form.as_p }}
 				<input class="btn btn-success btn-sm" type="submit" name="language" value="Add" />
 	      	</form>
 	      </div>
@@ -57,7 +57,7 @@ Add skill
 	      <div class="panel-body">
 	      	<form class="form-horizontal" method="post">
   				{% csrf_token %}
-	      		{{ fram_form.as_p }}
+	      		{{ framework_form.as_p }}
 				<input class="btn btn-success btn-sm" type="submit" name="framework" value="Add" />
 	      	</form>
 	      </div>

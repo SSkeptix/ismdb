@@ -16,13 +16,20 @@ from django.http import HttpResponse
 class AddSkill(TemplateView):
 	template_name = 'core/add_skill.html'
 
+	permission = None
+
+
+
+	def init(self, request):
+		if request.user.category in (tuples.CATEGORY.TEACHER, tuples.CATEGORY.EMPLOYER) and request.user.validated_by:
+			self.permission = True
+		else:
+			self.permission = False
+		
 
 
 	def render(self, request, new_args = None):
-		if request.user.category in (tuples.CATEGORY.TEACHER, tuples.CATEGORY.EMPLOYER) and user.validated_by:
-			permission = True
-		else:
-			permission = False
+		
 
 		# show skills that are waiting to confirmation
 		skills = []
@@ -40,10 +47,10 @@ class AddSkill(TemplateView):
 		skills.sort(key=lambda instance: instance.value)
 
 		args = {
-			'language_form': forms.Lang(),
-			'framework_form': forms.Fram(),
+			'language_form': forms.Language(),
+			'framework_form': forms.Framework(),
 			'other_form': forms.Other(),
-			'permission': permission,
+			'permission': self.permission,
 			'skills': skills,
 		}
 
@@ -56,17 +63,21 @@ class AddSkill(TemplateView):
 
 
 	def get(self, request):
+		self.init(request=request)
+
 		return self.render(request=request)
 
 
 
 	def post(self, request):
+		self.init(request=request)
+
 		if 'skill_validation' in request.POST:
 
 			if 'language' in request.POST:
 				skill = models.Language.objects.get(id = int(request.POST['language']))
 			elif 'framework' in request.POST:
-				skill = models.Framework.objects.get(id = int(request.POST['framwork']))
+				skill = models.Framework.objects.get(id = int(request.POST['framework']))
 			elif 'other' in request.POST:
 				skill = models.Other.objects.get(id = int(request.POST['other']))
 
@@ -82,14 +93,14 @@ class AddSkill(TemplateView):
 
 		else:
 			if 'add_language' in request.POST:
-				form = forms.Lang(request.POST)
+				form = forms.Language(request.POST)
 			elif 'add_framework' in request.POST:
-				form = forms.Fram(request.POST)
+				form = forms.Framework(request.POST)
 			elif 'add_other' in request.POST:
 				form = forms.Other(request.POST)
 
 			if form.is_valid():
-				if request.user.category in (tuples.CATEGORY.TEACHER, tuples.CATEGORY.EMPLOYER):
+				if self.permission:
 					form.save(validated_by = models.User.objects.get(id=request.user.id))
 				else:
 					form.save()

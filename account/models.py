@@ -9,7 +9,7 @@ from . import tuples
 #custom User
 class User(AbstractUser):
 	category = models.IntegerField(choices=tuples.CATEGORY.SELECT, default=tuples.CATEGORY.STUDENT)
-	validated_by = models.ForeignKey('User', on_delete=models.SET_NULL, related_name='validated_by', null = True, blank = True)
+	validated_by = models.ForeignKey('User', on_delete=models.SET_NULL, related_name='validate_by', null = True, blank = True)
 
 	def __str__(self):
 		return str(self.get_username())
@@ -21,12 +21,16 @@ class User(AbstractUser):
 # extra field for user - Student
 class Student(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key = True)
-	english = models.IntegerField(choices=tuples.LANG.SELECT, default=tuples.LANG.A1)
+	english = models.IntegerField(choices=tuples.ENGLISH.SELECT, default=tuples.ENGLISH.A1)
 	group = models.CharField(max_length = 50, null = True)
 	github = models.URLField(null = True, blank = True)
 	description = models.TextField(max_length = 2000, null = True, blank = True)
 
+	def get_username(self):
+		return self.user.username
 
+	def __str__(self):
+		return str(self.get_username())
 
 
 

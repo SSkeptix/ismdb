@@ -52,7 +52,7 @@ Profile
 				          </tr>
 				          <tr>
 				            <td align="right" style = "white-space: nowrap">English Level:</td>
-				            <td>{{ student_lang }}</td>
+				            <td>{{ student_english }}</td>
 				          </tr>
 				          <tr>
 				            <td align="right" style = "white-space: nowrap; ">GitHub:</td>
@@ -66,7 +66,7 @@ Profile
 
 				          <tr>
 				            <td align="right" style = "white-space: nowrap; ">Is validated:</td>
-				            {% if user_form.is_validate %}
+				            {% if user_form.validated_by %}
 				            <td>Yes</td>
 				            {% else %}
 				            	{% if validation_permission %}
@@ -95,7 +95,6 @@ Profile
 
 				<div class="collapse" id="skills">
 				  <div class="card card-block">
-				  	<br/>
 				    {% if skills %}
 
 					<table class = "table table-striped">

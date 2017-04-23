@@ -51,7 +51,7 @@ class Profile(TemplateView):
 
 		# validation permission - possibility to validate:
 		# student's skill, persons
-		if (user.category == tuples.CATEGORY.TEACHER) and user.is_validated:
+		if (user.category == tuples.CATEGORY.TEACHER) and user.validated_by:
 			validation_permission = True
 			if (username == user.username) :
 				validation_permission = False
@@ -108,11 +108,11 @@ class Profile(TemplateView):
 
 		if 'skill_validation' in request.POST:
 			if 'language' in request.POST:
-				skill = models.Student_lang.objects.get(id = int(request.POST['language']))
+				skill = models.StudentLanguage.objects.get(id = int(request.POST['language']))
 			elif 'framework' in request.POST:
-				skill = models.Student_fram.objects.get(id = int(request.POST['framework']))
+				skill = models.StudentFramework.objects.get(id = int(request.POST['framework']))
 			elif 'other' in request.POST:
-				skill = models.Student_other.objects.get(id = int(request.POST['other']))
+				skill = models.StudentOther.objects.get(id = int(request.POST['other']))
 
 			skill.validated_by = models.User.objects.only('id').get(username = request.user.username)
 			skill.save()
@@ -209,11 +209,11 @@ class EditProfile(TemplateView):
 		
 		# delete skill
 			elif 'language' in request.POST:
-				models.Student_lang.objects.get(id = int(request.POST['language'])).delete()
+				models.StudentLanguage.objects.get(id = int(request.POST['language'])).delete()
 			elif 'framework' in request.POST:
-				models.Student_fram.objects.get(id = int(request.POST['framework'])).delete()
+				models.StudentFramework.objects.get(id = int(request.POST['framework'])).delete()
 			elif 'other' in request.POST:
-				models.Student_other.objects.get(id = int(request.POST['other'])).delete()
+				models.StudentOther.objects.get(id = int(request.POST['other'])).delete()
 
 		else:
 		# edit profile (teacher, employer)

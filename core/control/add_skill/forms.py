@@ -33,7 +33,6 @@ class Language(Skill):
 			'placeholder': 'Title of language',
 			'class': _class,
 			'style': _style,
-			'name': 'lang'
 			}))
 
 	class Meta:

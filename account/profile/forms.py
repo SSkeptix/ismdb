@@ -52,10 +52,10 @@ class StudentSkill(forms.ModelForm):
 
 	def __init__(self, *args, **kwargs):
 		self.student = kwargs.pop('student', None)
-		super(Skill, self).__init__(*args, **kwargs)
+		super(StudentSkill, self).__init__(*args, **kwargs)
 
 	def save(self, commit=True):
-		instance = super(Skill, self).save(commit=False)
+		instance = super(StudentSkill, self).save(commit=False)
 		instance.student = self.student
 
 		if commit:
