@@ -18,41 +18,41 @@
   <div class="container-fluid">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-        <span class="sr-only">Toggle navigation</span>
+        <span class="sr-only">Навігація</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="{% url 'home' %}">ISM db</a>
+      <a class="navbar-brand" href="{% url 'home' %}">База студентів</a>
     </div>
 
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="{% url 'core:search' %}">Seacrh</a></li>
+        <li><a href="{% url 'core:search' %}">Пошук</a></li>
         {% if user.is_authenticated %}
           <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Control<span class="caret"></span></a>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Керування<span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
-              <li><a href="{% url 'core:add_skill' %}">Skills</a></li>
+              <li><a href="{% url 'core:add_skill' %}">Навички</a></li>
             </ul>
           </li>
 
           <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Account<span class="caret"></span></a>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Обліковий запис<span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
-              <li><a href="{% url 'account:profile' username=user.username  %}">Profile</a></li>
-              <li><a href="{% url 'account:edit_profile' username=user.username %}">Edit profile</a></li>              
+              <li><a href="{% url 'account:profile' username=user.username  %}">Профіль</a></li>
+              <li><a href="{% url 'account:edit_profile' username=user.username %}">Редагувати профіль</a></li>              
               <li class="divider"></li>
               {% if user.category == 1 %} <!-- 1 - student -->
-              <li><a href="{% url 'account:add_skill' username=user.username %}">Add skill</a></li>              
+              <li><a href="{% url 'account:add_skill' username=user.username %}">Додати навички</a></li>              
               <li class="divider"></li>
               {% endif %}
-              <li><a href="{% url 'account:logout' %}">Logout</a></li>
+              <li><a href="{% url 'account:logout' %}">Вийти</a></li>
             </ul>
           </li>
         {% else %}
-          <li><a href="{% url 'account:register'%}">Register</a></li>
-          <li><a href="{% url 'account:login' %}">Log In</a></li>
+          <li><a href="{% url 'account:register'%}">Реєстрація</a></li>
+          <li><a href="{% url 'account:login' %}">Вхід</a></li>
         {% endif %}
       </ul>
     </div>
