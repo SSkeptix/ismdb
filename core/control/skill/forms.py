@@ -1,7 +1,7 @@
 from django import forms
 from account import models 
 
-_style = 'width:auto;'
+_style = ''
 _class = 'form-control'
 
 
@@ -25,6 +25,8 @@ class Skill(forms.ModelForm):
 
 
 class Language(Skill):
+	skill_type = 'Language'
+
 	value = forms.CharField(
 		label="Language",
 		max_length=50,
@@ -44,6 +46,8 @@ class Language(Skill):
 
 
 class Framework(Skill):
+	skill_type = 'Framework'
+
 	lang = forms.ModelChoiceField(
 		queryset = models.Language.objects.exclude(validated_by__isnull=True).order_by('value'),
 		label = 'Language',
@@ -69,7 +73,11 @@ class Framework(Skill):
 
 
 
+
+
 class Other(Skill):
+	skill_type = 'Other'
+
 	value = forms.CharField(
 		label="Other",
 		max_length=50,
@@ -88,16 +96,9 @@ class Other(Skill):
 
 
 
-# for 'edit_profile' and 'profile'
 class SkillView:
-	category = None
-	value = None
-	id = None
-	added_at = None
-
-	def __init__(self, skill, category):
-		self.category = category
+	def __init__(self, skill, skill_type):
+		self.skill_type = skill_type
 		self.value = '<{0}>'.format(skill.__str__())
 		self.id = skill.id
 		self.added_at = skill.validated_at
-

@@ -8,7 +8,7 @@ import math
 
 
 class Search(TemplateView):
-	template_name = 'core/search.html'
+	template_name = 'core/search/search.html'
 
 	page = None
 	rows = None
