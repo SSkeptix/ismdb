@@ -141,6 +141,7 @@ LOGIN_REDIRECT_URL = 'account:profile_empty'
 ALLOWED_HOSTS = ['*']
 
 LOGIN_EXEMPT_URLS = (
+    r'^search/$',
     r'^account/login/$',
     r'^account/logout/$',
     r'^account/register/$',
