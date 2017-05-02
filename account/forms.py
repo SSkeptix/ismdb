@@ -11,14 +11,14 @@ _class = 'form-control'
 
 class Login(AuthenticationForm):
 	username = forms.CharField(
-		label="Username",
+		label="Логін",
 		max_length=150, 
 		widget=forms.TextInput(attrs={
 			'class': _class,
 			}))
 
 	password = forms.CharField(
-		label="Password",
+		label="Пароль",
 		max_length=150, 
 		widget=forms.PasswordInput(attrs={
 			'class': _class,
