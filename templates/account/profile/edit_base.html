@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block head %}
-ISM db Edit Profile
+ISMdb | Редагування профілю
 {% endblock %}
 
 
@@ -9,8 +9,8 @@ ISM db Edit Profile
 {% block body %}
 <div class="container">
     <div class="page-header">
-    	<a href="{% url 'account:profile' username=user.username %}" class="btn btn-success btn-primary btn-lg" role="button">Back to profile</a>
-        <h1>Edit Profile: {{ user.username }}</h1>
+    	<a href="{% url 'account:profile' username=user.username %}" class="btn btn-success btn-primary btn-lg" role="button">Повернутись до перегляду профілю</a>
+        <h1>Редагування профілю: {{ user.username }}</h1>
     </div>
 
     {% if student_form %}
@@ -19,7 +19,7 @@ ISM db Edit Profile
 	    <div class="panel-heading" role="tab" id="headProfile">
 	      <h4 class="panel-title">
 	        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#edit" href="#profile" aria-expanded="false" aria-controls="profile">
-	          Profile
+	          Профіль
 	        </a>
 	      </h4>
 	    </div>
@@ -35,7 +35,7 @@ ISM db Edit Profile
 	    <div class="panel-heading" role="tab" id="headSkills">
 	      <h4 class="panel-title">
 	        <a role="button" data-toggle="collapse" data-parent="#edit" href="#skills" aria-expanded="true" aria-controls="skills">
-	          Skills
+	          Вміння
 	        </a>
 	      </h4>
 	    </div>

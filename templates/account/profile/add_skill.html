@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block head %}
-Add skill
+ISMdb | Додання вмінь
 {% endblock %}
 
 
@@ -9,20 +9,20 @@ Add skill
 {% block body %}
 <div class="container">
     <div class="page-header">
-        <a href="{% url 'account:edit_profile' username=user.username %}" class="btn btn-success btn-primary btn-lg" role="button">Back to edit profile</a>
-        <h1>Add skill</h1>
+        <a href="{% url 'account:edit_profile' username=user.username %}" class="btn btn-success btn-primary btn-lg" role="button">Повернутись до редагування профілю</a>
+        <h1>Додати вміння</h1>
     </div>
 
-    <p>There a few types of skills:
-    	<li>Programing languages</li>
-    	<li>Frameworks</li>
-    	<li>Another techniques (database, algorithms and so on)</li>
+    <p>Є дкілька типів вмінь:
+    	<li>Мови програмування</li>
+    	<li>Фреймворки</li>
+    	<li>Інші вміння: бази даних, ide, алгоритми</li>
     </p>
 
-    <h4>If you don't see your skill please <a href="{% url 'core:add_skill' %}">add new skill</a>.</h4>
+    <h4>Якщо ви не бачите своє вміння серед наявного списку <a href="{% url 'core:add_skill' %}">додайте нове вміння</a>.</h4>
 
 
-    <h3>Choose your skill:</h3>
+    <h3>Виберіть ваші вміння:</h3>
 
 	<div class="panel-group" id="add_skill" role="tablist" aria-multiselectable="true">
 	  
@@ -30,7 +30,7 @@ Add skill
 	    <div class="panel-heading" role="tab" id="headLang">
 	      <h4 class="panel-title">
 	        <a role="button" data-toggle="collapse" data-parent="#add_skill" href="#language" aria-expanded="true" aria-controls="language">
-	          Programing languages
+	          Мови програмування
 	        </a>
 	      </h4>
 	    </div>
@@ -49,7 +49,7 @@ Add skill
 	    <div class="panel-heading" role="tab" id="headFram">
 	      <h4 class="panel-title">
 	        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#add_skill" href="#framework" aria-expanded="false" aria-controls="framework">
-	          Frameworks
+	          Фреймворки
 	        </a>
 	      </h4>
 	    </div>
@@ -68,7 +68,7 @@ Add skill
 	    <div class="panel-heading" role="tab" id="headOther">
 	      <h4 class="panel-title">
 	        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#add_skill" href="#other" aria-expanded="false" aria-controls="other">
-	          Another techniques
+	          Інші вміння
 	        </a>
 	      </h4>
 	    </div>

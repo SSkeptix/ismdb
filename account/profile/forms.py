@@ -131,7 +131,7 @@ class StudentFramework(StudentSkill):
 class StudentOther(StudentSkill):
 	skill = forms.ModelChoiceField(
 		queryset = models.Other.objects.exclude(validated_by__isnull=True).order_by('value'),
-		label = 'Other skill',
+		label = 'Інше',
 		required = True,
 		widget=forms.Select(attrs={
 			'class': _class,

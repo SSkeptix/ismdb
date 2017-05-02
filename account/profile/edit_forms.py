@@ -9,7 +9,7 @@ _class = 'form-control'
 
 class EditUser(forms.ModelForm):
 	username = forms.CharField(
-		label="Username",
+		label="Логін",
 		help_text = 'Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.',
 		max_length=50,
 		widget=forms.TextInput(attrs={
@@ -18,7 +18,7 @@ class EditUser(forms.ModelForm):
 			}))
 
 	first_name = forms.CharField(
-		label="First name",
+		label="Ім'я",
 		required = True,
 		max_length=50,
 		widget=forms.TextInput(attrs={
@@ -27,7 +27,7 @@ class EditUser(forms.ModelForm):
 			}))
 
 	last_name = forms.CharField(
-		label="Last name",
+		label="Прізвище",
 		required = True,
 		max_length=50,
 		widget=forms.TextInput(attrs={
@@ -69,7 +69,7 @@ class EditUser(forms.ModelForm):
 class EditStudent(forms.ModelForm):
 	english = forms.ChoiceField(
 		choices = tuples.ENGLISH.SELECT,
-		label = 'English level',
+		label = 'Рівень англійської',
 		required = True,
 		widget=forms.Select(attrs={
 			'class': _class,
@@ -85,7 +85,7 @@ class EditStudent(forms.ModelForm):
 			}))
 
 	group = forms.CharField(
-		label="Group",
+		label="Група",
 		required = True,
 		max_length=50, 
 		widget=forms.TextInput(attrs={
@@ -94,7 +94,7 @@ class EditStudent(forms.ModelForm):
 
 
 	description = forms.CharField(
-		label = 'Describe yourself',
+		label = 'Опиши себе',
 		required = False,
 		max_length=2000,
 		widget=forms.Textarea(attrs={

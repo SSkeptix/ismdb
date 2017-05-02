@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block head %}
-Profile
+ISMdb | Профіль
 {% endblock %}
 
 {% load static %}
@@ -10,7 +10,7 @@ Profile
 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-3 col-lg-offset-3 toppad" >
 	<div class="panel panel-info">
 		<div class="panel-heading">
-			<h1 class="panel-title">Profile</h1>
+			<h1 class="panel-title">Профіль</h1>
 		</div>
 		<div class="panel-body">
 			<div class="row">
@@ -18,7 +18,7 @@ Profile
 			    	<img class="img-responsive" alt="User Pic" src="{% static 'img/profile.png' %}" /> 
 			    	<center>
 					  	{% if own_profile %}
-					  		<a href="{% url 'account:edit_profile' username=user.username %}" class="btn btn-primary">Edit profile</a>
+					  		<a href="{% url 'account:edit_profile' username=user.username %}" class="btn btn-primary">Редагувати профіль</a>
 				  		{% endif %}
 					</center>
 			    </div>
@@ -28,15 +28,15 @@ Profile
 				        <tbody>
 
 				          <tr>
-				            <td align="right" style = "white-space: nowrap">Username:</td>
+				            <td align="right" style = "white-space: nowrap">Логін:</td>
 				            <td>{{user_form.username}}</td>
 				          </tr>
 				          <tr>
-				            <td align="right" style = "white-space: nowrap">First name:</td>
+				            <td align="right" style = "white-space: nowrap">Ім'я:</td>
 				            <td>{{ user_form.last_name }}</td>
 				          </tr>
 				          <tr>
-				            <td align="right" style = "white-space: nowrap">Last name:</td>
+				            <td align="right" style = "white-space: nowrap">Прізвище:</td>
 				            <td>{{ user_form.first_name }}</td>
 				          </tr>
 				          <tr>
@@ -47,11 +47,11 @@ Profile
 
 				          {% if student %}
 				          <tr>
-				            <td align="right" style = "white-space: nowrap">Group:</td>
+				            <td align="right" style = "white-space: nowrap">Група:</td>
 				            <td>{{ student.group }}</td>
 				          </tr>
 				          <tr>
-				            <td align="right" style = "white-space: nowrap">English Level:</td>
+				            <td align="right" style = "white-space: nowrap">Рівень англійської:</td>
 				            <td>{{ student_english }}</td>
 				          </tr>
 				          <tr>
@@ -59,24 +59,24 @@ Profile
 				            <td>{{ student.github }}</td>
 				          </tr>
 				          <tr>
-				            <td align="right" style = "white-space: nowrap">Description:</td>
+				            <td align="right" style = "white-space: nowrap">Опис:</td>
 				            <td>{{ student.description }}</td>
 				          </tr>
 				          {% endif %}
 
 				          <tr>
-				            <td align="right" style = "white-space: nowrap; ">Is validated:</td>
+				            <td align="right" style = "white-space: nowrap; ">Перевірений:</td>
 				            {% if user_form.validated_by %}
-				            <td>Yes</td>
+				            <td>Так</td>
 				            {% else %}
 				            	{% if validation_permission %}
 				            	<td>
 				            		<form method="POST"> {% csrf_token %} 
-					                    <input class="btn btn-sm btn-success" type="submit" name="user_validation" value="Confirm" />
+					                    <input class="btn btn-sm btn-success" type="submit" name="user_validation" value="Підтвердити" />
                 					</form>
 				            	</td>
 				            	{% else %}
-				            	<td>No</td>
+				            	<td>Ні</td>
 				            	{% endif %}
 
 				            {% endif %}
@@ -91,7 +91,7 @@ Profile
 
 
 			{% if student %}
-				<button class="btn btn-primary btn-lg btn-block" type="button" data-toggle="collapse" data-target="#skills" aria-expanded="false" aria-controls="skills">Skills</button>
+				<button class="btn btn-primary btn-lg btn-block" type="button" data-toggle="collapse" data-target="#skills" aria-expanded="false" aria-controls="skills">Вміння</button>
 
 				<div class="collapse" id="skills">
 				  <div class="card card-block">
@@ -100,9 +100,9 @@ Profile
 					<table class = "table table-striped">
 						<thead>
 						<tr>
-				            <th>Skill</th>
-				            <th>Validate by</th>
-				            <th>Added at</th>
+				            <th>Вміння</th>
+				            <th>Перевірений</th>
+				            <th>Дата перевірки</th>
 				         </tr>
 						</thead>
 
@@ -123,11 +123,11 @@ Profile
 				            	<td>
 				            		<form method="POST"> {% csrf_token %} 
 					                    <input type="hidden" name="{{ i.category }}" value="{{ i.id }}">
-					                    <input class="btn btn-sm btn-success" type="submit" name="skill_validation" value="Confirm" />
+					                    <input class="btn btn-sm btn-success" type="submit" name="skill_validation" value="Підтвердити" />
                 					</form>
 				            	</td>
 				            	{% else %}
-					            <td>None</td>
+					            <td>Немає</td>
 					            {% endif %}
 
 							<td>---</td>
@@ -141,7 +141,7 @@ Profile
 
 					{% else %}
 
-				    <p>Empty</p>
+				    <p>Пусто</p>
 
 				    {% endif %}	
 
