@@ -55,6 +55,9 @@ class AddSkill(forms.Form):
 		)
 
 
+
+
+
 class StudentSkill(forms.ModelForm):
 	student = None
 	skill = forms.ModelChoiceField(

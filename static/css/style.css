@@ -1,0 +1,34 @@
+.login-table{
+	margin-top: 2px;
+	margin-left: 2px;
+	margin-right: 2px;
+	margin-bottom: 2em;
+	text-align: left;
+}
+
+.login-table td{
+	padding: 2px 2px 2px 2px;
+}
+
+.in_one_line{
+	display: inline-block;
+}
+
+.scroll_entry{
+	float: left;
+	width: 100%;
+	height: 14em;
+	overflow-y: scroll;
+	background-color: #F3F3F3;
+	border: 1px solid #ccc!important;
+	border-radius: 5px;
+}
+
+.scroll_entry li{
+	list-style-type: none;
+}
+
+.scroll_entry ul{
+	padding-left: 1em;
+
+}
