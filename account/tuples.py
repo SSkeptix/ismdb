@@ -6,6 +6,7 @@ class CATEGORY:
 	EMPLOYER = 3
 
 	SELECT = (
+		('', '-----'),
 		(STUDENT, 'Student'),
 		(TEACHER, 'Teacher'),
 		(EMPLOYER, 'Employer'),

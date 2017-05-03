@@ -15,20 +15,22 @@ from django.http import HttpResponse
 
 
 
+
 def add_profile(request):
 	args = {}
 
 	# add student profile
 	if request.method == 'POST' :
 		form = forms.AddStudent(request.POST, user=request.user)
-		skill_form = forms.AddSkill(request.POST)
-		if form.is_valid():
+		skill_form = forms.AddSkill(request.POST, user=request.user)
+		if form.is_valid() and skill_form.is_valid():
 			form.save()
+			skill_form.save()
+
 			return redirect('account:profile', username=request.user.username)
 	else:
 		form = forms.AddStudent()
 		skill_form = forms.AddSkill()
-
 
 	args = {
 		'form': form,

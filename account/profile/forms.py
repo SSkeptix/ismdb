@@ -50,9 +50,19 @@ class AddSkill(forms.Form):
 	skill = forms.ModelMultipleChoiceField(
 		queryset = models.Skill.objects.exclude(validated_by__isnull=True).order_by('value'),
 		label = 'Вміння',
-		required = True,
+		required = False,
 		widget=forms.CheckboxSelectMultiple()
 		)
+
+
+	def __init__(self, *args, **kwargs):
+		self.user = kwargs.pop('user', None)
+		super(AddSkill, self).__init__(*args, **kwargs)
+
+
+	def save(self, commit=True):
+		for skill in self.cleaned_data['skill']:
+			student_skill = models.StudentSkill(student_id = self.user.id, skill_id = skill.id).save()
 
 
 
@@ -79,19 +89,19 @@ class StudentSkill(forms.ModelForm):
 			)
 
 
+	def __init__(self, *args, **kwargs):
+		self.student = kwargs.pop('student', None)
+		super(StudentSkill, self).__init__(*args, **kwargs)
+
+
 	def is_valid(self):
 		valid = super(StudentSkill, self).is_valid()
 		if not valid:
 			return valid
-		if models.StudentLanguage.objects.filter(student = self.student.user.id, skill = self.cleaned_data['skill']).count():
+		if models.StudentSkill.objects.filter(student = self.student.user.id, skill = self.cleaned_data['skill']).count():
 			self._errors['skill_exists'] = 'Skill is already exist'
 			return False
 		return True
-
-
-	def __init__(self, *args, **kwargs):
-		self.student = kwargs.pop('student', None)
-		super(StudentSkill, self).__init__(*args, **kwargs)
 
 
 	def save(self, commit=True):
