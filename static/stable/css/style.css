@@ -2,3 +2,7 @@
     padding: 2px;
     text-align: left;
 }
+
+.in_one_line{
+	display: inline-block;
+}

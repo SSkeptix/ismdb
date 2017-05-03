@@ -46,6 +46,15 @@ class AddStudent(EditStudent):
 
 
 
+class AddSkill(forms.Form):
+	skill = forms.ModelMultipleChoiceField(
+		queryset = models.Language.objects.exclude(validated_by__isnull=True).order_by('value'),
+		label = 'Language',
+		required = True,
+		widget=forms.CheckboxSelectMultiple()
+		)
+
+
 # base form for all type of skill
 class StudentSkill(forms.ModelForm):
 	student = None

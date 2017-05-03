@@ -21,14 +21,18 @@ def add_profile(request):
 	# add student profile
 	if request.method == 'POST' :
 		form = forms.AddStudent(request.POST, user=request.user)
+		skill_form = forms.AddSkill(request.POST)
 		if form.is_valid():
 			form.save()
 			return redirect('account:profile', username=request.user.username)
 	else:
 		form = forms.AddStudent()
+		skill_form = forms.AddSkill()
+
 
 	args = {
 		'form': form,
+		'skill_form': skill_form,
 	}
 
 	return render(request, 'account/profile/add_profile.html', args)
