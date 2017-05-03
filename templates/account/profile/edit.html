@@ -83,7 +83,7 @@
                 
                 <td align="right">
                     <form method="POST"> {% csrf_token %} 
-                        <input type="hidden" name="{{ i.category }}" value="{{ i.id }}">
+                        <input type="hidden" name="skill" value="{{ i.id }}">
                         <input class="btn btn-sm btn-danger" type="submit" value="Видалити" />
                     </form>
                 </td>
@@ -95,8 +95,7 @@
     {% else %}
         <p>Ви нічого не знаєте</p>
     {% endif %} 
-       
-    <a href="{% url 'account:add_skill' username=user.username %}" class="btn btn-success btn-primary btn-lg" role="button">Додати вміння</a>
+
 
 </div>
 {% endblock %}

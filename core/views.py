@@ -6,10 +6,5 @@ from account import models
 
 from django.http import HttpResponse
 
-
-
-
-
-
 def test(request):
-	return render(request, 'core/test.html')
+	return HttpResponse('test')

@@ -36,18 +36,3 @@ class ENGLISH:
 
 	def value(self, *args):
 		return self.SELECT[args[0] - 1][1]
-
-
-class SKILL:
-	LANGUAGE = 1
-	FRAMEWORK = 2
-	OTHER = 3
-
-	SELECT = (
-		(LANGUAGE, 'Language'), 
-		(FRAMEWORK, 'Framework'), 
-		(OTHER, 'Other'), 
-	)
-
-	def value(self, *args):
-		return self.SELECT[args[0] - 1][1]

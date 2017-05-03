@@ -5,7 +5,7 @@ _style = ''
 _class = 'form-control'
 
 
-
+'''
 
 
 # base form for all type of skill
@@ -102,3 +102,4 @@ class SkillView:
 		self.value = '<{0}>'.format(skill.__str__())
 		self.id = skill.id
 		self.added_at = skill.validated_at
+'''

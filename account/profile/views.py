@@ -78,16 +78,8 @@ class Profile(TemplateView):
 
 		# show skills
 			skills = []
-
-			langs = models.StudentLanguage.objects.filter(student = student.user.id)
-			for skill in langs:
-				skills.append(view_forms.SkillView(skill=skill, category='language'))
-			frams = models.StudentFramework.objects.filter(student = student.user.id)
-			for skill in frams:
-				skills.append(view_forms.SkillView(skill=skill, category='framework'))
-			others = models.StudentOther.objects.filter(student = student.user.id)
-			for skill in others:
-				skills.append(view_forms.SkillView(skill=skill, category='other'))
+			for i in models.StudentSkill.objects.filter(student = student.user.id):
+				skills.append(view_forms.Skill(skill=i))
 
 			skills.sort(key=lambda instance: instance.value)
 			args['skills'] = skills
@@ -111,12 +103,7 @@ class Profile(TemplateView):
 	def post(self, request, username = ''):
 
 		if 'skill_validation' in request.POST:
-			if 'language' in request.POST:
-				skill = models.StudentLanguage.objects.get(id = int(request.POST['language']))
-			elif 'framework' in request.POST:
-				skill = models.StudentFramework.objects.get(id = int(request.POST['framework']))
-			elif 'other' in request.POST:
-				skill = models.StudentOther.objects.get(id = int(request.POST['other']))
+			skill = models.StudentSkill.objects.get(id = int(request.POST['id']))
 
 			skill.validated_by = models.User.objects.only('id').get(username = request.user.username)
 			skill.save()
@@ -146,16 +133,8 @@ class EditProfile(TemplateView):
 
 		# show skills
 			skills = []
-
-			langs = models.StudentLanguage.objects.filter(student = student.user.id)
-			for skill in langs:
-				skills.append(view_forms.SkillView(skill=skill, category='language'))
-			frams = models.StudentFramework.objects.filter(student = student.user.id)
-			for skill in frams:
-				skills.append(view_forms.SkillView(skill=skill, category='framework'))
-			others = models.StudentOther.objects.filter(student = student.user.id)
-			for skill in others:
-				skills.append(view_forms.SkillView(skill=skill, category='other'))
+			for i in models.StudentSkill.objects.filter(student = student.user.id):
+				skills.append(view_forms.Skill(skill=i))
 
 			skills.sort(key=lambda instance: instance.value)
 
@@ -212,12 +191,8 @@ class EditProfile(TemplateView):
 					return self.render(request=request, username=username, new_args=args)
 		
 		# delete skill
-			elif 'language' in request.POST:
-				models.StudentLanguage.objects.get(id = int(request.POST['language'])).delete()
-			elif 'framework' in request.POST:
-				models.StudentFramework.objects.get(id = int(request.POST['framework'])).delete()
-			elif 'other' in request.POST:
-				models.StudentOther.objects.get(id = int(request.POST['other'])).delete()
+			elif 'skill' in request.POST:
+				models.StudentSkill.objects.get(id = int(request.POST['skill'])).delete()
 
 		else:
 		# edit profile (teacher, employer)
@@ -235,7 +210,7 @@ class EditProfile(TemplateView):
 
 
 
-
+'''
 class AddSkill(TemplateView):
 	template_name = 'account/profile/add_skill.html'
 
@@ -243,7 +218,7 @@ class AddSkill(TemplateView):
 
 	def render(self, request, username = '', new_args = None):
 		args = {
-			'language_form': forms.StudentLanguage(),
+			'skill_form': forms.StudentSkill(),
 			'framework_form': forms.StudentFramework(),
 			'other_form': forms.StudentOther(),
 		}
@@ -295,3 +270,4 @@ class AddSkill(TemplateView):
 		
 		return self.get(request=request, username=username)
 
+'''

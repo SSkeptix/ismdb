@@ -6,7 +6,7 @@ from . import forms
 from itertools import chain
 import math
 
-
+'''
 class Search(TemplateView):
 	template_name = 'core/search/search.html'
 
@@ -148,3 +148,4 @@ class Search(TemplateView):
 
 
 		return redirect(reverse('core:search_page', kwargs={'page': 1}) + url_data)
+'''

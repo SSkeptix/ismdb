@@ -17,7 +17,7 @@ urlpatterns = [
 		url(r'^$', profile_views.Profile.as_view(), name = 'profile_empty'),
 		url(r'^(?P<username>\w+)/$', profile_views.Profile.as_view(), name = 'profile'),
 		url(r'^(?P<username>\w+)/edit/$', profile_views.EditProfile.as_view(), name = 'edit_profile'),
-		url(r'^(?P<username>\w+)/edit/add_skill/$', profile_views.AddSkill.as_view(), name = 'add_skill'),
+		#url(r'^(?P<username>\w+)/edit/add_skill/$', profile_views.AddSkill.as_view(), name = 'add_skill'),
     ])),
 
 ] 

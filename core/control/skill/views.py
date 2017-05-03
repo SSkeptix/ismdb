@@ -8,7 +8,7 @@ from django.http import Http404, HttpResponse
 
 from itertools import chain
 
-
+'''
 # support class for writing short code
 class SKILL:
 	LANGUAGE = tuples.SKILL().value(tuples.SKILL.LANGUAGE)
@@ -188,3 +188,4 @@ class EditSkill(TemplateView):
 		else: 
 			args = {'form': form, }
 			return self.render(request=request, new_args=args)
+'''

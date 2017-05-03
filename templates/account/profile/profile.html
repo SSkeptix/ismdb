@@ -122,7 +122,7 @@ ISMdb | Профіль
 				            	{% if validation_permission %}
 				            	<td>
 				            		<form method="POST"> {% csrf_token %} 
-					                    <input type="hidden" name="{{ i.category }}" value="{{ i.id }}">
+					                    <input type="hidden" name="id" value="{{ i.id }}">
 					                    <input class="btn btn-sm btn-success" type="submit" name="skill_validation" value="Підтвердити" />
                 					</form>
 				            	</td>

@@ -4,11 +4,5 @@ from . import models
 
 admin.site.register(models.User)
 admin.site.register(models.Student)
-
-admin.site.register(models.Language)
-admin.site.register(models.Framework)
-admin.site.register(models.Other)
-
-admin.site.register(models.StudentLanguage)
-admin.site.register(models.StudentFramework)
-admin.site.register(models.StudentOther)
+admin.site.register(models.Skill)
+admin.site.register(models.StudentSkill)

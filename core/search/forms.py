@@ -4,7 +4,7 @@ from account import tuples
 
 
 
-
+'''
 class Language(forms.Form):
 	value = forms.ModelChoiceField(
 		queryset = models.Language.objects.exclude(validated_by__isnull=True).order_by('value'),
@@ -86,3 +86,4 @@ class Student:
 			self.skills.append(i.skill.value)
 
 		self.skills.sort()
+'''
