@@ -11,7 +11,7 @@ _class = 'form-control'
 class EditUser(forms.ModelForm):
 	username = forms.CharField(
 		label="Логін",
-		help_text = 'Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.',
+		help_text = 'Required. 50 characters or fewer. Letters, digits and @/./+/-/_ only.',
 		max_length=50,
 		widget=forms.TextInput(attrs={
 			'placeholder': 'pro100_Hacker',
@@ -58,7 +58,7 @@ class EditUser(forms.ModelForm):
 		valid = super(EditUser, self).is_valid()
 		if not valid:
 			return valid
-		if models.User.objects.exclude(username=self.cleaned_data['username']).filter(email=self.cleaned_data['email']).exists():
+		if models.User.objects.exclude(id=self.instance.id).filter(email=self.cleaned_data['email']).exists():
 			self._errors['email_exists'] = 'Email is already exist.'
 			return False
 		return True

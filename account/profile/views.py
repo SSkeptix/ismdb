@@ -97,6 +97,14 @@ class Profile(TemplateView):
 		if username == '':
 			return redirect('account:profile', username=request.user.username)
 
+		#if student profile don't exist create profile
+		if (
+			username == request.user.username and
+			request.user.category == tuples.CATEGORY.STUDENT and 
+			models.Student.objects.filter(user = request.user.id).exists() == False
+			):
+			return redirect('account:add_profile')
+
 		return self.render(request=request, username=username)
 
 
