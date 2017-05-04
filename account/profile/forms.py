@@ -11,7 +11,7 @@ _class = 'form-control'
 class EditUser(forms.ModelForm):
 	username = forms.CharField(
 		label="Логін",
-		help_text = 'Required. 50 characters or fewer. Letters, digits and @/./+/-/_ only.',
+		help_text = '50 символів або менше, використовувати можна латинські букви, цифри і наступні символи: @/./+/-/_',
 		max_length=50,
 		widget=forms.TextInput(attrs={
 			'placeholder': 'pro100_Hacker',

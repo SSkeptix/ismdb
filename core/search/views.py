@@ -6,15 +6,15 @@ from . import forms
 from itertools import chain
 import math
 
-'''
+
+
+
 class Search(TemplateView):
 	template_name = 'core/search/search.html'
 
 	page = None
 	rows = None
-	languages = None
-	frameworks = None
-	others = None
+	skills = None
 	english = None
 
 
@@ -26,9 +26,7 @@ class Search(TemplateView):
 		self.rows = 10
 
 		# get filter data from url
-		self.languages = request.GET.get('langs', None)
-		self.frameworks = request.GET.get('frams', None)
-		self.others = request.GET.get('others', None)
+		self.skills = request.GET.get('skills', None)
 		self.english = request.GET.get('english', '1')
 
 
@@ -40,15 +38,12 @@ class Search(TemplateView):
 		# add filters
 		kwargs_filter = {}
 
-		if self.languages:
-			for i in self.languages.split(","):
-				kwargs_filter['studentlanguage__skill'] = int (i)
-		if self.frameworks:
-			for i in self.frameworks.split(","):
-				kwargs_filter['studentframework__skill'] = int (i)
-		if self.others:
-			for i in self.others.split(","):
-				kwargs_filter['studentother__skill'] = int (i)
+		initial_skill = []
+		if self.skills:
+			for i in self.skills.split(","):
+				initial_skill.append(int (i))
+				kwargs_filter['studentskill__skill'] = int (i)
+
 		kwargs_filter['english__gte'] = self.english
 
 		# which data need get from database
@@ -94,15 +89,18 @@ class Search(TemplateView):
 		for student in students:
 			students_form.append(forms.Student(student = student))
 
-		args['students'] = students_form
+		url_data = '?skills={0}&english={1}'.format(self.skills, self.english)
+		args['url_data'] = url_data
 
-		args['language_form'] = forms.Language()
-		args['framework_form'] = forms.Framework()
-		args['other_form'] = forms.Other()
+
+
+		args['students'] = students_form
+		args['skill_form'] = forms.Skill(initial={'skill': initial_skill})
 		args['english_form'] = forms.English(initial={'value': self.english})
 		args['page'] = self.page
+		
 
-
+		print(kwargs_filter)
 		return render(request, self.template_name, args)
 
 
@@ -110,42 +108,20 @@ class Search(TemplateView):
 	def post(self, request, page = 1):
 		self.init(request=request, page=page)
 
-		# !!!!!!!!!!!!!!
-		# not fancy code --- but it work :)
 		# send filter data to url
 		url_data = '?'
-		skill = [self.languages, self.frameworks, self.others]
-		template = ['langs', 'frams', 'others']
 
-		for i in range(0,3):
-			if template[i] in request.POST:
-				if i==0:
-					form = forms.Language(request.POST)
-				elif i==1:
-					form = forms.Framework(request.POST)
-				elif i==2:
-					form = forms.Other(request.POST)
+		skill_form = forms.Skill(request.POST)
+		english_form = forms.English(request.POST)
+		if skill_form.is_valid() and english_form.is_valid():
+			skill = skill_form.get_list()
+			if skill:
+				url_data +='skills='
+				for i in skill:
+					url_data +='{0},'.format(str(i))
+				url_data = url_data[:-1] + '&'
 
-				if form.is_valid():
-					var = form.cleaned_data['value'].id
-				if skill[i]:
-					if not (str(var) in skill[i]):
-						skill[i] += (',{0}'.format(str(var)))
-				else:
-					skill[i] = str(var)
-				url_data += '{0}={1}&'.format(template[i], skill[i])
-
-			elif skill[i]:
-				url_data += '{0}={1}&'.format(template[i], skill[i])
-
-		if 'english' in request.POST:
-			form = forms.English(request.POST)
-			if form.is_valid():
-				var = form.cleaned_data['value']
-				url_data += '{0}={1}&'.format('english', str(var))
-		else:
-			url_data += '{0}={1}&'.format('english', self.english)
-
+			english = english_form.cleaned_data['value']
+			url_data += '{0}={1}&'.format('english', str(english))
 
 		return redirect(reverse('core:search_page', kwargs={'page': 1}) + url_data)
-'''

@@ -12,14 +12,14 @@ _class = 'form-control'
 class Login(AuthenticationForm):
 	username = forms.CharField(
 		label="Логін",
-		max_length=150, 
+		max_length=50, 
 		widget=forms.TextInput(attrs={
 			'class': _class,
 			}))
 
 	password = forms.CharField(
 		label="Пароль",
-		max_length=150, 
+		max_length=50, 
 		widget=forms.PasswordInput(attrs={
 			'class': _class,
 			}))
@@ -32,8 +32,8 @@ class Registration(UserCreationForm):
 
 	username = forms.CharField(
 		label="Логін",
-		help_text = '150 символів або менше, використовувати можна латинські букви, цифри і наступні символи: @/./+/-/_',
-		max_length=150,
+		help_text = '50 символів або менше, використовувати можна латинські букви, цифри і наступні символи: @/./+/-/_',
+		max_length=50,
 		widget=forms.TextInput(attrs={
 			'placeholder': 'pro100_Hacker',
 			'class': _class,
@@ -42,7 +42,7 @@ class Registration(UserCreationForm):
 	first_name = forms.CharField(
 		label="Ім'я",
 		required = True,
-		max_length=150,
+		max_length=50,
 		widget=forms.TextInput(attrs={
 			'placeholder': 'Петро',
 			'class': _class,
@@ -51,7 +51,7 @@ class Registration(UserCreationForm):
 	last_name = forms.CharField(
 		label="Прізвище",
 		required = True,
-		max_length=150,
+		max_length=50,
 		widget=forms.TextInput(attrs={
 			'placeholder': 'Петренко',
 			'class': _class,
@@ -60,7 +60,7 @@ class Registration(UserCreationForm):
 	email = forms.EmailField(
 		label="Email",
 		required = True,
-		max_length=150, 
+		max_length=50, 
 		widget=forms.TextInput(attrs={
 			'placeholder': 'pro100hacker@mail.com',
 			'class': _class,
@@ -74,7 +74,7 @@ class Registration(UserCreationForm):
 			Ваш пароль не може бути занадто простим (password). <br/>
 			Ваш пароль не може бути повністю числовим.
 		''',
-		max_length=150, 
+		max_length=50, 
 		widget=forms.PasswordInput(attrs={
 			'placeholder': 'passw@rd',
 			'class': _class,
@@ -83,7 +83,7 @@ class Registration(UserCreationForm):
 	password2 = forms.CharField(
 		label="Підтвердження паролю",
 		help_text = 'Повторно введіть пароль',
-		max_length=150, 
+		max_length=50, 
 		widget=forms.PasswordInput(attrs={
 			'placeholder': 're-enter_passw@rd',
 			'class': _class,
