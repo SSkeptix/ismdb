@@ -3,7 +3,6 @@
 
 {% block profile_only %}
 {% block profile %}
-  <form class="form-horizontal" method="post">
     <br/>
     {% csrf_token %}
     
@@ -41,10 +40,6 @@
 
     {% endif %}
 
-    <p class="bs-component">
-        <center><input class="btn btn-success btn-sm" type="submit" name="profile" value="Зберегти" /></center>
-    </p>
-  </form>
 {% endblock %}
 {% endblock %}
 
@@ -54,48 +49,15 @@
 {% block skills %}
 <div class="card card-block">
 
-  	{% if skills %}
-    <div class="col-xs-12 col-sm-12"> 
-    	<table class = "table table-striped">
-    		<thead>
-    		<tr>
-                <th class="col-md-3 col-lg-3">Вміння</th>
-                <th class="col-md-3 col-lg-3">Перевірений</th>
-                <th class="col-md-3 col-lg-3">Дата перевірки</th>
-                <th class="col-md-3 col-lg-3"></th>
-             </tr>
-    		</thead>
 
-            <tbody>
-    		{% for i in skills %}
-              <tr>
-                <td style = "white-space: nowrap">{{ i.value }}</td>
-                
-                {% if i.validated_by %}
-                <td style = "white-space: nowrap">
-                    <a href="{% url 'account:profile' username=i.validated_by_username %}" target="_blank">{{ i.validated_by }}</a>
-                </td>
-                <td style = "white-space: nowrap">{{ i.validated_at }}</td>
-                {% else %}
-                <td>Немає</td>
-                <td>---</td>
-                {% endif %}
-                
-                <td align="right">
-                    <form method="POST"> {% csrf_token %} 
-                        <input type="hidden" name="skill" value="{{ i.id }}">
-                        <input class="btn btn-sm btn-danger" type="submit" value="Видалити" />
-                    </form>
-                </td>
-              </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+  	<div class="form-group">
+        <label class="col-sm-2 control-label" >{{ skill_form.skill.label_tag }}</label>
+            <div class="col-sm-10">
+                <div class="scroll_entry">
+                    {{ skill_form.skill }}
+                </div>
+            </div>
     </div>
-    {% else %}
-        <p>Ви нічого не знаєте</p>
-    {% endif %} 
-
-
+    <h4>Якщо ви не бачите своє вміння серед наявного списку <a href="{% url 'core:add_skill' %}">додайте нове вміння</a>.</h4>
 </div>
 {% endblock %}
