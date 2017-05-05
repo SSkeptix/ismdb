@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
 from django.views.generic import TemplateView
+from django.db.models import Count
 
 from account import models
 from . import forms
@@ -41,17 +42,17 @@ class Search(TemplateView):
 		kwargs_filter = {
 			'english__gte': self.english,
 		}
+		kwargs_filter2 = {}
+		kwargs_annotate = {}
 
 		# filter by skills - begin 
 		initial_skill = []
 		if self.skills:
 			for i in self.skills.split(","):
 				initial_skill.append(int (i))
-
-		all_skills_id = set(models.Skill.objects.all().values_list('id', flat=True))
-		kwargs_exclude = {
-			'studentskill__skill__in': list(all_skills_id - set(initial_skill)),
-		}
+			kwargs_filter['studentskill__skill__in'] = initial_skill
+			kwargs_annotate['skill_count'] = Count('studentskill__skill_id')
+			kwargs_filter2['skill_count'] = len(initial_skill)
 		# filter by skills - end 
 
 		# which data need get from database
@@ -70,11 +71,13 @@ class Search(TemplateView):
 			'user__last_name',	# first
 		}
 
+
 		# take number of all suitable students
 		students_count = models.Student.objects.filter(**kwargs_filter
-			).exclude(**kwargs_exclude
 			).select_related('user'
 			).only(*args_only
+			).annotate(**kwargs_annotate
+			).filter(**kwargs_filter2
 			).order_by(*args_order_by
 			).count()
 
@@ -85,9 +88,10 @@ class Search(TemplateView):
 
 		# take queryset (rows depends on 'page' and 'rows' - number of lines per page)
 		students = models.Student.objects.filter(**kwargs_filter
-			).exclude(**kwargs_exclude
 			).select_related('user'
 			).only(*args_only
+			).annotate(**kwargs_annotate
+			).filter(**kwargs_filter2
 			).order_by(*args_order_by
 			)[
 				(self.page-1)*self.rows : self.page*self.rows
@@ -98,19 +102,18 @@ class Search(TemplateView):
 		students_form = []
 		for student in students:
 			students_form.append(forms.Student(student = student))
+		args['students'] = students_form
+
 
 		url_data = '?skills={0}&english={1}'.format(self.skills, self.english)
 		args['url_data'] = url_data
 
 
-
-		args['students'] = students_form
 		args['skill_form'] = forms.Skill(initial={'skill': initial_skill})
 		args['english_form'] = forms.English(initial={'value': self.english})
 		args['page'] = self.page
 		
 
-		print(kwargs_exclude, '\n', initial_skill, '\n\n', list(all_skills_id - set(initial_skill)))
 		return render(request, self.template_name, args)
 
 
