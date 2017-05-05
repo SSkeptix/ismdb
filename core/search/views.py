@@ -47,7 +47,7 @@ class Search(TemplateView):
 
 		# filter by skills - begin 
 		initial_skill = []
-		if self.skills:
+		if self.skills and self.skills != 'None':
 			for i in self.skills.split(","):
 				initial_skill.append(int (i))
 			kwargs_filter['studentskill__skill__in'] = initial_skill
