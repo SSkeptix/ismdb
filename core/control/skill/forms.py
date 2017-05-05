@@ -5,11 +5,24 @@ _style = ''
 _class = 'form-control'
 
 
-'''
 
-
-# base form for all type of skill
 class Skill(forms.ModelForm):
+	value = forms.CharField(
+		label="Вміння",
+		max_length=50,
+		required = True,
+		widget=forms.TextInput(attrs={
+			'placeholder': 'Назва вміння',
+			'class': _class,
+			'style': _style,
+			}))
+
+
+	class Meta:
+		model = models.Skill
+		fields = ('value', )
+
+	
 	def save(self, commit=True, validated_by = None):
 		instance = super(Skill, self).save(commit=False)
 
@@ -24,82 +37,8 @@ class Skill(forms.ModelForm):
 
 
 
-class Language(Skill):
-	skill_type = 'Language'
-
-	value = forms.CharField(
-		label="Language",
-		max_length=50,
-		required = True,
-		widget=forms.TextInput(attrs={
-			'placeholder': 'Title of language',
-			'class': _class,
-			'style': _style,
-			}))
-
-	class Meta:
-		model = models.Language
-		fields = ('value', )
-
-
-
-
-
-class Framework(Skill):
-	skill_type = 'Framework'
-
-	lang = forms.ModelChoiceField(
-		queryset = models.Language.objects.exclude(validated_by__isnull=True).order_by('value'),
-		label = 'Language',
-		required = True,
-		widget=forms.Select(attrs={
-			'class': _class,
-			'style': _style,
-			}))
-
-	value = forms.CharField(
-		label="Framework",
-		max_length=50,
-		required = True,
-		widget=forms.TextInput(attrs={
-			'placeholder': 'Title of framework',
-			'class': _class,
-			'style': _style,
-			}))
-
-	class Meta:
-		model = models.Framework
-		fields = ('lang', 'value', )
-
-
-
-
-
-class Other(Skill):
-	skill_type = 'Other'
-
-	value = forms.CharField(
-		label="Other",
-		max_length=50,
-		required = True,
-		widget=forms.TextInput(attrs={
-			'placeholder': 'Title of technique',
-			'class': _class,
-			'style': _style,
-			}))
-
-	class Meta:
-		model = models.Other
-		fields = ('value', )
-
-
-
-
-
 class SkillView:
-	def __init__(self, skill, skill_type):
-		self.skill_type = skill_type
+	def __init__(self, skill):
 		self.value = '<{0}>'.format(skill.__str__())
 		self.id = skill.id
-		self.added_at = skill.validated_at
-'''
+		self.date = skill.validated_at
