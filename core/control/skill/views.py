@@ -101,6 +101,7 @@ class EditSkill(TemplateView):
 	template_name = 'core/control/edit_skill.html'
 
 
+
 	def render(self, request, new_args = None):
 		args = {}
 
@@ -110,25 +111,16 @@ class EditSkill(TemplateView):
 		return render(request, self.template_name, args)
 
 
-	def get(self, request, id, skill_type):
+
+	def get(self, request, id):
 		id = int(id)
 
-		if skill_type == 'lang':
-			skill = models.Language.objects.get(id = id)
-			form = forms.Language(instance = skill)
-
-		elif skill_type == 'fram':
-			skill = models.Framework.objects.get(id = id)
-			form = forms.Framework(instance = skill)
-
-		elif skill_type == 'other':
-			skill = models.Other.objects.get(id = id)
-			form = eforms.Other(instance = skill)
-
+		skill = models.Skill.objects.get(id = id)
+		form = forms.Skill(instance = skill)
 
 		#skill is already validated
 		if skill.validated_by:
-			raise Http404('You dont have permission to change this skill')	
+			raise Http404('Ви не маєте прав на редагування цього вміння')	
 
 		args = {'form': form, }
 
@@ -136,16 +128,8 @@ class EditSkill(TemplateView):
 
 
 
-
-	def post(self, request, id, skill_type):
-
-		if SKILL.LANGUAGE in request.POST:
-			form = forms.Language(request.POST, instance = models.Language.objects.get(id = id))
-		elif SKILL.FRAMEWORK in request.POST:
-			form = forms.Framework(request.POST, instance = models.Framework.objects.get(id = id))
-		if SKILL.OTHER in request.POST:
-			form = forms.Other(request.POST, instance = models.Other.objects.get(id = id))
-
+	def post(self, request, id):
+		form = forms.Skill(request.POST, instance = models.Skill.objects.get(id = id))
 
 		if form.is_valid():
 			form.save(validated_by = models.User.objects.get(id=request.user.id))

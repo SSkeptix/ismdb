@@ -14,7 +14,7 @@ urlpatterns = [
 
 	url(r'^control/', include([
 		url(r'^skill/add/$', AddSkill.as_view(), name = 'add_skill'),
-		url(r'^skill/(?P<skill_type>[\w]+)/(?P<id>[\d]+)/edit/$', EditSkill.as_view(), name = 'edit_skill'),
+		url(r'^skill/(?P<id>[\d]+)/edit/$', EditSkill.as_view(), name = 'edit_skill'),
  
 	])),
 
