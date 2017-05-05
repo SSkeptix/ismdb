@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
 from django.views.generic import TemplateView
+
 from account import models
 from . import forms
+
 from itertools import chain
 import math
 
@@ -36,15 +38,21 @@ class Search(TemplateView):
 		args = {}
 
 		# add filters
-		kwargs_filter = {}
+		kwargs_filter = {
+			'english__gte': self.english,
+		}
 
+		# filter by skills - begin 
 		initial_skill = []
 		if self.skills:
 			for i in self.skills.split(","):
 				initial_skill.append(int (i))
-				kwargs_filter['studentskill__skill'] = int (i)
 
-		kwargs_filter['english__gte'] = self.english
+		all_skills_id = set(models.Skill.objects.all().values_list('id', flat=True))
+		kwargs_exclude = {
+			'studentskill__skill__in': list(all_skills_id - set(initial_skill)),
+		}
+		# filter by skills - end 
 
 		# which data need get from database
 		args_only = {
@@ -64,6 +72,7 @@ class Search(TemplateView):
 
 		# take number of all suitable students
 		students_count = models.Student.objects.filter(**kwargs_filter
+			).exclude(**kwargs_exclude
 			).select_related('user'
 			).only(*args_only
 			).order_by(*args_order_by
@@ -76,6 +85,7 @@ class Search(TemplateView):
 
 		# take queryset (rows depends on 'page' and 'rows' - number of lines per page)
 		students = models.Student.objects.filter(**kwargs_filter
+			).exclude(**kwargs_exclude
 			).select_related('user'
 			).only(*args_only
 			).order_by(*args_order_by
@@ -100,7 +110,7 @@ class Search(TemplateView):
 		args['page'] = self.page
 		
 
-		print(kwargs_filter)
+		print(kwargs_exclude, '\n', initial_skill, '\n\n', list(all_skills_id - set(initial_skill)))
 		return render(request, self.template_name, args)
 
 
@@ -125,3 +135,4 @@ class Search(TemplateView):
 			url_data += '{0}={1}&'.format('english', str(english))
 
 		return redirect(reverse('core:search_page', kwargs={'page': 1}) + url_data)
+

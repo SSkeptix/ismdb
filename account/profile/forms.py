@@ -88,9 +88,10 @@ class EditStudent(forms.ModelForm):
 	group = forms.CharField(
 		label="Група",
 		required = True,
-		max_length=50, 
+		max_length=50,
 		widget=forms.TextInput(attrs={
 			'class': _class,
+			'placeholder': 'КН-32',
 			}))
 
 
