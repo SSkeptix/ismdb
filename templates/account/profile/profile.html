@@ -102,7 +102,7 @@ ISMdb | Профіль
 						<tr>
 				            <th>Вміння</th>
 				            <th>Перевірений</th>
-				            <th>Дата перевірки</th>
+				            <th>Оновлено</th>
 				         </tr>
 						</thead>
 
@@ -116,7 +116,6 @@ ISMdb | Профіль
 				            <td style = "white-space: nowrap">
 				                <a href="{% url 'account:profile' username=i.validated_by_username %}" target="_blank">{{ i.validated_by }}</a>
 				            </td>
-				            <td style = "white-space: nowrap">{{ i.updated }}</td>
 				            {% else %}
 
 				            	{% if validation_permission %}
@@ -130,9 +129,9 @@ ISMdb | Профіль
 					            <td>Немає</td>
 					            {% endif %}
 
-							<td>---</td>
 				            {% endif %}
-            
+
+				            <td style = "white-space: nowrap">{{ i.updated }}</td>
 				          </tr>
 				        {% endfor %}
 

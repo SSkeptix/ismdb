@@ -12,7 +12,8 @@ class User(AbstractUser):
 	validated_by = models.ForeignKey('User', on_delete=models.SET_NULL, related_name='validate_by', null = True, blank = True)
 
 	def __str__(self):
-		return str(self.get_full_name())
+		#return str(self.get_full_name())
+		return str( '{0} {1}'.format(self.last_name, self.first_name) )
 
 
 
@@ -27,7 +28,7 @@ class Student(models.Model):
 	description = models.TextField(max_length = 2000, null = True, blank = True)
 
 	def __str__(self):
-		return str(user.__str__())
+		return str(self.user.__str__())
 
 
 

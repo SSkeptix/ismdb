@@ -15,8 +15,9 @@ def user_validation(request):
 	if not validation_permission:
 		return Http404('У вас немає прав для перегляду даної сторінки')
 
-	users = models.User.objects.filter(validated_by__isnull = True).only('first_name', 'last_name', 'username').order_by('last_name', 'first_name')
-	args['users'] = users
+	users = models.User.objects.filter(validated_by__isnull = True).only('first_name', 'last_name', 'username', 'date_joined').order_by('last_name', 'first_name')
+	args['users'] = users 
+
 	return render(request, 'core/control/user_validation.html', args)
 
 

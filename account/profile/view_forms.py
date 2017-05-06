@@ -11,6 +11,6 @@ class Skill:
 		if skill.validated_by:
 			self.validated_by = skill.validated_by
 			self.validated_by_username = skill.validated_by.username
-			self.updated = skill.updated
-
+		
+		self.updated = skill.updated
 		self.id = skill.id

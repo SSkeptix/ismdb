@@ -14,10 +14,16 @@ ISMdb | Не перевірені користувачі
 
     {% if users %}
     <table class = "table table-striped">
+        <tr>
+            <th>Користувач</th>
+            <th>Дата реєстрації</th>
+        </tr>
+
         {% for i in users %}
-        <tr><td>
-            <a href="{% url 'account:profile' username=i.username %}">{{ i.last_name }} {{ i.first_name }}</a>
-        </td></tr>
+        <tr>
+            <td><a href="{% url 'account:profile' username=i.username %}">{{ i }}</a></td>
+            <td>{{ i.date_joined|date:"d E Y" }}</td>
+        </tr>
         {% endfor %}
     </table>
     {% endif %}
