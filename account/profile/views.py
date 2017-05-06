@@ -136,7 +136,7 @@ class EditProfile(TemplateView):
 		if (request.user.category == tuples.CATEGORY.STUDENT) :
 			student = models.Student.objects.get(user = request.user.id)
 
-			args['user_form':] = forms.EditUser(instance = request.user)
+			args['user_form'] = forms.EditUser(instance = request.user)
 			args['student_form'] = forms.EditStudent(instance = student)
 			args['skill_form'] = forms.EditSkill(user = request.user)
 			
