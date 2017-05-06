@@ -6,7 +6,7 @@ from account import tuples
 from . import forms
 from django.http import Http404, HttpResponse
 
-from itertools import chain
+from core.functions import validation_permission
 
 
 
@@ -21,13 +21,12 @@ class AddSkill(TemplateView):
 
 
 	def init(self, request):
+		self.validation_permission = validation_permission(user=request.user)
+		
 		if request.user.validated_by:
 			self.add_permission = True
-			if request.user.category in (tuples.CATEGORY.TEACHER, tuples.CATEGORY.EMPLOYER):
-				self.validation_permission = True
 		else:
 			self.add_permission = False
-			self.validation_permission = False			
 
 
 
@@ -103,7 +102,7 @@ class EditSkill(TemplateView):
 
 
 	def render(self, request, new_args = None):
-		args = {}
+		args = {'validation_permission': validation_permission(user=request.user), }
 
 		if new_args:
 			for i in new_args:

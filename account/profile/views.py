@@ -9,6 +9,8 @@ from . import view_forms
 
 from django.http import HttpResponse
 
+from core.functions import validation_permission
+
 #reverse('account:add_skill', kwargs={'username': request.user.username})
 
 
@@ -16,7 +18,7 @@ from django.http import HttpResponse
 
 
 def add_profile(request):
-	args = {}
+	args = {'validation_permission': validation_permission(user=request.user), }
 
 	# add student profile
 	if request.method == 'POST' :
@@ -48,23 +50,15 @@ class Profile(TemplateView):
 
 
 
-	def render(self, request, username = '', new_args = None):
-		args = {}
+	def render(self, request, username, new_args = None):
+		args = {'validation_permission': validation_permission(user=request.user), }
+		
 		user = models.User.objects.get(username = request.user.username)
 		profile = models.User.objects.get(username = username)
 		args['user_form'] = profile
 
 		# validation permission - possibility to validate:
 		# student's skill, persons
-		if (user.category == tuples.CATEGORY.TEACHER) and user.validated_by:
-			validation_permission = True
-			if (username == user.username) :
-				validation_permission = False
-		else:
-			validation_permission = False
-		args['validation_permission'] = validation_permission
-
-
 		if (username == user.username) :
 			own_profile = True
 		else:
@@ -137,14 +131,15 @@ class EditProfile(TemplateView):
 
 
 	def render(self, request, username = '', new_args = None):
+		args = {'validation_permission': validation_permission(user=request.user), }
+
 		if (request.user.category == tuples.CATEGORY.STUDENT) :
 			student = models.Student.objects.get(user = request.user.id)
 
-			args = {
-				'user_form': forms.EditUser(instance = request.user),
-				'student_form': forms.EditStudent(instance = student),
-				'skill_form': forms.EditSkill(user = request.user),
-			}
+			args['user_form':] = forms.EditUser(instance = request.user)
+			args['student_form'] = forms.EditStudent(instance = student)
+			args['skill_form'] = forms.EditSkill(user = request.user)
+			
 		else:
 		# edit profile (teacher, employer)
 			args = {

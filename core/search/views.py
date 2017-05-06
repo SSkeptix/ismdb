@@ -6,8 +6,9 @@ from django.db.models import Count
 from account import models
 from . import forms
 
-from itertools import chain
 import math
+
+from core.functions import validation_permission
 
 
 
@@ -36,7 +37,7 @@ class Search(TemplateView):
 
 	def get(self, request, page = 1):
 		self.init(request=request, page=page)
-		args = {}
+		args = {'validation_permission': validation_permission(user=request.user), }
 
 		# add filters
 		kwargs_filter = {

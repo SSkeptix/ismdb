@@ -6,6 +6,9 @@ from . import models
 
 from django.http import HttpResponse
 
+from core.functions import validation_permission
+
+
 
 def register(request):
 	if request.method == 'POST':
@@ -16,7 +19,10 @@ def register(request):
 	else:
 		form = forms.Registration()
 
-	args = {'form': form}
+	args = {
+		'form': form,
+		'validation_permission': validation_permission(user=request.user),
+	}
 	return render(request, 'account/register.html', args)
 
 
