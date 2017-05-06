@@ -12,7 +12,7 @@ class User(AbstractUser):
 	validated_by = models.ForeignKey('User', on_delete=models.SET_NULL, related_name='validate_by', null = True, blank = True)
 
 	def __str__(self):
-		return str(self.get_username())
+		return str(self.get_full_name())
 
 
 
@@ -26,11 +26,8 @@ class Student(models.Model):
 	github = models.URLField(null = True, blank = True)
 	description = models.TextField(max_length = 2000, null = True, blank = True)
 
-	def get_username(self):
-		return self.user.username
-
 	def __str__(self):
-		return str(self.get_username())
+		return str(user.__str__())
 
 
 
@@ -39,13 +36,10 @@ class Student(models.Model):
 class Skill(models.Model):
 	value = models.CharField(max_length = 50, unique = True)
 	validated_by = models.ForeignKey(User, on_delete=models.CASCADE, null = True, blank = True)
-	validated_at = models.DateField(auto_now=True)
-
-	def get_value(self):
-		return self.value
+	updated = models.DateField(auto_now=True)
 
 	def __str__(self):
-		return str(self.get_value())
+		return str(self.value)
 
 
 
@@ -54,11 +48,11 @@ class Skill(models.Model):
 class StudentSkill(models.Model):
 	student = models.ForeignKey(Student, on_delete=models.CASCADE)
 	validated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null = True, blank = True)
-	validated_at = models.DateField(auto_now=True)
+	updated = models.DateField(auto_now=True)
 	skill = models.ForeignKey(Skill, on_delete=models.CASCADE)
 
 	class Meta:
 		unique_together = ('student', 'skill')
 
 	def __str__(self):
-		return str('{0} - {1}'.format(self.student.get_username(), self.skill.get_value()) )
+		return str('{0} - {1}'.format(self.student.__str__(), self.skill.__str__()) )

@@ -11,8 +11,8 @@ _class = 'form-control'
 class EditUser(forms.ModelForm):
 	username = forms.CharField(
 		label="Логін",
-		help_text = '50 символів або менше, використовувати можна латинські букви, цифри і наступні символи: @/./+/-/_',
-		max_length=50,
+		help_text = '150 символів або менше, використовувати можна латинські букви, цифри і наступні символи: @/./+/-/_',
+		max_length=150,
 		widget=forms.TextInput(attrs={
 			'placeholder': 'pro100_Hacker',
 			'class': _class,
@@ -21,7 +21,7 @@ class EditUser(forms.ModelForm):
 	first_name = forms.CharField(
 		label="Ім'я",
 		required = True,
-		max_length=50,
+		max_length=150,
 		widget=forms.TextInput(attrs={
 			'placeholder': 'Петро',
 			'class': _class,
@@ -30,7 +30,7 @@ class EditUser(forms.ModelForm):
 	last_name = forms.CharField(
 		label="Прізвище",
 		required = True,
-		max_length=50,
+		max_length=150,
 		widget=forms.TextInput(attrs={
 			'placeholder': 'Петренко',
 			'class': _class,
@@ -39,7 +39,7 @@ class EditUser(forms.ModelForm):
 	email = forms.EmailField(
 		label="Email",
 		required = True,
-		max_length=50, 
+		max_length=150, 
 		widget=forms.TextInput(attrs={
 			'placeholder': 'pro100hacker@mail.com',
 			'class': _class,
@@ -88,7 +88,7 @@ class EditStudent(forms.ModelForm):
 	group = forms.CharField(
 		label="Група",
 		required = True,
-		max_length=50,
+		max_length=150,
 		widget=forms.TextInput(attrs={
 			'class': _class,
 			'placeholder': 'КН-32',
@@ -221,7 +221,7 @@ class StudentSkill(forms.ModelForm):
 		exclude = (
 			'student',
 			'validated_by', 
-			'validated_at',
+			'updated',
 			)
 
 

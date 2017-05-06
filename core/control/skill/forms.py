@@ -41,4 +41,4 @@ class SkillView:
 	def __init__(self, skill):
 		self.value = '<{0}>'.format(skill.__str__())
 		self.id = skill.id
-		self.date = skill.validated_at
+		self.updated = skill.updated

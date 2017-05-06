@@ -49,7 +49,7 @@ class Student:
 	english = ''
 
 	def __init__(self, student):
-		self.name = ('{0} {1}'.format(student.user.last_name, student.user.first_name))
+		self.name = student.user
 		self.english = tuples.ENGLISH().value(student.english)
 		self.username = student.user.username
 		self.skills = ''
