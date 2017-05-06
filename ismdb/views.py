@@ -1,13 +1,17 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
-
 from django.http import HttpResponse
-# Create your views here.
+
+from core.functions import validation_permission
+
+
+
 
 @login_required(login_url="/account/login/")
 def home(request):
-	return render(request, "home.html")
+	args = {'validation_permission': validation_permission(user=request.user), }
+	return render(request, "home.html", args)
 
 def debuging(request):
 

@@ -13,7 +13,7 @@ ISMdb | Не перевірені користувачі
     </div>
 
     {% if users %}
-    <table>
+    <table class = "table table-striped">
         {% for i in users %}
         <tr><td>
             <a href="{% url 'account:profile' username=i.username %}">{{ i.last_name }} {{ i.first_name }}</a>
