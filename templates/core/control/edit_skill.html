@@ -1,28 +1,18 @@
 {% extends 'base.html' %}
 
 {% block head %}
-Control: Edit Skill
+ISMdb | Редагування вміння
 {% endblock %}
 
 {% block body %}
 <div class="container">
 
     <div class="page-header">
-        <h1>Edit Skill</h1>
+        <h1>Редагування вміння</h1>
     </div>
 
     <form class="form-horizontal" method="post">
         {% csrf_token %}
-
-        {% if form.skill_type == 'Framework' %}
-        <div class="form-group">
-        <label class="col-sm-2 control-label" >Language</label>
-            <div class="col-sm-10">
-                {{ form.lang.errors }}
-                {{ form.lang }}
-            </div>
-        </div>
-        {% endif %}
 
         <div class="form-group">
         <label class="col-sm-2 control-label" >{{ form.value.label_tag }}</label>
@@ -33,7 +23,7 @@ Control: Edit Skill
         </div>
 
         <p class="bs-component">
-            <center><input class="btn btn-success" type="submit" name="{{ form.skill_type }}" value="Save"/></center>
+            <center><input class="btn btn-success" type="submit" name="skill" value="Зберегти"/></center>
         </p>
     </form>
 </div>

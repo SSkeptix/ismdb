@@ -7,6 +7,7 @@ from . import models
 from django.http import HttpResponse
 
 
+
 def register(request):
 	if request.method == 'POST':
 		form = forms.Registration(request.POST)
@@ -16,7 +17,9 @@ def register(request):
 	else:
 		form = forms.Registration()
 
-	args = {'form': form}
+	args = {
+		'form': form,
+	}
 	return render(request, 'account/register.html', args)
 
 

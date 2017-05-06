@@ -34,17 +34,12 @@ class Student(models.Model):
 
 
 
-# abstract model for
-#					 - programing languages
-#					 - programing fraimworks
-#					 - other skills
-class SkillBase(models.Model):
+
+
+class Skill(models.Model):
 	value = models.CharField(max_length = 50, unique = True)
 	validated_by = models.ForeignKey(User, on_delete=models.CASCADE, null = True, blank = True)
 	validated_at = models.DateField(auto_now=True)
-
-	class Meta:
-		abstract = True
 
 	def get_value(self):
 		return self.value
@@ -53,50 +48,17 @@ class SkillBase(models.Model):
 		return str(self.get_value())
 
 
-#programing languages model
-class Language(SkillBase):
-	pass
-
-#programing fraimworks model
-class Framework(SkillBase):
-	value = models.CharField(max_length = 50)
-	lang = models.ForeignKey(Language, on_delete=models.CASCADE)
-
-	class Meta:
-		unique_together = ('value', 'lang')
-
-	def get_lang(self):
-		return self.lang.get_value()
-
-	def __str__(self):
-		return str("%s - %s" % (self.get_lang(), self.get_value()))
-
-#other skills model
-class Other(SkillBase):
-	pass
 
 
 
-
-
-# abstract model for student skills
 class StudentSkill(models.Model):
 	student = models.ForeignKey(Student, on_delete=models.CASCADE)
 	validated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null = True, blank = True)
 	validated_at = models.DateField(auto_now=True)
+	skill = models.ForeignKey(Skill, on_delete=models.CASCADE)
 
 	class Meta:
-		abstract = True
 		unique_together = ('student', 'skill')
 
 	def __str__(self):
-		return str("%s - %s" % (self.student.get_username(), self.skill.get_value()) )
-
-class StudentLanguage(StudentSkill):
-	skill = models.ForeignKey(Language, on_delete=models.CASCADE)
-
-class StudentFramework(StudentSkill):
-	skill = models.ForeignKey(Framework, on_delete=models.CASCADE)
-
-class StudentOther(StudentSkill):
-	skill = models.ForeignKey(Other, on_delete=models.CASCADE)
+		return str('{0} - {1}'.format(self.student.get_username(), self.skill.get_value()) )

@@ -12,14 +12,13 @@ ISMdb | Нові вміння
 <div class="container">
 
     <div class="page-header">
-    	<h1>Вміння я чекають на підтвердження</h1>
+    	<h1>Вміння які чекають на підтвердження</h1>
     </div>
 
     {% if skills %}
     <table class = "table table-striped">
     	<thead>
     		<th>Вміння</th>
-            <th>Тип</th>
     		<th>Доданий</th>
     		{% if permission %}
 				<th></th>
@@ -29,17 +28,16 @@ ISMdb | Нові вміння
 	    	{% for i in skills %}
 	    	<tr>
 	    		<td>{{ i.value }}</td>
-                <td>{{ i.skill_type }}</td>
-	    		<td>{{ i.added_at }}</td>
-	    		{% if permission %}
+	    		<td>{{ i.date }}</td>
+	    		{% if validation_permission %}
 	    			<td align="right">
 	    				<form method="POST">   
 	    					{% csrf_token %}
 		    				<div class="btn-group" role="group">
-		    					<input type="hidden" name="{{ i.skill_type }}" value="{{ i.id }}">
-					            <input class="btn btn-sm btn-danger" type="submit" name="skill_validation" value="Delete" />
-					            <input class="btn btn-sm btn-warning" type="submit" name="skill_validation" value="Change" />
-					            <input class="btn btn-sm btn-success" type="submit" name="skill_validation" value="Save" />
+		    					<input type="hidden" name="skill_id" value="{{ i.id }}">
+					            <input class="btn btn-sm btn-danger" type="submit" name="skill_validation" value="Видалити" />
+					            <input class="btn btn-sm btn-warning" type="submit" name="skill_validation" value="Змінити" />
+					            <input class="btn btn-sm btn-success" type="submit" name="skill_validation" value="Зберегти" />
 							</div>
 						</form>
 	    			</td> 			
@@ -52,63 +50,29 @@ ISMdb | Нові вміння
     <p>Пусто</p>
     {% endif %}
 
+    {% if add_permission %}
+        <div class="page-header">
+            <h1>Додати нове вміння</h1>
+        </div>
 
+        <table>
+            {% if skill_form.value.errors %}
+            <tr>
+                <td></td>
+                <td>{{ skill_form.value.errors }}</td>
+            </tr>
+            {% endif %}
+            <tr>
+                <form class="form-horizontal" method="post">
+            	    {% csrf_token %}
+                    <td><label class="col-sm-2 control-label" >{{ skill_form.value.label_tag }}</label></td>
+                    <td>{{ skill_form.value }}</td>
+                    <td><input class="btn btn-success btn-sm" type="submit" name="add_skill" value="Add" /></td>
+            	</form>
+            </tr>
+        </table>
+    {% endif %}
 
-    <div class="page-header">
-        <h1>Додати нове вміння</h1>
-    </div>
-
-    <table>
-
-        {% if language_form.value.errors %}
-        <tr>
-            <td></td>
-            <td>{{ language_form.value.errors }}</td>
-        </tr>
-        {% endif %}
-        <tr>
-            <form class="form-horizontal" method="post">
-        	    {% csrf_token %}
-                <td><label class="col-sm-2 control-label" >{{ language_form.value.label_tag }}</label></td>
-                <td>{{ language_form.value }}</td>
-                <td><input class="btn btn-success btn-sm" type="submit" name="add_language" value="Add" /></td>
-        	</form>
-        </tr>
-
-
-        {% if framework_form.value.errors %}
-        <tr>
-            <td></td>
-            <td>{{ framework_form.value.errors }}</td>
-        </tr>
-        {% endif %}
-        <tr>
-            <form class="form-horizontal" method="post">
-                {% csrf_token %}
-                <td><label class="col-sm-2 control-label" >{{ framework_form.value.label_tag }}</label></td>
-                <td>{{ framework_form.value }}</td>
-                <td>{{ framework_form.lang }}</td>
-                <td><input class="btn btn-success btn-sm" type="submit" name="add_framework" value="Add" /></td>
-            </form>
-        </tr>
-
-
-        {% if other_form.value.errors %}
-        <tr>
-            <td></td>
-            <td>{{ other_form.value.errors }}</td>
-        </tr>
-        {% endif %}
-        <tr>
-            <form class="form-horizontal" method="post">
-                {% csrf_token %}
-                <td><label class="col-sm-2 control-label" >{{ other_form.value.label_tag }}</label></td>
-                <td>{{ other_form.value }}</td>
-                <td><input class="btn btn-success btn-sm" type="submit" name="add_other" value="Add" /></td>
-            </form>
-        </tr>
-
-    </table>
 	
 </div>
 

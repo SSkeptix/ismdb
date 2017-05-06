@@ -51,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'ismdb.middleware.LoginRequiredMiddleware'
 ]
 
@@ -81,7 +82,7 @@ WSGI_APPLICATION = 'ismdb.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ismdb_new',
+        'NAME': 'ismdb_v3',
         'USER': 'root',
         'PASSWORD': 'root',
         'HOST': 'localhost',
@@ -112,7 +113,12 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'uk'
+
+    
+LANGUAGES = [
+    ('uk', ('Ukrainian')),
+]
 
 TIME_ZONE = 'UTC'
 

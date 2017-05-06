@@ -5,44 +5,23 @@ from account import tuples
 
 
 
-class Language(forms.Form):
-	value = forms.ModelChoiceField(
-		queryset = models.Language.objects.exclude(validated_by__isnull=True).order_by('value'),
-		label = 'Language',
-		required = True,
-		widget=forms.Select(attrs={
-			'class': 'form-control',
-			#'style': 'width:auto;'
-			}))
+class Skill(forms.Form):
+	skill = forms.ModelMultipleChoiceField(
+		queryset = models.Skill.objects.exclude(validated_by__isnull=True).order_by('value'),
+		label = 'Вміння',
+		required = False,
+		widget=forms.CheckboxSelectMultiple()
+		)
 
-	class Meta:
-		fields = ('value')
 
-class Framework(forms.Form):
-	value = forms.ModelChoiceField(
-		queryset = models.Framework.objects.exclude(validated_by__isnull=True).order_by('lang__value', 'value'),
-		label = 'Framework',
-		required = True,
-		widget=forms.Select(attrs={
-			'class': 'form-control',
-			#'style': 'width:auto;'
-			}))
+	def get_list(self):
+		data = []
+		for skill in self.cleaned_data['skill']:
+			data.append(skill.id)
 
-	class Meta:
-		fields = ('value')
+		return data
 
-class Other(forms.Form):
-	value = forms.ModelChoiceField(
-		queryset = models.Other.objects.exclude(validated_by__isnull=True).order_by('value'),
-		label = 'Other skill',
-		required = True,
-		widget=forms.Select(attrs={
-			'class': 'form-control',
-			#'style': 'width:auto;'
-			}))
-
-	class Meta:
-		fields = ('value')
+			
 
 
 
@@ -61,6 +40,8 @@ class English(forms.Form):
 
 
 
+
+
 class Student:
 	name = ''
 	username = ''
@@ -71,18 +52,10 @@ class Student:
 		self.name = ('{0} {1}'.format(student.user.last_name, student.user.first_name))
 		self.english = tuples.ENGLISH().value(student.english)
 		self.username = student.user.username
-		self.skills = []
+		self.skills = ''
 
-		skills_queryset = models.StudentLanguage.objects.filter(student = student.user.id)
+		skills_queryset = models.Skill.objects.filter(studentskill__student = student.user.id).order_by('value')
 		for i in skills_queryset:
-			self.skills.append(i.skill.value)
+			self.skills += '{0}, '.format(i.value)
+		self.skills = self.skills[:-2]
 
-		skills_queryset = models.StudentFramework.objects.filter(student = student.user.id)
-		for i in skills_queryset:
-			self.skills.append(i.skill.value)
-
-		skills_queryset = models.StudentOther.objects.filter(student = student.user.id)
-		for i in skills_queryset:
-			self.skills.append(i.skill.value)
-
-		self.skills.sort()

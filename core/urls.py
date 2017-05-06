@@ -1,7 +1,7 @@
 from django.conf.urls import url, include
 from .search.views import Search
 from .control.skill.views import AddSkill, EditSkill
-from . import views
+from .control import views as control_views
 
 app_name = 'core'
 
@@ -14,12 +14,9 @@ urlpatterns = [
 
 	url(r'^control/', include([
 		url(r'^skill/add/$', AddSkill.as_view(), name = 'add_skill'),
-		url(r'^skill/(?P<skill_type>[\w]+)/(?P<id>[\d]+)/edit/$', EditSkill.as_view(), name = 'edit_skill'),
-
+		url(r'^skill/(?P<id>[\d]+)/edit/$', EditSkill.as_view(), name = 'edit_skill'),
+ 
+ 		url(r'^user_validation/$', control_views.user_validation, name = 'user_validation')
 	])),
-
-	
-
-    url(r'^test/$', views.test),
 
 ] 

@@ -6,15 +6,7 @@ from account import tuples
 from . import forms
 from django.http import Http404, HttpResponse
 
-from itertools import chain
-
-
-# support class for writing short code
-class SKILL:
-	LANGUAGE = tuples.SKILL().value(tuples.SKILL.LANGUAGE)
-	FRAMEWORK = tuples.SKILL().value(tuples.SKILL.FRAMEWORK)
-	OTHER = tuples.SKILL().value(tuples.SKILL.OTHER)
-
+from core.functions import validation_permission
 
 
 
@@ -23,44 +15,36 @@ class SKILL:
 class AddSkill(TemplateView):
 	template_name = 'core/control/add_skill.html'
 
-	permission = None
+	add_permission = None
+	validation_permission = None
 
 
 
 	def init(self, request):
-		if request.user.category in (tuples.CATEGORY.TEACHER, tuples.CATEGORY.EMPLOYER) and request.user.validated_by:
-			self.permission = True
-		else:
-			self.permission = False
+		self.validation_permission = validation_permission(user=request.user)
 		
+		if request.user.validated_by:
+			self.add_permission = True
+		else:
+			self.add_permission = False
+
 
 
 	def render(self, request, new_args = None):
 		
-
 		# show skills that are waiting to confirmation
 		skills = []
 
-		queryset = models.Language.objects.filter(validated_by__isnull = True)
+		queryset = models.Skill.objects.filter(validated_by__isnull = True).order_by('value')
 		for i in queryset:
-			skills.append(forms.SkillView(skill=i, skill_type=SKILL.LANGUAGE))
-		queryset = models.Framework.objects.filter(validated_by__isnull = True)
-		for i in queryset:
-			skills.append(forms.SkillView(skill=i, skill_type=SKILL.FRAMEWORK))
-		queryset = models.Other.objects.filter(validated_by__isnull = True)
-		for i in queryset:
-			skills.append(forms.SkillView(skill=i, skill_type=SKILL.OTHER))
-
-		skills.sort(key=lambda instance: instance.value)
+			skills.append(forms.SkillView(skill=i))
 
 		args = {
-			'language_form': forms.Language(),
-			'framework_form': forms.Framework(),
-			'other_form': forms.Other(),
-			'permission': self.permission,
+			'skill_form': forms.Skill(),
+			'add_permission': self.add_permission,
+			'validation_permission': self.validation_permission,
 			'skills': skills,
 		}
-
 
 		if new_args:
 			for i in new_args:
@@ -80,50 +64,30 @@ class AddSkill(TemplateView):
 		self.init(request=request)
 
 		if 'skill_validation' in request.POST:
+			skill = models.Skill.objects.get(id = int(request.POST['skill_id']))
 
-			if SKILL.LANGUAGE in request.POST:
-				skill = models.Language.objects.get(id = int(request.POST[SKILL.LANGUAGE]))
-				skill_type = 'lang'
-			elif SKILL.FRAMEWORK in request.POST:
-				skill = models.Framework.objects.get(id = int(request.POST[SKILL.FRAMEWORK ]))
-				skill_type = 'fram'
-			elif SKILL.OTHER in request.POST:
-				skill = models.Other.objects.get(id = int(request.POST[SKILL.OTHER]))
-				skill_type = 'other'
-
-			if request.POST['skill_validation'] == 'Delete':
+			if request.POST['skill_validation'] == 'Видалити':
 				skill.delete()
-			elif request.POST['skill_validation'] == 'Change':
-				return redirect('core:edit_skill', id=skill.id, skill_type=skill_type)
-			elif request.POST['skill_validation'] == 'Save':
+			elif request.POST['skill_validation'] == 'Змінити':
+				return redirect('core:edit_skill', id=skill.id)
+			elif request.POST['skill_validation'] == 'Зберегти':
 				skill.validated_by = models.User.objects.get(id=request.user.id)
 				skill.save()
 
 			return redirect('core:add_skill')
 
-		else:
-			if 'add_language' in request.POST:
-				form = forms.Language(request.POST)
-			elif 'add_framework' in request.POST:
-				form = forms.Framework(request.POST)
-			elif 'add_other' in request.POST:
-				form = forms.Other(request.POST)
+		elif 'add_skill' in request.POST:
+			form = forms.Skill(request.POST)
 
 			if form.is_valid():
-				if self.permission:
+				if self.validation_permission:
 					form.save(validated_by = models.User.objects.get(id=request.user.id))
 				else:
 					form.save()
 				return redirect('core:add_skill')
 
 			else:
-				if 'add_language' in request.POST:
-					args = {'language_form': form, }
-				elif 'add_framework' in request.POST:
-					args = {'framework_form': form, }
-				elif 'add_other' in request.POST:
-					args = {'other_form': form, }
-				
+				args = {'skill_form': form, }
 				return self.render(request=request, new_args=args)
 
 		return self.get(request=request)
@@ -136,8 +100,9 @@ class EditSkill(TemplateView):
 	template_name = 'core/control/edit_skill.html'
 
 
+
 	def render(self, request, new_args = None):
-		args = {}
+		args = {'validation_permission': validation_permission(user=request.user), }
 
 		if new_args:
 			for i in new_args:
@@ -145,25 +110,16 @@ class EditSkill(TemplateView):
 		return render(request, self.template_name, args)
 
 
-	def get(self, request, id, skill_type):
+
+	def get(self, request, id):
 		id = int(id)
 
-		if skill_type == 'lang':
-			skill = models.Language.objects.get(id = id)
-			form = forms.Language(instance = skill)
-
-		elif skill_type == 'fram':
-			skill = models.Framework.objects.get(id = id)
-			form = forms.Framework(instance = skill)
-
-		elif skill_type == 'other':
-			skill = models.Other.objects.get(id = id)
-			form = eforms.Other(instance = skill)
-
+		skill = models.Skill.objects.get(id = id)
+		form = forms.Skill(instance = skill)
 
 		#skill is already validated
 		if skill.validated_by:
-			raise Http404('You dont have permission to change this skill')	
+			raise Http404('Ви не маєте прав на редагування цього вміння')	
 
 		args = {'form': form, }
 
@@ -171,16 +127,8 @@ class EditSkill(TemplateView):
 
 
 
-
-	def post(self, request, id, skill_type):
-
-		if SKILL.LANGUAGE in request.POST:
-			form = forms.Language(request.POST, instance = models.Language.objects.get(id = id))
-		elif SKILL.FRAMEWORK in request.POST:
-			form = forms.Framework(request.POST, instance = models.Framework.objects.get(id = id))
-		if SKILL.OTHER in request.POST:
-			form = forms.Other(request.POST, instance = models.Other.objects.get(id = id))
-
+	def post(self, request, id):
+		form = forms.Skill(request.POST, instance = models.Skill.objects.get(id = id))
 
 		if form.is_valid():
 			form.save(validated_by = models.User.objects.get(id=request.user.id))

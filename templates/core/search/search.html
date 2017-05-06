@@ -1,70 +1,61 @@
 {% extends 'base.html' %}
 
 {% block head %}
-Search
+ISMdb | Пошук
 {% endblock %}
 
 {% block body %}
 
 <div class="container">
     <div class="page-header">
-        <h1>Search, page = {{ page }}</h1>
+        <h1>Пошук, сторінка = {{ page }}</h1>
         <!--  debuging information  -->
 
         <!--  debuging information  -->
 
     </div>
 
-    <a href="{% url 'core:search' %}" class="btn btn-primary">Reset filters</a>
+    <a href="{% url 'core:search' %}" class="btn btn-primary">Скинути фільтри</a>
+    <br /> <br />
 
+		<div class="panel panel-default">
+		    <div class="panel-heading" role="tab" id="filters">
+		        <h4 class="panel-title">
+			        <a role="button" data-toggle="collapse" data-parent="#edit" href="#filters_child" aria-expanded="true" aria-controls="filters_child">
+			          Фільтри
+			        </a>
+		        </h4>
+		    </div>
+		    <div id="filters_child" class="panel-collapse collapse" role="tabpanel" aria-labelledby="filters">
+		        <div class="panel-body">
+			        
+					<form class="form-horizontal" method="post">
+						{% csrf_token %}
 
-    <form class="form-horizontal" method="post">
-		<div class="col-xs-12 col-sm-12">
-			<table>
-				<thead>
-					<tr>
-			            <th class="col-xs-4 col-sm-4"></th>
-			            <th class="col-xs-4 col-sm-4"></th>
-			            <th class="col-xs-4 col-sm-4"></th>
-			        </tr>
-				</thead>
-		        <tbody>
-		        	<tr>
-		        	<form method="post">
-		        		{% csrf_token %}
-			        	<td align="center">{{ english_form.value.label_tag }}</td>
-			        	<td align="center">{{ english_form.value }}</td>
-			        	<td align="center"><input class="btn btn-success" type="submit" value="Set" name="english"/></td>
-			        </form>
-			        </tr>
-		        	<tr>
-		        	<form method="post">
-		        		{% csrf_token %}
-			        	<td align="center">{{ language_form.value.label_tag }}</td>
-			        	<td align="center">{{ language_form.value }}</td>
-			        	<td align="center"><input class="btn btn-success" type="submit" value="Add" name="langs"/></td>
-			        </form>
-			        </tr>
-			        <tr>
-		        	<form method="post">
-		        		{% csrf_token %}
-			        	<td align="center">{{ framework_form.value.label_tag }}</td>
-			        	<td align="center">{{ framework_form.value }}</td>
-			        	<td align="center"><input class="btn btn-success" type="submit" value="Add" name="frams"/></td>
-			        </form>
-			        </tr>
-			        <tr>
-		        	<form method="post">
-		        		{% csrf_token %}
-			        	<td align="center">{{ other_form.value.label_tag }}</td>
-			        	<td align="center">{{ other_form.value }}</td>
-			        	<td align="center"><input class="btn btn-success" type="submit" value="Add" name="others"/></td>
-			        </form>
-			        </tr>
-		        </tbody>
-		    </table>
+						<div class="form-group">
+				        	<label class="col-sm-2 control-label" >{{ english_form.value.label_tag }}</label>
+				            <div class="col-sm-10">
+				                {{ english_form.value }}
+				            </div>
+				        </div> 
+
+						<div class="form-group">
+				        <label class="col-sm-2 control-label" >{{ skill_form.skill.label_tag }}</label>
+				            <div class="col-sm-10">
+				                <div class="scroll_entry">
+				                    {{ skill_form.skill }}
+				                </div>
+				            </div>
+				        </div>
+
+	    				<center><input class="btn btn-success" type="submit" value="Пошук" /></center>
+
+					</form>
+
+		        </div>
+		    </div>
 		</div>
-	</form>
+
 
 
 	<div class="col-xs-12 col-sm-12">
@@ -81,12 +72,8 @@ Search
     			{% for i in students %}
 		          <tr>
 		            <td><a href="{% url 'account:profile' username=i.username %}" target="_blank">{{ i.name }}</a></td>
-		            <td>{{ i.lang }}</td>
-		            <td>
-		            	{% for s in i.skills %}
-		            	{{ s }}
-		            	{% endfor %}
-		            </td>
+		            <td>{{ i.english }}</td>
+		            <td>{{ i.skills }}</td>
 		          </tr>
 		        {% endfor %}
 		        {% else %}

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block head %}
-ISM db Add Profile
+ISMdb | Реєстрація студента
 {% endblock %}
 
 
@@ -9,7 +9,7 @@ ISM db Add Profile
 {% block body %}
 <div class="container">
     <div class="page-header">
-        <h1>Add Profile: {{ user.username }}</h1>
+        <h1>Профіль: {{ user.username }}</h1>
     </div>
 
     <form class="form-horizontal" method="post">
@@ -33,14 +33,17 @@ ISM db Add Profile
 
 
 
-        <br /><br /><br />
-        <div class="in_one_line">
-        {{ skill_form.skill }}
-        </div>
-
-
-
+        <div class="form-group">
+        <label class="col-sm-2 control-label" >{{ skill_form.skill.label_tag }}</label>
+            <div class="col-sm-10">
+                <div class="scroll_entry">
+                    {{ skill_form.skill }}
+                </div>
+            </div>
+        </div>     
         <center><input class="btn btn-success btn-sm" type="submit" value="Зберегти" /></center>
     </form>
+
+    <br />
 </div>
 {% endblock %}

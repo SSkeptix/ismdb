@@ -1,10 +1,16 @@
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
 from django.views.generic import TemplateView
+from django.db.models import Count
+
 from account import models
 from . import forms
-from itertools import chain
+
 import math
+
+from core.functions import validation_permission
+
+
 
 
 class Search(TemplateView):
@@ -12,9 +18,7 @@ class Search(TemplateView):
 
 	page = None
 	rows = None
-	languages = None
-	frameworks = None
-	others = None
+	skills = None
 	english = None
 
 
@@ -26,30 +30,31 @@ class Search(TemplateView):
 		self.rows = 10
 
 		# get filter data from url
-		self.languages = request.GET.get('langs', None)
-		self.frameworks = request.GET.get('frams', None)
-		self.others = request.GET.get('others', None)
+		self.skills = request.GET.get('skills', None)
 		self.english = request.GET.get('english', '1')
 
 
 
 	def get(self, request, page = 1):
 		self.init(request=request, page=page)
-		args = {}
+		args = {'validation_permission': validation_permission(user=request.user), }
 
 		# add filters
-		kwargs_filter = {}
+		kwargs_filter = {
+			'english__gte': self.english,
+		}
+		kwargs_filter2 = {}
+		kwargs_annotate = {}
 
-		if self.languages:
-			for i in self.languages.split(","):
-				kwargs_filter['studentlanguage__skill'] = int (i)
-		if self.frameworks:
-			for i in self.frameworks.split(","):
-				kwargs_filter['studentframework__skill'] = int (i)
-		if self.others:
-			for i in self.others.split(","):
-				kwargs_filter['studentother__skill'] = int (i)
-		kwargs_filter['english__gte'] = self.english
+		# filter by skills - begin 
+		initial_skill = []
+		if self.skills and self.skills != 'None':
+			for i in self.skills.split(","):
+				initial_skill.append(int (i))
+			kwargs_filter['studentskill__skill__in'] = initial_skill
+			kwargs_annotate['skill_count'] = Count('studentskill__skill_id')
+			kwargs_filter2['skill_count'] = len(initial_skill)
+		# filter by skills - end 
 
 		# which data need get from database
 		args_only = {
@@ -67,10 +72,13 @@ class Search(TemplateView):
 			'user__last_name',	# first
 		}
 
+
 		# take number of all suitable students
 		students_count = models.Student.objects.filter(**kwargs_filter
 			).select_related('user'
 			).only(*args_only
+			).annotate(**kwargs_annotate
+			).filter(**kwargs_filter2
 			).order_by(*args_order_by
 			).count()
 
@@ -83,6 +91,8 @@ class Search(TemplateView):
 		students = models.Student.objects.filter(**kwargs_filter
 			).select_related('user'
 			).only(*args_only
+			).annotate(**kwargs_annotate
+			).filter(**kwargs_filter2
 			).order_by(*args_order_by
 			)[
 				(self.page-1)*self.rows : self.page*self.rows
@@ -93,15 +103,17 @@ class Search(TemplateView):
 		students_form = []
 		for student in students:
 			students_form.append(forms.Student(student = student))
-
 		args['students'] = students_form
 
-		args['language_form'] = forms.Language()
-		args['framework_form'] = forms.Framework()
-		args['other_form'] = forms.Other()
+
+		url_data = '?skills={0}&english={1}'.format(self.skills, self.english)
+		args['url_data'] = url_data
+
+
+		args['skill_form'] = forms.Skill(initial={'skill': initial_skill})
 		args['english_form'] = forms.English(initial={'value': self.english})
 		args['page'] = self.page
-
+		
 
 		return render(request, self.template_name, args)
 
@@ -110,41 +122,21 @@ class Search(TemplateView):
 	def post(self, request, page = 1):
 		self.init(request=request, page=page)
 
-		# !!!!!!!!!!!!!!
-		# not fancy code --- but it work :)
 		# send filter data to url
 		url_data = '?'
-		skill = [self.languages, self.frameworks, self.others]
-		template = ['langs', 'frams', 'others']
 
-		for i in range(0,3):
-			if template[i] in request.POST:
-				if i==0:
-					form = forms.Language(request.POST)
-				elif i==1:
-					form = forms.Framework(request.POST)
-				elif i==2:
-					form = forms.Other(request.POST)
+		skill_form = forms.Skill(request.POST)
+		english_form = forms.English(request.POST)
+		if skill_form.is_valid() and english_form.is_valid():
+			skill = skill_form.get_list()
+			if skill:
+				url_data +='skills='
+				for i in skill:
+					url_data +='{0},'.format(str(i))
+				url_data = url_data[:-1] + '&'
 
-				if form.is_valid():
-					var = form.cleaned_data['value'].id
-				if skill[i]:
-					if not (str(var) in skill[i]):
-						skill[i] += (',{0}'.format(str(var)))
-				else:
-					skill[i] = str(var)
-				url_data += '{0}={1}&'.format(template[i], skill[i])
-
-			elif skill[i]:
-				url_data += '{0}={1}&'.format(template[i], skill[i])
-
-		if 'english' in request.POST:
-			form = forms.English(request.POST)
-			if form.is_valid():
-				var = form.cleaned_data['value']
-				url_data += '{0}={1}&'.format('english', str(var))
-		else:
-			url_data += '{0}={1}&'.format('english', self.english)
-
+			english = english_form.cleaned_data['value']
+			url_data += '{0}={1}&'.format('english', str(english))
 
 		return redirect(reverse('core:search_page', kwargs={'page': 1}) + url_data)
+

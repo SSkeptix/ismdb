@@ -6,9 +6,10 @@ class CATEGORY:
 	EMPLOYER = 3
 
 	SELECT = (
-		(STUDENT, 'Student'),
-		(TEACHER, 'Teacher'),
-		(EMPLOYER, 'Employer'),
+		('', '-----'),
+		(STUDENT, 'Студент'),
+		(TEACHER, 'Викладач'),
+		(EMPLOYER, 'Роботодавець'),
 	)
 
 	def value(self, *args):
@@ -32,21 +33,6 @@ class ENGLISH:
 		(B2, 'B2 - Upper intermediate'),
 		(C1, 'C1 - Advanced'), 
 		(C2, 'C2 - Proficient'),
-	)
-
-	def value(self, *args):
-		return self.SELECT[args[0] - 1][1]
-
-
-class SKILL:
-	LANGUAGE = 1
-	FRAMEWORK = 2
-	OTHER = 3
-
-	SELECT = (
-		(LANGUAGE, 'Language'), 
-		(FRAMEWORK, 'Framework'), 
-		(OTHER, 'Other'), 
 	)
 
 	def value(self, *args):
