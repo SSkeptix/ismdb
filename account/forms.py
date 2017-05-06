@@ -12,14 +12,14 @@ _class = 'form-control'
 class Login(AuthenticationForm):
 	username = forms.CharField(
 		label="Логін",
-		max_length=50, 
+		max_length=150, 
 		widget=forms.TextInput(attrs={
 			'class': _class,
 			}))
 
 	password = forms.CharField(
 		label="Пароль",
-		max_length=50, 
+		max_length=150, 
 		widget=forms.PasswordInput(attrs={
 			'class': _class,
 			}))
@@ -31,59 +31,59 @@ class Login(AuthenticationForm):
 class Registration(UserCreationForm):
 
 	username = forms.CharField(
-		label="Логін",
+		label="Логін*",
 		help_text = '50 символів або менше, використовувати можна латинські букви, цифри і наступні символи: @/./+/-/_',
-		max_length=50,
+		max_length=150,
 		widget=forms.TextInput(attrs={
 			'placeholder': 'pro100_Hacker',
 			'class': _class,
 			}))
 
 	first_name = forms.CharField(
-		label="Ім'я",
+		label="Ім'я*",
 		required = True,
-		max_length=50,
+		max_length=150,
 		widget=forms.TextInput(attrs={
 			'placeholder': 'Петро',
 			'class': _class,
 			}))
 
 	last_name = forms.CharField(
-		label="Прізвище",
+		label="Прізвище*",
 		required = True,
-		max_length=50,
+		max_length=150,
 		widget=forms.TextInput(attrs={
 			'placeholder': 'Петренко',
 			'class': _class,
 			}))
 
 	email = forms.EmailField(
-		label="Email",
+		label="Email*",
 		required = True,
-		max_length=50, 
+		max_length=150, 
 		widget=forms.TextInput(attrs={
 			'placeholder': 'pro100hacker@mail.com',
 			'class': _class,
 			}))
 
 	password1 = forms.CharField(
-		label="Password",
+		label="Пароль*",
 		help_text = '''
 			Ваш пароль не може бути схожий на вашу іншу особисту інформацію. <br/>
 			Ваш пароль повинен містити не менше 8 символів. <br/>
 			Ваш пароль не може бути занадто простим (password). <br/>
 			Ваш пароль не може бути повністю числовим.
 		''',
-		max_length=50, 
+		max_length=150, 
 		widget=forms.PasswordInput(attrs={
 			'placeholder': 'passw@rd',
 			'class': _class,
 			}))
 
 	password2 = forms.CharField(
-		label="Підтвердження паролю",
+		label="Підтвердження паролю*",
 		help_text = 'Повторно введіть пароль',
-		max_length=50, 
+		max_length=150, 
 		widget=forms.PasswordInput(attrs={
 			'placeholder': 're-enter_passw@rd',
 			'class': _class,
@@ -91,7 +91,7 @@ class Registration(UserCreationForm):
 
 	category = forms.ChoiceField(
 		choices = tuples.CATEGORY.SELECT,
-		label = 'Категорія',
+		label = 'Категорія*',
 		required = True,
 		widget=forms.Select(attrs={
 			'class': _class,
@@ -127,6 +127,6 @@ class Registration(UserCreationForm):
 		if not valid:
 			return valid
 		if models.User.objects.filter(email = self.cleaned_data['email']).exists():
-			self._errors['email_exists'] = 'Email is already exist'
+			self._errors['email_exists'] = 'Пошта вже зайнята'
 			return False
 		return True

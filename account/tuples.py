@@ -7,9 +7,9 @@ class CATEGORY:
 
 	SELECT = (
 		('', '-----'),
-		(STUDENT, 'Student'),
-		(TEACHER, 'Teacher'),
-		(EMPLOYER, 'Employer'),
+		(STUDENT, 'Студент'),
+		(TEACHER, 'Викладач'),
+		(EMPLOYER, 'Роботодавець'),
 	)
 
 	def value(self, *args):
