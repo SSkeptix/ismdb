@@ -12,9 +12,9 @@ from core.functions import validation_permission
 def user_validation(request):
 	args = {'validation_permission': validation_permission(user = request.user), }
 
-	if not validation_permission:
-		return Http404('У вас немає прав для перегляду даної сторінки')
-
+	if not args['validation_permission']:
+		return redirect('404')
+		
 	users = models.User.objects.filter(validated_by__isnull = True).only('first_name', 'last_name', 'username', 'date_joined').order_by('last_name', 'first_name')
 	args['users'] = users 
 

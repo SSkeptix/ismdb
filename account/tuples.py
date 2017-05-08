@@ -27,12 +27,12 @@ class ENGLISH:
 	C2 = 6
 
 	SELECT = (
-		(A1, 'A1 - Elementary'), 
-		(A2, 'A2 - Pre-Intermediate'), 
-		(B1, 'B1 - Intermediate'), 
-		(B2, 'B2 - Upper intermediate'),
-		(C1, 'C1 - Advanced'), 
-		(C2, 'C2 - Proficient'),
+		(A1, 'Низький: A1 - Elementary'), 
+		(A2, 'Низький: A2 - Pre-Intermediate'), 
+		(B1, 'Середній: B1 - Intermediate'), 
+		(B2, 'Середній: B2 - Upper intermediate'),
+		(C1, 'Високий: C1 - Advanced'), 
+		(C2, 'Високий: C2 - Proficient'),
 	)
 
 	def value(self, *args):

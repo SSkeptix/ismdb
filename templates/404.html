@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{% block head %}ISMdb 404{% endblock %}</title>
+</head>
+
+<body>
+{% block body %}
+
+    <h1>404 Page not found</h1> 
+    {% if msg %}
+    <p>{{msg}}</p>
+    {% endif %}
+{% endblock %}
+</body>
+
+</html>

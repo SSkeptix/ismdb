@@ -23,6 +23,8 @@ urlpatterns = [
     url(r'^account/', include('account.urls', namespace = 'account')),
     url(r'^', include('core.urls', namespace = 'core')),
     
-    url(r'^$', views.home, name = 'home'),
+    url(r'^home/$', views.home, name = 'home'),
     url(r'^debuging/$', views.debuging),
+
+    url(r'', views.e404, name = '404')
 ]

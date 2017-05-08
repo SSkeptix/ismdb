@@ -6,9 +6,11 @@ from django.http import HttpResponse
 from core.functions import validation_permission
 
 
+def e404(request, msg = None):
+	args = {'msg': msg, }
+	return render(request, "404.html", args)
 
 
-@login_required(login_url="/account/login/")
 def home(request):
 	args = {'validation_permission': validation_permission(user=request.user), }
 	return render(request, "home.html", args)

@@ -7,7 +7,7 @@ from account import models
 from . import forms
 from . import view_forms
 
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 
 from core.functions import validation_permission
 
@@ -18,6 +18,12 @@ from core.functions import validation_permission
 
 
 def add_profile(request):
+	if (request.user.category != tuples.CATEGORY.STUDENT or 
+		models.Student.objects.filter(user_id = request.user.id).exists()
+		):
+		return redirect('404')
+
+
 	args = {'validation_permission': validation_permission(user=request.user), }
 
 	# add student profile
