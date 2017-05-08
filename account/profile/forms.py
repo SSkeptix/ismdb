@@ -204,57 +204,8 @@ class EditSkill(AddSkill):
 		delete_skills = list(set(self.initial_data) - set(data))
 		add_skills = list(set(data) - set(self.initial_data))
 
-		print (delete_skills , '\n', add_skills)
 		for i in delete_skills:
 			models.StudentSkill.objects.get(student_id = self.user.id, skill_id = i).delete()
 
 		for i in add_skills:
 			models.StudentSkill(student_id = self.user.id, skill_id = i).save()
-
-
-
-
-
-class StudentSkill(forms.ModelForm):
-	student = None
-	skill = forms.ModelChoiceField(
-		queryset = models.Skill.objects.exclude(validated_by__isnull=True).order_by('value'),
-		label = 'Вміння',
-		required = True,
-		widget=forms.Select(attrs={
-			'class': _class,
-			'style': 'width:auto;'
-			}))
-
-
-	class Meta:
-		model = models.StudentSkill
-		exclude = (
-			'student',
-			'validated_by', 
-			'updated',
-			)
-
-
-	def __init__(self, *args, **kwargs):
-		self.student = kwargs.pop('student', None)
-		super(StudentSkill, self).__init__(*args, **kwargs)
-
-
-	def is_valid(self):
-		valid = super(StudentSkill, self).is_valid()
-		if not valid:
-			return valid
-		if models.StudentSkill.objects.filter(student = self.student.user.id, skill = self.cleaned_data['skill']).count():
-			self._errors['skill_exists'] = 'Skill is already exist'
-			return False
-		return True
-
-
-	def save(self, commit=True):
-		instance = super(StudentSkill, self).save(commit=False)
-		instance.student = self.student
-
-		if commit:
-			instance.save()
-		return instance

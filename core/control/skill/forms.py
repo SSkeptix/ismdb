@@ -11,6 +11,7 @@ class Skill(forms.ModelForm):
 		label="Вміння",
 		max_length=50,
 		required = True,
+		error_messages={'unique': 'Вміння з таким значенням вже існує.'},
 		widget=forms.TextInput(attrs={
 			'placeholder': 'Назва вміння',
 			'class': _class,
