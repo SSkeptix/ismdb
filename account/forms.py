@@ -1,12 +1,12 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.forms.utils import ErrorList
 from . import models 
 from . import tuples
 
 _class = 'form-control'
 
-
-
+invalid_characters = '@_+[]\\/0123456789'
 
 
 class Login(AuthenticationForm):
@@ -32,7 +32,7 @@ class Registration(UserCreationForm):
 
 	username = forms.CharField(
 		label="Логін*",
-		help_text = '50 символів або менше, використовувати можна латинські букви, цифри і наступні символи: @/./+/-/_',
+		help_text = 'Від 5 до 150 символів, використовувати можна латинські букви, цифри і наступні символи: @/./+/-/_',
 		max_length=150,
 		widget=forms.TextInput(attrs={
 			'placeholder': 'pro100_Hacker',
@@ -122,11 +122,28 @@ class Registration(UserCreationForm):
 
 		return user
 
-	def is_valid(self):
-		valid = super(Registration, self).is_valid()
-		if not valid:
-			return valid
+	def clean_email(self):
+		data = self.cleaned_data['email']
 		if models.User.objects.filter(email = self.cleaned_data['email']).exists():
-			self._errors['email_exists'] = 'Пошта вже зайнята'
-			return False
-		return True
+			raise forms.ValidationError("Пошта вже зайнята.")
+		return data
+
+	def clean_username(self):
+		data = self.cleaned_data['username']
+		if len(data) < 5:
+			raise forms.ValidationError("Ваш логін занадто короткий.")
+		return data
+
+	def clean_first_name(self):
+		data = self.cleaned_data['first_name']
+		for i in data:
+			if i in invalid_characters:	
+				raise forms.ValidationError("Недопустимі символи.")
+		return data
+
+	def clean_last_name(self):
+		data = self.cleaned_data['last_name']
+		for i in data:
+			if i in invalid_characters:	
+				raise forms.ValidationError("Недопустимі символи.")
+		return data
