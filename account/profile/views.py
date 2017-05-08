@@ -62,6 +62,7 @@ class Profile(TemplateView):
 		user = models.User.objects.get(username = request.user.username)
 		profile = models.User.objects.get(username = username)
 		args['user_form'] = profile
+		args['user_category'] = tuples.CATEGORY().value(profile.category) 
 
 		# validation permission - possibility to validate:
 		# student's skill, persons

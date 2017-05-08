@@ -10,82 +10,96 @@ ISMdb | Профіль
 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-3 col-lg-offset-3 toppad" >
 	<div class="panel panel-info">
 		<div class="panel-heading">
-			<h1 class="panel-title">Профіль</h1>
+			<table style="width:100%;">
+			  <tbody>
+				<tr>
+					<td><h1 class="panel-title">Профіль</h1></td>	
+
+					{% if own_profile %}
+					<td align="right">
+						<h1 class="panel-title">
+							<a href="{% url 'account:edit_profile' username=user.username %}" class="btn btn-success", style="color: white;">
+							  Редагувати профіль
+							</a>
+						</h1>
+					</td>
+					{% endif %}
+
+				</tr>
+			  </tbody>
+			</table>
 		</div>
 		<div class="panel-body">
 			<div class="row">
-			    <div class="col-md-4 col-lg-4 " align="center" class="img-fluid"> 
-			    	<img class="img-responsive" alt="User Pic" src="{% static 'img/profile.png' %}" /> 
-			    	<center>
-					  	{% if own_profile %}
-					  		<a href="{% url 'account:edit_profile' username=user.username %}" class="btn btn-primary">Редагувати профіль</a>
-				  		{% endif %}
-					</center>
-			    </div>
+		      <table class="table table-user-information">
+		        <tbody>
 
-			    <div class="col-md-8 col-lg-8"> 
-				    <table class="table table-user-information">
-				        <tbody>
-
-				          <tr>
-				            <td align="right" style = "white-space: nowrap">Логін:</td>
-				            <td>{{user_form.username}}</td>
-				          </tr>
-				          <tr>
-				            <td align="right" style = "white-space: nowrap">Ім'я:</td>
-				            <td>{{ user_form.last_name }}</td>
-				          </tr>
-				          <tr>
-				            <td align="right" style = "white-space: nowrap">Прізвище:</td>
-				            <td>{{ user_form.first_name }}</td>
-				          </tr>
-				          <tr>
-				            <td align="right" style = "white-space: nowrap">Email:</td>
-				            <td>{{ user_form.email }}</td>
-				          </tr>
+		          <tr>
+		            <td align="right">Логін:</td>
+		            <td>{{user_form.username}}</td>
+		          </tr>
+		          <tr>
+		            <td align="right">Ім'я:</td>
+		            <td>{{ user_form.last_name }}</td>
+		          </tr>
+		          <tr>
+		            <td align="right">Прізвище:</td>
+		            <td>{{ user_form.first_name }}</td>
+		          </tr>
+		          <tr>
+		            <td align="right">Email:</td>
+		            <td>{{ user_form.email }}</td>
+		          </tr>
 
 
-				          {% if student %}
-				          <tr>
-				            <td align="right" style = "white-space: nowrap">Група:</td>
-				            <td>{{ student.group }}</td>
-				          </tr>
-				          <tr>
-				            <td align="right" style = "white-space: nowrap">Рівень англійської:</td>
-				            <td>{{ student_english }}</td>
-				          </tr>
-				          <tr>
-				            <td align="right" style = "white-space: nowrap; ">GitHub:</td>
-				            <td>{{ student.github }}</td>
-				          </tr>
-				          <tr>
-				            <td align="right" style = "white-space: nowrap">Опис:</td>
-				            <td>{{ student.description }}</td>
-				          </tr>
-				          {% endif %}
+		          {% if student %}
+		          <tr>
+		            <td align="right">Група:</td>
+		            <td>{{ student.group }}</td>
+		          </tr>
+		          <tr>
+		            <td align="right">Рівень англійської:</td>
+		            <td>{{ student_english }}</td>
+		          </tr>
+		          <tr>
+		            <td align="right">GitHub:</td>
+		            <td>
+		              <a href="{{ student.github }}" id="github">{{ student.github }}</a>
+		            </td>
+		          </tr>
+		          <tr>
+		            <td align="right">Опис:</td>
+		            <td>{{ student.description }}</td>
+		          </tr>
+		          {% endif %}
 
-				          <tr>
-				            <td align="right" style = "white-space: nowrap; ">Перевірений:</td>
-				            {% if user_form.validated_by %}
-				            <td>Так</td>
-				            {% else %}
-				            	{% if validation_permission %}
-				            	<td>
-				            		<form method="POST"> {% csrf_token %} 
-					                    <input class="btn btn-sm btn-success" type="submit" name="user_validation" value="Підтвердити" />
-                					</form>
-				            	</td>
-				            	{% else %}
-				            	<td>Ні</td>
-				            	{% endif %}
+		          <tr>
+		            <td align="right">Перевірений викладачем:</td>
+		            
+		            {% if user_form.validated_by %}
+		            	<td>
+				            <a href="{% url 'account:profile' username=user_form.validated_by.username %}" target="_blank">{{ user_form.validated_by }}</a>
+				    	</td>
+		            {% else %}
+		            	{% if validation_permission %}
+		            	<td>
+		            		<form method="POST"> {% csrf_token %} 
+			                    <input class="btn btn-sm btn-success" type="submit" name="user_validation" value="Підтвердити" />
+        					</form>
+		            	</td>
+		            	{% else %}
+		            	<td>Ні</td>
+		            	{% endif %}
 
-				            {% endif %}
-				          </tr>
+		            {% endif %}
+		          </tr>
+		          <tr>
+		            <td align="right" style = "white-space: nowrap">Категорія:</td>
+		            <td>{{ user_category }}</td>
+		          </tr>
 
-				        </tbody>
-				    </table>		      
-			    </div>
-
+		        </tbody>
+		      </table>		      
 			</div>
 
 
@@ -139,9 +153,9 @@ ISMdb | Профіль
 				    </table>
 
 					{% else %}
-
-				    <p>Пусто</p>
-
+					<center>
+				    	<p style="margin-top: 1em;">Пусто</p>
+				    </center>
 				    {% endif %}	
 
 				  </div>

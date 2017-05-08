@@ -53,3 +53,11 @@ p#login_link a{
 	margin-left: 10px;
 	margin-right: 10px;
 }
+
+a#github {
+	width : 15em;
+	overflow:hidden;
+	display:inline-block;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}

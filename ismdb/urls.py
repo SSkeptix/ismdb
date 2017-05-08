@@ -26,5 +26,5 @@ urlpatterns = [
     url(r'^home/$', views.home, name = 'home'),
     url(r'^debuging/$', views.debuging),
 
-    url(r'', views.e404, name = '404')
+    url(r'^404/$', views.e404, name = '404')
 ]

@@ -13,7 +13,7 @@ class CATEGORY:
 	)
 
 	def value(self, *args):
-		return self.SELECT[args[0] - 1][1]
+		return self.SELECT[args[0]][1]
 
 
 
