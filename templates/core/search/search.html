@@ -8,63 +8,66 @@ ISMdb | Пошук
 
 <div class="container">
     <div class="page-header">
-        <h1>Пошук, сторінка = {{ page }}</h1>
-        <!--  debuging information  -->
-
-        <!--  debuging information  -->
-
+        <h1>Пошук</h1>
     </div>
 
-    <a href="{% url 'core:search' %}" class="btn btn-primary">Скинути фільтри</a>
-    <br /> <br />
+  <div>
+	<div class="form-group">
+		<center>
+			<a href="{% url 'core:search' %}" class="col-sm-2 btn btn-primary" id="reset_filters">Скинути фільтри</a>
+		</center>
 
-		<div class="panel panel-default">
-		    <div class="panel-heading" role="tab" id="filters">
-		        <h4 class="panel-title">
-			        <a role="button" data-toggle="collapse" data-parent="#edit" href="#filters_child" aria-expanded="true" aria-controls="filters_child">
-			          Фільтри
-			        </a>
-		        </h4>
-		    </div>
-		    <div id="filters_child" class="panel-collapse collapse" role="tabpanel" aria-labelledby="filters">
-		        <div class="panel-body">
-			        
-					<form class="form-horizontal" method="post">
-						{% csrf_token %}
+        <div class="col-sm-10">
+            
+			<div class="panel panel-default">
+			    
+			    <div class="panel-heading" role="tab" id="filters">
+			        <h4 class="panel-title">
+				        <a role="button" data-toggle="collapse" data-parent="#edit" href="#filters_child" aria-expanded="true" aria-controls="filters_child">
+				          Фільтри
+				        </a>
+			        </h4>
+			    </div>
+			    <div id="filters_child" class="panel-collapse collapse" role="tabpanel" aria-labelledby="filters">
+			        <div class="panel-body">
+				        
+						<form class="form-horizontal" method="post">
+							{% csrf_token %}
 
-						<div class="form-group">
-				        	<label class="col-sm-2 control-label" >{{ english_form.value.label_tag }}</label>
-				            <div class="col-sm-10">
-				                {{ english_form.value }}
-				            </div>
-				        </div> 
+							<div class="form-group">
+					        	<label class="col-sm-2 control-label" >{{ english_form.value.label_tag }}</label>
+					            <div class="col-sm-10">
+					                {{ english_form.value }}
+					            </div>
+					        </div> 
 
-						<div class="form-group">
-				        <label class="col-sm-2 control-label" >{{ skill_form.skill.label_tag }}</label>
-				            <div class="col-sm-10">
-				                <div class="scroll_entry">
-				                    {{ skill_form.skill }}
-				                </div>
-				            </div>
-				        </div>
+							<div class="form-group">
+					        <label class="col-sm-2 control-label" >{{ skill_form.skill.label_tag }}</label>
+					            <div class="col-sm-10">
+					                <div class="scroll-entry">
+					                    {{ skill_form.skill }}
+					                </div>
+					            </div>
+					        </div>
 
-	    				<center><input class="btn btn-success" type="submit" value="Пошук" /></center>
+		    				<center><input class="btn btn-success" type="submit" value="Пошук" /></center>
+						</form>
+			        </div>
+			    </div>
 
-					</form>
+			</div>
+        </div>
 
-		        </div>
-		    </div>
-		</div>
-
+    </div>
 
 
 	<div class="col-xs-12 col-sm-12">
 		<table class = "table table-striped">
 			<thead>
 				<tr>
-		            <th class="col-xs-3 col-sm-3">Student</th>
-		            <th class="col-xs-3 col-sm-3">English</th>
-		            <th class="col-xs-6 col-sm-6">Skills</th>
+		            <th class="col-xs-3 col-sm-3">Студент</th>
+		            <th class="col-xs-3 col-sm-3">Англійська</th>
+		            <th class="col-xs-6 col-sm-6">Вміння</th>
 		        </tr>
 			</thead>
 	        <tbody>
@@ -84,11 +87,27 @@ ISMdb | Пошук
 	        </tbody>
 	    </table>
 	</div>
-	<div class="btn-group mr-2" role="group" aria-label="Second group">
-	{% for i in page_range %}
-		<a href="{% url 'core:search_page' page=i %}{{ url_data }}" class="btn btn-info">{{ i }}</a>
-	{% endfor %}
-	</div>
+  </div>
+
+  <div>
+    <center>
+  	  <p class="pages">
+  	  	{% if first_page %}
+			<a href="{{ first_page }}"> << </a>
+			<a href="{{ prev_page }}"> < </a>
+		{% endif %}
+
+		<span>{{ page }}</span>
+
+  	  	{% if last_page %}
+  	  		<a href="{{ next_page }}"> > </a>
+			<a href="{{ last_page }}"> >> </a>
+		{% endif %}
+  	  </p>
+  	</center>
+  </div>
+
+<br />
 </div>
 
 

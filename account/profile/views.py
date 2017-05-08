@@ -11,8 +11,6 @@ from django.http import Http404, HttpResponse
 
 from core.functions import validation_permission
 
-#reverse('account:add_skill', kwargs={'username': request.user.username})
-
 
 
 

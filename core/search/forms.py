@@ -55,7 +55,12 @@ class Student:
 		self.skills = ''
 
 		skills_queryset = models.Skill.objects.filter(studentskill__student = student.user.id).order_by('value')
-		for i in skills_queryset:
-			self.skills += '{0}, '.format(i.value)
-		self.skills = self.skills[:-2]
+		if skills_queryset:
+			for i in skills_queryset:
+				self.skills += '{0}, '.format(i.value)
+			self.skills = self.skills[:-2]
+		else:
+			self.skills = '-----'
+
+		
 

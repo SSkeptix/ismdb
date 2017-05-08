@@ -10,6 +10,9 @@ import math
 
 from core.functions import validation_permission
 
+#reverse('account:add_skill', kwargs={'username': request.user.username})
+
+
 
 
 
@@ -82,11 +85,6 @@ class Search(TemplateView):
 			).order_by(*args_order_by
 			).count()
 
-		# args['page_range'] - number of result's pages = [1, 2, 3, 4, 5] - 5 pages
-		args['page_range'] = []
-		for i in range(1, 1 + math.ceil(students_count/self.rows)):
-			args['page_range'].append(i)
-
 		# take queryset (rows depends on 'page' and 'rows' - number of lines per page)
 		students = models.Student.objects.filter(**kwargs_filter
 			).select_related('user'
@@ -113,7 +111,18 @@ class Search(TemplateView):
 		args['skill_form'] = forms.Skill(initial={'skill': initial_skill})
 		args['english_form'] = forms.English(initial={'value': self.english})
 		args['page'] = self.page
-		
+
+
+		# count of pages
+		count_pages = math.ceil(students_count/self.rows)
+		if count_pages > 1:
+			if self.page > 1:
+				args['first_page'] = reverse('core:search_page', kwargs={'page': 1}) + url_data
+				args['prev_page'] = reverse('core:search_page', kwargs={'page': self.page - 1}) + url_data
+			
+			if self.page < count_pages:
+				args['next_page'] = reverse('core:search_page', kwargs={'page': self.page + 1}) + url_data
+				args['last_page'] = reverse('core:search_page', kwargs={'page': count_pages}) + url_data
 
 		return render(request, self.template_name, args)
 
