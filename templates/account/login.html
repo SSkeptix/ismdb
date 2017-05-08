@@ -33,6 +33,13 @@ ISMdb | Вхід
                             </tr>
                             {% endfor %}
                             </table>
+
+                            <p id="login_link">
+                                <a href="{% url 'account:register' %}">Реєстрація</a>
+                                |
+                                <a href="{% url 'account:reset_password' %}">Відновити пароль</a>
+                            </p>
+
                             <input class="btn btn-success" type="submit" value="Вхід" />
                         </center>
                     </form>

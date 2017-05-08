@@ -2,7 +2,7 @@
 	margin-top: 2px;
 	margin-left: 2px;
 	margin-right: 2px;
-	margin-bottom: 2em;
+	margin-bottom: 0.5em;
 	text-align: left;
 }
 
@@ -10,11 +10,11 @@
 	padding: 2px 2px 2px 2px;
 }
 
-.in_one_line{
+.in-one-line{
 	display: inline-block;
 }
 
-.scroll_entry{
+.scroll-entry{
 	float: left;
 	width: 100%;
 	height: 14em;
@@ -24,11 +24,11 @@
 	border-radius: 5px;
 }
 
-.scroll_entry li{
+.scroll-entry li{
 	list-style-type: none;
 }
 
-.scroll_entry ul{
+.scroll-entry ul{
 	padding-left: 1em;
 
 }
@@ -41,4 +41,15 @@ ul.errorlist {
 .errorlist li{
 	list-style-type: none;
 	color: red;
+}
+
+.help-block{
+	margin-top: 2px;
+	margin-left: 5px;
+	margin-bottom: 0px;
+}
+
+p#login_link a{
+	margin-left: 10px;
+	margin-right: 10px;
 }

@@ -19,4 +19,6 @@ urlpatterns = [
 		url(r'^(?P<username>[\w@.+-]+)/edit/$', profile_views.EditProfile.as_view(), name = 'edit_profile'),
     ])),
 
+    url(r'^reset-password/$', views.reset_password, name = 'reset_password'),
+
 ] 
