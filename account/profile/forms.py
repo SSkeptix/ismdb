@@ -3,6 +3,7 @@ from account import models
 from account import tuples
 
 _class = 'form-control'
+invalid_characters = '@_+[]\\/0123456789'
 
 
 
@@ -10,7 +11,7 @@ _class = 'form-control'
 
 class EditUser(forms.ModelForm):
 	username = forms.CharField(
-		label="Логін",
+		label="Логін*",
 		help_text = '150 символів або менше, використовувати можна латинські букви, цифри і наступні символи: @/./+/-/_',
 		max_length=150,
 		widget=forms.TextInput(attrs={
@@ -19,7 +20,7 @@ class EditUser(forms.ModelForm):
 			}))
 
 	first_name = forms.CharField(
-		label="Ім'я",
+		label="Ім'я*",
 		required = True,
 		max_length=150,
 		widget=forms.TextInput(attrs={
@@ -28,7 +29,7 @@ class EditUser(forms.ModelForm):
 			}))
 
 	last_name = forms.CharField(
-		label="Прізвище",
+		label="Прізвище*",
 		required = True,
 		max_length=150,
 		widget=forms.TextInput(attrs={
@@ -37,7 +38,7 @@ class EditUser(forms.ModelForm):
 			}))
 
 	email = forms.EmailField(
-		label="Email",
+		label="Email*",
 		required = True,
 		max_length=150, 
 		widget=forms.TextInput(attrs={
@@ -54,14 +55,32 @@ class EditUser(forms.ModelForm):
 			'email',
 			)
 
-	def is_valid(self):
-		valid = super(EditUser, self).is_valid()
-		if not valid:
-			return valid
+	def clean_email(self):
+		data = self.cleaned_data['email']
 		if models.User.objects.exclude(id=self.instance.id).filter(email=self.cleaned_data['email']).exists():
-			self._errors['email_exists'] = 'Email is already exist.'
-			return False
-		return True
+			raise forms.ValidationError("Пошта вже зайнята.")
+		return data
+
+	def clean_username(self):
+		data = self.cleaned_data['username']
+		if len(data) < 5:
+			raise forms.ValidationError("Ваш логін занадто короткий.")
+		return data
+
+	def clean_first_name(self):
+		data = self.cleaned_data['first_name']
+		for i in data:
+			if i in invalid_characters:	
+				raise forms.ValidationError("Недопустимі символи.")
+		return data
+
+	def clean_last_name(self):
+		data = self.cleaned_data['last_name']
+		for i in data:
+			if i in invalid_characters:	
+				raise forms.ValidationError("Недопустимі символи.")
+		return data
+
 
 
 
@@ -70,7 +89,7 @@ class EditUser(forms.ModelForm):
 class EditStudent(forms.ModelForm):
 	english = forms.ChoiceField(
 		choices = tuples.ENGLISH.SELECT,
-		label = 'Рівень англійської',
+		label = 'Рівень англійської*',
 		required = True,
 		widget=forms.Select(attrs={
 			'class': _class,
@@ -86,7 +105,7 @@ class EditStudent(forms.ModelForm):
 			}))
 
 	group = forms.CharField(
-		label="Група",
+		label="Група*",
 		required = True,
 		max_length=150,
 		widget=forms.TextInput(attrs={
@@ -98,6 +117,7 @@ class EditStudent(forms.ModelForm):
 	description = forms.CharField(
 		label = 'Опиши себе',
 		required = False,
+		help_text = 'Не більше 2000 символів',
 		max_length=2000,
 		widget=forms.Textarea(attrs={
 			'class': _class,
@@ -131,15 +151,6 @@ class AddStudent(EditStudent):
 	def __init__(self, *args, **kwargs):
 		self.user = kwargs.pop('user', None)
 		super(AddStudent, self).__init__(*args, **kwargs)
-
-	def is_valid(self):
-		valid = super(AddStudent, self).is_valid()
-		if not valid:
-			return valid
-		if models.Student.objects.filter(user = self.user).exists():
-			self._errors['profile_exists'] = 'Profile is already exist. Close this page.'
-			return False
-		return True
 
 	def save(self, commit=True):
 		instance = super(AddStudent, self).save(commit=False)
