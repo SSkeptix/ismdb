@@ -8,9 +8,7 @@ ISMdb | Вхід
 
 {% block body %}
 
-{% if form.errors %}
-	<p>Неправильний логін або пароль. Спробуйте знову.</p>
-{% endif %}
+
 
 
 <div class="container">
@@ -25,6 +23,8 @@ ISMdb | Вхід
                     <form method="post">
                         {% csrf_token %}
                         <center>
+                            {{ form.non_field_errors  }}
+                            
                             <table class="login-table">
                             {% for field in form %}
                             <tr>

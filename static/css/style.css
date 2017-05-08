@@ -32,3 +32,13 @@
 	padding-left: 1em;
 
 }
+
+ul.errorlist {
+    margin-left: 0; /* Отступ слева в браузере IE и Opera */
+    padding-left: 0; /* Отступ слева в браузере Firefox, Safari, Chrome */
+   }
+
+.errorlist li{
+	list-style-type: none;
+	color: red;
+}
