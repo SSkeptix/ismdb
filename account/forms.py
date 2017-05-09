@@ -1,9 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import (
-	AuthenticationForm,
-	UserCreationForm,
-	SetPasswordForm
-	)
+from django.contrib.auth import forms as ContribAuthForms
 from django.forms.utils import ErrorList
 from django.utils.translation import gettext, gettext_lazy as _
 from . import models 
@@ -23,7 +19,7 @@ password_help_text = '''
 
 
 
-class Login(AuthenticationForm):
+class Login(ContribAuthForms.AuthenticationForm):
 	username = forms.CharField(
 		label="Логін",
 		max_length=150, 
@@ -42,7 +38,7 @@ class Login(AuthenticationForm):
 
 
 
-class Registration(UserCreationForm):
+class Registration(ContribAuthForms.UserCreationForm):
 
 	username = forms.CharField(
 		label="Логін*",
@@ -161,7 +157,7 @@ class Registration(UserCreationForm):
 
 
 
-class SetPassword(SetPasswordForm):
+class SetPassword(ContribAuthForms.SetPasswordForm):
 	error_messages = {
 		'password_mismatch':  _("The two password fields didn't match."),
 	}
@@ -173,6 +169,7 @@ class SetPassword(SetPasswordForm):
 		widget=forms.PasswordInput(attrs={
 			'class': _class,
 			}))
+	
 	new_password2 = forms.CharField(
 		label=_("New password confirmation"),
 		strip=False,
@@ -185,7 +182,7 @@ class SetPassword(SetPasswordForm):
 
 
 class ChangePassword(SetPassword):
-	error_messages = dict(SetPasswordForm.error_messages, **{
+	error_messages = dict(ContribAuthForms.SetPasswordForm.error_messages, **{
 		'password_incorrect': _("Your old password was entered incorrectly. Please enter it again."),
 	})
 
@@ -208,3 +205,12 @@ class ChangePassword(SetPassword):
 				code='password_incorrect',
 			)
 		return old_password
+
+
+class PasswordReset(ContribAuthForms.PasswordResetForm):
+	email = forms.EmailField(
+		label=_("Email"),
+		max_length=254,
+		widget=forms.EmailInput(attrs={
+			'class': _class,
+			}))
