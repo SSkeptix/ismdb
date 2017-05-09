@@ -6,7 +6,16 @@ from account import tuples
 from . import forms
 from django.http import Http404, HttpResponse
 
-from core.functions import validation_permission
+
+
+
+
+def validation_permission(user):		
+	if user.category in [tuples.CATEGORY.TEACHER, tuples.CATEGORY.EMPLOYER] and user.validated_by:
+		return True
+	else:
+		return False
+
 
 
 

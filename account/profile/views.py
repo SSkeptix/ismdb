@@ -57,18 +57,21 @@ class Profile(TemplateView):
 	def render(self, request, username, new_args = None):
 		args = {'validation_permission': validation_permission(user=request.user), }
 		
-		user = models.User.objects.get(username = request.user.username)
+		args['own_profile'] = False
+		if request.user.is_authenticated and username == request.user.username :
+			args['own_profile'] = True
+
+
 		profile = models.User.objects.get(username = username)
 		args['user_form'] = profile
 		args['user_category'] = tuples.CATEGORY().value(profile.category) 
 
 		# validation permission - possibility to validate:
 		# student's skill, persons
-		if (username == user.username) :
-			own_profile = True
-		else:
-			own_profile = False
-		args['own_profile'] = own_profile
+		
+
+
+
 
 		# if user want to view profile of student
 		if (profile.category == tuples.CATEGORY.STUDENT) and models.Student.objects.filter(user = profile.id).exists() :
@@ -98,6 +101,7 @@ class Profile(TemplateView):
 
 		#if student profile don't exist create profile
 		if (
+			request.user.is_authenticated and
 			username == request.user.username and
 			request.user.category == tuples.CATEGORY.STUDENT and 
 			models.Student.objects.filter(user = request.user.id).exists() == False
