@@ -147,7 +147,6 @@ LOGIN_REDIRECT_URL = 'account:profile_empty'
 ALLOWED_HOSTS = ['*']
 
 LOGIN_EXEMPT_URLS = (
-    r'^search/$',
     r'^account/login/$',
     r'^account/logout/$',
     r'^account/register/$',
@@ -156,3 +155,6 @@ LOGIN_EXEMPT_URLS = (
     r'^account/reset-password/confirm/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$',
     r'^account/reset-password/complete/$',
 )
+
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 1025

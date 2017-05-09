@@ -18,6 +18,10 @@ ISMdb | Профіль
 					{% if own_profile %}
 					<td align="right">
 						<h1 class="panel-title">
+							<a href="{% url 'account:change_password' %}" class="btn btn-success", style="color: white;">
+							  Змінити пароль
+							</a>
+
 							<a href="{% url 'account:edit_profile' username=user.username %}" class="btn btn-success", style="color: white;">
 							  Редагувати профіль
 							</a>

@@ -1,12 +1,26 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import (
+	AuthenticationForm,
+	UserCreationForm,
+	SetPasswordForm
+	)
 from django.forms.utils import ErrorList
+from django.utils.translation import gettext, gettext_lazy as _
 from . import models 
 from . import tuples
 
 _class = 'form-control'
 
 invalid_characters = '@_+[]\\/0123456789'
+
+password_help_text = '''
+			Ваш пароль не може бути схожий на вашу іншу особисту інформацію. <br/>
+			Ваш пароль повинен містити як мінімум 8 символів. <br/>
+			Ваш пароль не може бути занадто простим (password). <br/>
+			Ваш пароль не може складається лише із цифр.
+	'''
+
+
 
 
 class Login(AuthenticationForm):
@@ -68,12 +82,7 @@ class Registration(UserCreationForm):
 
 	password1 = forms.CharField(
 		label="Пароль*",
-		help_text = '''
-			Ваш пароль не може бути схожий на вашу іншу особисту інформацію. <br/>
-			Ваш пароль повинен містити не менше 8 символів. <br/>
-			Ваш пароль не може бути занадто простим (password). <br/>
-			Ваш пароль не може бути повністю числовим.
-		''',
+		help_text=password_help_text,
 		max_length=150, 
 		widget=forms.PasswordInput(attrs={
 			'placeholder': 'passw@rd',
@@ -147,3 +156,55 @@ class Registration(UserCreationForm):
 			if i in invalid_characters:	
 				raise forms.ValidationError("Недопустимі символи.")
 		return data
+
+
+
+
+
+class SetPassword(SetPasswordForm):
+	error_messages = {
+		'password_mismatch':  _("The two password fields didn't match."),
+	}
+
+	new_password1 = forms.CharField(
+		label=_("New password"),
+		strip=False,
+		help_text=password_help_text,
+		widget=forms.PasswordInput(attrs={
+			'class': _class,
+			}))
+	new_password2 = forms.CharField(
+		label=_("New password confirmation"),
+		strip=False,
+		widget=forms.PasswordInput(attrs={
+			'class': _class,
+			}))
+
+
+
+
+
+class ChangePassword(SetPassword):
+	error_messages = dict(SetPasswordForm.error_messages, **{
+		'password_incorrect': _("Your old password was entered incorrectly. Please enter it again."),
+	})
+
+	old_password = forms.CharField(
+		label=_("Old password"),
+		widget=forms.PasswordInput(attrs={
+			'class': _class,
+			}))
+
+	field_order = ['old_password', 'new_password1', 'new_password2']
+
+	def clean_old_password(self):
+		"""
+		Validate that the old_password field is correct.
+		"""
+		old_password = self.cleaned_data["old_password"]
+		if not self.user.check_password(old_password):
+			raise forms.ValidationError(
+				self.error_messages['password_incorrect'],
+				code='password_incorrect',
+			)
+		return old_password

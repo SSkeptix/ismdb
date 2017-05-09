@@ -53,6 +53,8 @@
               <li><a href="{% url 'account:profile' username=user.username  %}">Профіль</a></li>
               <li><a href="{% url 'account:edit_profile' username=user.username %}">Редагувати профіль</a></li>              
               <li class="divider"></li>
+              <li><a href="{% url 'account:change_password' %}">Змінити пароль</a></li>              
+              <li class="divider"></li>
               <li><a href="{% url 'account:logout' %}">Вийти</a></li>
             </ul>
           </li>
