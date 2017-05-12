@@ -52,6 +52,7 @@ urlpatterns = [
         url(r'^confirm/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$', password_reset_confirm, {
             'template_name': 'account/reset_password_confirm.html',
             'post_reset_redirect': 'account:password_reset_complete',
+            'set_password_form': forms.SetPassword,
             }, name='password_reset_confirm'),
 
         url(r'^complete/$', password_reset_complete,{

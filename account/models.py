@@ -36,7 +36,7 @@ class Student(models.Model):
 
 class Skill(models.Model):
 	value = models.CharField(max_length = 50, unique = True)
-	validated_by = models.ForeignKey(User, on_delete=models.CASCADE, null = True, blank = True)
+	validated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null = True, blank = True)
 	updated = models.DateField(auto_now=True)
 
 	def __str__(self):
