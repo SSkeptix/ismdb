@@ -24,7 +24,7 @@ urlpatterns = [
     url(r'^', include('core.urls', namespace = 'core')),
     
     url(r'^home/$', views.home, name = 'home'),
-    url(r'^debuging/$', views.debuging),
+    url(r'^debug/$', views.debug),
 
     url(r'^404/$', views.e404, name = '404')
 ]

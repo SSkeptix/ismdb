@@ -41,6 +41,19 @@ class English(forms.Form):
 
 
 
+'''
+class Validated_only(forms.Form):
+	value = forms.BooleanField(
+		label = 'Лише перевірені студенти',
+		required = False,
+		widget=forms.CheckboxInput(attrs={
+			'class': 'form-control',
+			'style': 'width:auto;'
+			}))
+'''
+
+
+
 
 class Student:
 	name = ''

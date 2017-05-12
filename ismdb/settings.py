@@ -54,7 +54,7 @@ MIDDLEWARE = [
     'django.middleware.locale.LocaleMiddleware',
     
     #custom
-    'ismdb.middleware.LoginRequiredMiddleware'
+    'ismdb.middleware.LoginRequiredMiddleware',
 ]
 
 ROOT_URLCONF = 'ismdb.urls'

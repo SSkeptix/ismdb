@@ -15,7 +15,7 @@ def home(request):
 	args = {'validation_permission': validation_permission(user=request.user), }
 	return render(request, "home.html", args)
 
-def debuging(request):
+def debug(request):
 
 	count = 33
 	string = ''
