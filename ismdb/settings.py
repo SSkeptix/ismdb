@@ -84,7 +84,7 @@ WSGI_APPLICATION = 'ismdb.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ismdb_v3',
+        'NAME': 'ismdb',
         'USER': 'root',
         'PASSWORD': 'root',
         'HOST': 'localhost',
