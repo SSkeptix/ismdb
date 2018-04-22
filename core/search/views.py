@@ -23,6 +23,7 @@ class Search(TemplateView):
 	rows = None
 	skills = None
 	english = None
+	validated = None
 
 
 
@@ -35,6 +36,7 @@ class Search(TemplateView):
 		# get filter data from url
 		self.skills = request.GET.get('skills', None)
 		self.english = request.GET.get('english', '1')
+		self.validated = request.GET.get('validated', 'True')
 
 
 
@@ -46,6 +48,10 @@ class Search(TemplateView):
 		kwargs_filter = {
 			'english__gte': self.english,
 		}
+
+		if self.validated == 'True':
+			kwargs_filter['user__validated_by__isnull'] = False
+
 		kwargs_filter2 = {}
 		kwargs_annotate = {}
 
@@ -59,7 +65,7 @@ class Search(TemplateView):
 			kwargs_filter2['skill_count'] = len(initial_skill)
 		# filter by skills - end 
 
-		# which data need get from database
+		# which data need to get from database
 		args_only = {
 			'user',
 			'english',
@@ -110,6 +116,12 @@ class Search(TemplateView):
 
 		args['skill_form'] = forms.Skill(initial={'skill': initial_skill})
 		args['english_form'] = forms.English(initial={'value': self.english})
+
+		if self.validated == 'True':
+			args['validated_form'] = forms.Validated(initial={'validated': True})
+		else:
+			args['validated_form'] = forms.Validated()
+
 		args['page'] = self.page
 
 
@@ -146,6 +158,7 @@ class Search(TemplateView):
 
 			english = english_form.cleaned_data['value']
 			url_data += '{0}={1}&'.format('english', str(english))
+			url_data += '{0}={1}&'.format('validated', str('validated' in request.POST))
 
 		return redirect(reverse('core:search_page', kwargs={'page': 1}) + url_data)
 

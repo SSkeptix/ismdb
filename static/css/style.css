@@ -71,3 +71,12 @@ p.pages a, span{
 	margin-left: 5px;
 	margin-right: 5px;
 }
+
+.table-user-information > thead > tr > th,
+.table-user-information > tbody > tr > th,
+.table-user-information > tfoot > tr > th,
+.table-user-information > thead > tr > td,
+.table-user-information > tbody > tr > td,
+.table-user-information > tfoot > tr > td {
+  min-width: 200px;
+}

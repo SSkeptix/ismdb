@@ -42,6 +42,13 @@ ISMdb | Пошук
 					        </div> 
 
 							<div class="form-group">
+					        	<label class="col-sm-2 control-label" >{{ validated_form.validated.label_tag }}</label>
+					            <div class="col-sm-10">
+					                {{ validated_form.validated }}
+					            </div>
+					        </div>
+
+							<div class="form-group">
 					        <label class="col-sm-2 control-label" >{{ skill_form.skill.label_tag }}</label>
 					            <div class="col-sm-10">
 					                <div class="scroll-entry">
