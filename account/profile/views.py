@@ -145,21 +145,15 @@ class EditProfile(TemplateView):
 		if (request.user.category == tuples.CATEGORY.STUDENT) :
 			student = models.Student.objects.get(user = request.user.id)
 
-			args['user_form'] = forms.EditUser(instance = request.user)
 			args['student_form'] = forms.EditStudent(instance = student)
 			args['skill_form'] = forms.EditSkill(user = request.user)
 			
-		else:
-		# edit profile (teacher, employer)
-			args = {
-				'user_form': forms.EditUser(instance = request.user),
-			}
-			
+		args['user_form'] = forms.EditUser(instance = request.user)
+
 		if new_args:
 			for i in new_args:
 				args[i] = new_args[i]
 		return render(request, self.template_name, args)
-
 
 
 	def get(self, request, username = ''):

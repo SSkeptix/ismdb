@@ -10,9 +10,6 @@ import math
 
 from core.functions import validation_permission
 
-#reverse('account:add_skill', kwargs={'username': request.user.username})
-
-
 
 
 
@@ -161,4 +158,4 @@ class Search(TemplateView):
 			url_data += '{0}={1}&'.format('validated', str('validated' in request.POST))
 
 		return redirect(reverse('core:search_page', kwargs={'page': 1}) + url_data)
-
+		
